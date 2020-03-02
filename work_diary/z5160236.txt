@@ -9,7 +9,7 @@ Week 1
 
 Week 2
 
-*notes here*
+- Talked about the sections that needed to be included in the Project Proposal due next week and allocated sections to group members. I was allocated the system flow diagram. As such, a system flow diagram for each different type of user was needed (Customer, Cashier, Waiter, Kitcher Staff and Management). Also added user stories for the Management user to the Jira board.
 
 Week 3
 
