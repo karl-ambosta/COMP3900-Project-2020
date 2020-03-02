@@ -5,11 +5,14 @@ UNSW - 20T1
 
 Week 1
 
-Group formed and project topic selected in lab. I setup MS teams for collaboration/communication and Github repo. Also set out a template for project proposal and set out some desired features of our project.
+Group formed and project topic selected in lab. I setup MS teams for collaboration/communication and Github repo.
+Also set out a template for project proposal and set out some desired features of our project.
 
 Week 2
 
-*notes here*
+Setup tasks within Jira for project proposal report. Set out report sections and assisted to delegate out sections to each team member.
+Wrote the options section, my about me piece, created user stories for cashier and kitchen staff, setup github classroom.
+Planning is entirely being maintained with Jira.
 
 Week 3
 
