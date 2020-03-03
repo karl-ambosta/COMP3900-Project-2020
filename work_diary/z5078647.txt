@@ -11,7 +11,7 @@ Communication is via microsoft teams and we are brainstorming ideas of what shou
 
 Week 2
 
-*notes here*
+Parts for draft proposal separated. I will be doing the Gantt chart, project methodology, EPICS for login page and editing and combination of all parts of the draft. 
 
 Week 3
 
