@@ -11,7 +11,12 @@ Communication is via microsoft teams and we are brainstorming ideas of what shou
 
 Week 2
 
-Parts for draft proposal separated. I will be doing the Gantt chart, project methodology, EPICS for login page and editing and combination of all parts of the draft. 
+Parts for draft proposal separated. 
+The following were my parts and were completed as a part of drafting the proposal: 
+- gantt chart using teamgantt
+- project methodology
+- epics for login page
+My tasks in week 3 will involve editing and combining all part of the proposal. 
 
 Week 3
 
