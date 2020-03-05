@@ -9,7 +9,10 @@ Week 1
 
 Week 2
 
-*notes here*
+Assign the parts in proposal. My tasks including:
+1.	Write introduction section
+2.	Compare existing system with our application and the aim of our system
+3.	Add user stories for wait staff to Jira board
 
 Week 3
 
