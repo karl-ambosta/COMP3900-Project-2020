@@ -13,7 +13,7 @@ Week 2
 
 Week 3
 
-*notes here*
+- Fixed up the system flow diagrams to better showcase the structure and the content that will be displayed on each screen, as per our tutors feedback. Our group has chosen to use Python/Django for the back-end and Vue.js and Bootstrap for the front-end. The rest of the week has been spent practicing using Vue.js along with Python to create various different features that can be added to our webpages.
 
 Week 4
 
