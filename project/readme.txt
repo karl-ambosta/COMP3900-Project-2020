@@ -1,4 +1,5 @@
 Working in venv for first time.
+Make sure you are within the project/ directory when activating using the below.
 
 Step 1)
     $ source venv/bin/activate
