@@ -15,6 +15,9 @@ Wrote the options section, my about me piece, created user stories for cashier a
 Planning is entirely being maintained with Jira.
 
 Week 3
+Followed up with team regarding Sprint 2. All task's within Sprint2 completed except for Jintao's two sections within project proposal report. Highlighted the priority of these outstanding tasks during the stand up.
+Created a section to link our EPICs in Jira to our features within the project proposal report. Assisted with editing Jintao's sections with Silvia. Upon Silvia compiling the report, assited to double check and then submit.
+Sprint 3 appears to sticking closer to plan than sprint 2. This will allow Sprint 4 to move into development stages.
 
 *notes here*
 
