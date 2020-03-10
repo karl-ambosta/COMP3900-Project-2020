@@ -7,13 +7,13 @@ We aim to create a friendly, effective and easy-use application to solve theprob
 ## Our team:
 
 Scrum Master:
-Joel Lawrence - z3331029 - z3331029@unsw.edu.au
+- Joel Lawrence - z3331029 - z3331029@unsw.edu.au
 
 Developers:
-Burton Chen - z5075078 - z5075078@unsw.edu.au
-Jintao Li - z5202432 - z5202432@unsw.edu.au
-Karl Ambosta- z5160236 - z5160236@unsw.edu.au
-Silvia Xu - z5078647 - z5078647@unsw.edu.au
+- Burton Chen - z5075078 - z5075078@unsw.edu.au
+- Jintao Li - z5202432 - z5202432@unsw.edu.au
+- Karl Ambosta- z5160236 - z5160236@unsw.edu.au
+- Silvia Xu - z5078647 - z5078647@unsw.edu.au
 
 ## Repository Layout
 
