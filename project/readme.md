@@ -1,6 +1,6 @@
 # Getting Started
+Make sure you are within the `project/` directory when following the below.
 ## Working in venv for first time
-Make sure you are within the project/ directory when activating using the below.
 1. `$ python3 -m venv venv`
 2. `$ source venv/bin/activate`
 3. `$ python3 -m pip install --upgrade pip`
