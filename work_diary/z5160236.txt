@@ -17,7 +17,7 @@ Week 3
 
 Week 4
 
-*notes here*
+- Started working on the landing pages for the website in HTML, before we use Django and Vue to display it. A basic skeleton has been completed during the tutorial and now the CSS/Bootstrap on the pages will be completed over the week to display more like the finish product. Aim to finish the landing page and all adjoining pages for next week's demo.
 
 Week 5
 
