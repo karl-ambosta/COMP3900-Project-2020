@@ -1,0 +1,343 @@
+<!-- Menu Page for Waiter App/Site-->
+<!DOCTYPE html>
+<html>
+<script>
+	function hideTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+    		x[i].style.display = "none";
+		}
+	}
+
+	function changeType(name) {
+		hideTypes();
+		document.getElementById(name).style.display = "block"
+		document.getElementById("info").style.display = "none"
+	}
+
+	function toLogin() {
+		window.location.href='login.html'
+	}
+
+	
+</script>
+
+	<body>
+		<head>
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+			<title>Waiter - Menu</title>
+		</head>
+
+		<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background-color:#6f42c1;">
+			<img src="../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white">Waiter</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="landing_page.html">Home</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link disabled" href="#" >Menu <span class="sr-only">(current)</span> </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="contact.html">Contact Us</a>
+					</li>
+				</ul>
+				<button class="btn btn-outline-success my-2 my-sm-0"onclick="toLogin()">Login</button>
+			</div>
+		</nav>
+
+		<div class="title">
+			<h1 class="text">Menu</h1>
+		</div>
+
+		<br>
+
+		<div class="container">
+			<div class="row">
+				<div class="menu">
+					<h3 class="sidebar_text" align="center">Menu Filters</h3>
+					<div class="category_cont" align="center">
+						<a class="category" href="#"  onclick="changeType('entree')">Entree</a>
+					</div>
+					<hr>
+					<div class="category_cont" align="center">
+						<a class="category" href="#" onclick="changeType('lunch')">Lunch</a>
+					</div>
+					<hr>
+					<div class="category_cont" align="center">
+						<a class="category" href="#" onclick="changeType('dinner')">Dinner</a>
+					</div>
+					<hr>
+					<div class="category_cont" align="center">
+						<a class="category" href="#" onclick="">Specials</a>
+					</div>
+					<hr>
+				</div>
+
+				<div class="intro_text"> 
+					<p class="menu_text"><font color="pink">(To be properly implemented when the back-end is set up to read menu items from database)</font></p>
+
+					<h3 class="menu_text" id="info">Click one of the menu categories on the left to start viewing the menu!</h3>  
+
+					<div class="items" id="entree">
+						<div class="row">
+							<div class="column"> <!-- ITEM 1 -->
+								<div class="border">
+									<img class="thumbnail zoom" src="../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<div class="item_text">
+										<h4>Entree 1</h4>
+										<p>Description of item</p>
+									</div>
+									<div class="price_text">
+										<h4>$Price</h4>
+									</div>
+								</div>
+							</div>
+
+							<div class="column"> <!-- ITEM 2 -->
+								<div class="border">
+									<img class="thumbnail zoom" src="../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<div class="item_text">
+										<h4>Entree 2</h4>
+										<p>Description of item</p>
+									</div>
+									<div class="price_text">
+										<h4>$Price</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="column"> <!-- ITEM 3 -->
+								<div class="border">
+									<img class="thumbnail zoom" src="../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<div class="item_text">
+										<h4>Entree 3</h4>
+										<p>Description of item</p>
+									</div>
+									<div class="price_text">
+										<h4>$Price</h4>
+									</div>
+								</div>
+							</div>
+
+							<div class="column"> <!-- ITEM 4 -->
+								<div class="border">
+									<img class="thumbnail zoom" src="../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<div class="item_text">
+										<h4>Entree 4</h4>
+										<p>Description of item</p>
+									</div>
+									<div class="price_text">
+										<h4>$Price</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="items" id="lunch">
+						<div class="row">
+							<div class="column"> <!-- ITEM 1 -->
+								<div class="border">
+									<img class="thumbnail zoom" src="../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<div class="item_text">
+										<h4>Lunch 1</h4>
+										<p>Description of item</p>
+									</div>
+									<div class="price_text">
+										<h4>$Price</h4>
+									</div>
+								</div>
+							</div>
+
+							<div class="column"> <!-- ITEM 2 -->
+								<div class="border">
+									<img class="thumbnail zoom" src="" align="left" width="100" height="100">
+									<div class="item_text">
+										<h4>Lunch 2</h4>
+										<p>Description of item</p>
+									</div>
+									<div class="price_text">
+										<h4>$Price</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="items" id="dinner">
+						<div class="row">
+							<div class="column"> <!-- ITEM 1 -->
+								<div class="border">
+									<img class="thumbnail zoom" src="" align="left" width="100" height="100">
+									<div class="item_text">
+										<h4>Dinner 1</h4>
+										<p>Description of item</p>
+									</div>
+									<div class="price_text">
+										<h4>$Price</h4>
+									</div>
+								</div>
+							</div>
+
+							<div class="column"> <!-- ITEM 2 -->
+								<div class="border">
+									<img class="thumbnail zoom" src="../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<div class="item_text">
+										<h4>Dinner 2</h4>
+										<p>Description of item</p>
+									</div>
+									<div class="price_text">
+										<h4>$Price</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>					
+			</div>
+		</div>
+
+	</body>
+
+<style type="text/css">
+body {
+	background-image: url(../pictures/k_dim.jpg);
+}
+
+
+.column {
+	padding: 5px;
+	border-radius: 5px;
+	width: 50%;
+}
+
+.intro_text {
+	padding: 5px;
+	margin-left: 5em;
+}
+
+.border {
+	border-radius: 5px;
+	background-color: white;
+	padding: 5px;
+	height: 112px;
+	width: 500px;
+}
+
+.menu {
+	position: fixed;
+	left: 2%;
+	top: 25%;
+	width: 12em;
+	margin-top: -2.7em;
+	border-radius: 5px;
+	background-color: #a184d7;
+	padding: 5px;
+}
+
+.container {
+	top: 25%;
+	left: 50%;
+}
+
+.text {
+	font-family: 'Courgette', cursive;
+	font-size: 50px;
+	color: white;
+	text-shadow: 2px 2px grey;
+}
+
+.menu_text {
+	font-family: 'Courgette', cursive;
+	color: white;
+	text-shadow: 2px 2px grey;
+}
+
+.sidebar_text {
+	font-family: 'Courgette', cursive;
+	font-size: 30px;
+	text-decoration: underline;
+}
+
+.title {
+	margin-top: 2em;
+	margin-left: 35em;
+
+}
+
+.category {
+	font-family: 'Courgette', cursive;
+	font-size: 20px;
+	color: white;
+}
+
+.category:hover {
+	color:red;
+}
+
+.item_text {
+	margin-left: 7em;
+}
+
+.price_text {
+	margin-top: -4.8em;
+	margin-left: 26em;
+	position: absolute;
+}
+
+/**THE SAME CSS IS USED IN ALL 3 DEMOS**/    
+/**gallery margins**/  
+ul.gallery{    
+margin-left: 3vw;     
+margin-right:3vw;  
+}    
+
+.zoom {      
+-webkit-transition: all 0.35s ease-in-out;    
+-moz-transition: all 0.35s ease-in-out;    
+transition: all 0.35s ease-in-out;     
+cursor: -webkit-zoom-in;      
+cursor: -moz-zoom-in;      
+cursor: zoom-in;  
+}     
+
+.zoom:hover,  
+.zoom:active,   
+.zoom:focus {
+/**adjust scale to desired size, 
+add browser prefixes**/
+-ms-transform: scale(2.5);    
+-moz-transform: scale(2.5);  
+-webkit-transform: scale(2.5);  
+-o-transform: scale(2.5);  
+transform: scale(2.5);    
+position:relative;      
+z-index:100;  
+}
+
+/**To keep upscaled images visible on mobile, 
+increase left & right margins a bit**/  
+@media only screen and (max-width: 768px) {   
+ul.gallery {      
+margin-left: 15vw;       
+margin-right: 15vw;
+}
+
+/**TIP: Easy escape for touch screens,
+give gallery's parent container a cursor: pointer.**/
+.DivName {cursor: pointer}
+}
+
+</style>
+</html>
