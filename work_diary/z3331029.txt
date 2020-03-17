@@ -19,11 +19,9 @@ Followed up with team regarding Sprint 2. All task's within Sprint2 completed ex
 Created a section to link our EPICs in Jira to our features within the project proposal report. Assisted with editing Jintao's sections with Silvia. Upon Silvia compiling the report, assited to double check and then submit.
 Sprint 3 appears to sticking closer to plan than sprint 2. This will allow Sprint 4 to move into development stages.
 
-*notes here*
-
 Week 4
 
-*notes here*
+Team met and discussed a move from task based sprints to design and conceptual processes. Worked on landing page to provide a conceptual idea. Will demonstrate ideas within week 5 meeting to discuss our overall design look and feel and progress the build from there.
 
 Week 5
 
