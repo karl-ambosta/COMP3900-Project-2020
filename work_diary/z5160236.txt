@@ -21,7 +21,7 @@ Week 4
 
 Week 5
 
-*notes here*
+- This week, Joel and myself decided to work together on the first type of ser screens and the customer screens were tasked to finish. After this week, we will break off and work on separate user screens to get through the fron-end faster. I have completed most of the screens that the customer will use to access when using the app. After finishing most of the screens, I have decided for next week, to work on adding Vue to the html page, as was planned for the project.
 
 Week 6
 
