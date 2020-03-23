@@ -4,18 +4,19 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    
     class Meta:
         model = User
         fields = ['username', 'email']
 
-class MenuCategorySerializer(serializers.HyperlinkedModelSerializer):
+class MenuCategorySerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = MenuCategory
         fields = ['id', 'name', 'menu_item']
 
-class MenuItemSerializer(serializers.HyperlinkedModelSerializer): 
-    menu_category = serializers.ReadOnlyField(source='menu_category.id')
+class MenuItemSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MenuItem
-        fields = ['id', 'name', 'price', 'description', 'menu_category']
+        fields = '__all__'
