@@ -8,13 +8,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ['username', 'email']
 
-class MenuItemSerializer(serializers.HyperlinkedModelSerializer): 
-    class Meta:
-        model = MenuItem
-        fields = ['name', 'price']
-
 class MenuCategorySerializer(serializers.HyperlinkedModelSerializer):
-    menuItem = serializers.ReadOnlyField(source='menuItem.name')
     class Meta:
         model = MenuCategory
-        fields = ['name', 'menuItem']
+        fields = ['id', 'name', 'menu_item']
+
+class MenuItemSerializer(serializers.HyperlinkedModelSerializer): 
+    menu_category = serializers.ReadOnlyField(source='menu_category.id')
+    
+    class Meta:
+        model = MenuItem
+        fields = ['id', 'name', 'price', 'description', 'menu_category']
