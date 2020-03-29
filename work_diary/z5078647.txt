@@ -28,11 +28,14 @@ Completed editing on Saturday morning and passed onto Joel for final checks and 
 
 Week 4
 
-*notes here*
+Researched about vue.js, django and auth0. Began using those to create a landing page to form an understanding of how they worked together, but had decided to use django rest framework instead. Burton created initial backend, therefore had to 
+wait until it was completed. 
 
 Week 5
 
-*notes here*
+Gained an understanding of django rest framework.
+Worked with Burton on the backend, mainly the authentication. 
+Added auth api for google and twitter. 
 
 Week 6
 
