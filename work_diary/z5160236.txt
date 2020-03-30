@@ -25,7 +25,7 @@ Week 5
 
 Week 6
 
-- This week, Joel and I continued to work through the rest of the different user pages. Joel had started on the cashier, kitchen stafd and waiter pages, while I went back through the landing pages and customer pages to make the layouts more responsive. After that I worked on the management pages, which includes the dashboard, menu editing, history and old items pages.
+- This week, Joel and I continued to work through the rest of the different user pages. Joel had started on the cashier, kitchen stafd and waiter pages, while I went back through the landing pages and customer pages to make the layouts more responsive. After that I worked on the management pages, which includes the dashboard, menu editing, history and old items pages. Also, Ali gave some ideas on extending the customer pages. Some included: allowing app to track user's position to determine the closest restaurant near them, autofill customer name, customise item from the menu ordering screen. Some extra feature idea he gave us were: dividing bills and use of qr codes. These will be worked on in future weeks.
 
 Week 7
 
