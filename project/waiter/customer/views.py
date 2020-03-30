@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import permissions
-from .serializers import UserSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer
-from .models import MenuItem, MenuCategory, OrderList
+from .serializers import UserSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer
+from .models import MenuItem, MenuCategory, OrderList, OrderRequest
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_framework.decorators import action
@@ -30,28 +30,32 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-    @action(detail=True)
+    @action(detail=True, methods=['post'])
     def order(self, request, id=None):
         try:
             item = get_object_or_404(self.queryset, id=id)
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
             order_list = get_object_or_404(OrderList.objects.all(), owner=owner)
-            order_list.menuItems.add(item)
+            order_list.order_request.create(order_list=order_list, owner=owner, menu_item=item, comments=request.data["comments"], quantity=request.data["quantity"])
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True)
     def remove(self, request, id=None):
-        try: 
+        try:
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
             order_list = get_object_or_404(OrderList.objects.all(), owner=owner)
             item = get_object_or_404(self.queryset, id=id)
-            order_list.menuItems.remove(item)    
+            order_request = get_object_or_404(OrderRequest.objects.all(), owner=owner, order_list=order_list, menu_item=item)
+            if(order_request.quantity > 1):
+                order_request.quantity = order_request.quantity - 1
+                order_request.save()
+            else:   
+                order_request.delete()
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class MenuCategoryViewSet(viewsets.ModelViewSet):
     queryset = MenuCategory.objects.all()
@@ -78,3 +82,11 @@ class OrderListViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data)
+
+class OrderRequestViewSet(viewsets.ModelViewSet):
+    queryset = OrderRequest.objects.all()
+    serializer_class = OrderRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request): 
+        return Response(status=status.HTTP_204_NO_CONTENT)

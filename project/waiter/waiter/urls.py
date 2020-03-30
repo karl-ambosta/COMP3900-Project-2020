@@ -24,6 +24,7 @@ router.register(r'users', views.UserViewSet, 'user')
 router.register(r'menuItems', views.MenuItemViewSet, 'menuItem')
 router.register(r'menuCategories', views.MenuCategoryViewSet, 'menuCategories')
 router.register(r'orderList', views.OrderListViewSet, 'orderList')
+router.register(r'orderRequest', views.OrderRequestViewSet, 'orderRequest')
 
 
 urlpatterns = [

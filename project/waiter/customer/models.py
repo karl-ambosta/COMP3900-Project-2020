@@ -22,6 +22,14 @@ class OrderList(models.Model):
     The current active order list of the user
     """
     owner = models.ForeignKey(User, related_name='order_list', on_delete=models.CASCADE)
-    menuItems = models.ManyToManyField(MenuItem, related_name='ordered_by')
 
+class OrderRequest(models.Model):
+    """
+    details of an individual order
+    """
 
+    order_list = models.ForeignKey(OrderList, related_name='order_request', on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, related_name='order_request', on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(MenuItem, related_name='order_request', on_delete=models.CASCADE)
+    comments = models.CharField(max_length=300)
+    quantity = models.PositiveIntegerField()
