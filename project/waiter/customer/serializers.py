@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import MenuItem, MenuCategory
+from .models import MenuItem, MenuCategory, OrderList
 from rest_framework import serializers
 
 
@@ -19,4 +19,11 @@ class MenuItemSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MenuItem
-        fields = '__all__'
+        fields = ['id', 'name', 'price', 'description', 'menu_category']
+
+class OrderListSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = OrderList
+        fields = ['id', 'owner', 'menuItems']
