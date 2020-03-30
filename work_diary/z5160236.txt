@@ -25,7 +25,7 @@ Week 5
 
 Week 6
 
-*notes here*
+- This week, Joel and I continued to work through the rest of the different user pages. Joel had started on the cashier, kitchen stafd and waiter pages, while I went back through the landing pages and customer pages to make the layouts more responsive. After that I worked on the management pages, which includes the dashboard, menu editing, history and old items pages.
 
 Week 7
 
