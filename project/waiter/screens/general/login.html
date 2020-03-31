@@ -1,0 +1,100 @@
+<!-- Login Page for Waiter App/Site-->
+<!DOCTYPE html>
+<html>
+<script type="text/javascript">
+	function goBack() {
+		window.open("landing_page.html", "_self");
+	}
+
+	function toCustomer() {
+		window.open("customer.html", "_self");
+	}
+
+</script>
+	<head>
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+		<title>Waiter - Login</title>
+	</head>
+
+	<body>
+		<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background-color:#6f42c1;">
+			<img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white">Waiter</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<button class="btn btn-outline-success my-2 my-sm-0" onclick="goBack()">Back</button>
+			</div>
+		</nav>
+
+		<br>
+
+		<div class="container">
+			<form class="sign_in" action="customer.html">
+				<div class="text-center mb-4">
+					<img class="mb-4" src="../../pictures/logo_transp.png" alt="" width="72" height="72">
+					<h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
+				</div>
+				<div class="col-xs-4">
+					<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+				</div>
+				<br>
+				<div class="form-label-group">
+					<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+				</div>
+				<br>
+				<div class="checkbox mb-3" align="center">
+					<label>
+						<input type="checkbox" value="remember-me"> Remember me
+					</label>
+				</div>
+				<button class="btn btn-lg btn-primary btn-block" type="submit" onclick="toCustomer()">Sign in</button>
+			</form>
+		</div>
+
+		
+  
+
+</body>
+
+<style type="text/css">
+
+body {
+	background-image: url("../pictures/bkg-repeat.png");
+	background-size: cover;
+}
+
+.sign_in {
+	align-content: center;
+	font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal; 
+	font-weight: 700;
+	line-height: 26.4px;
+	position: relative;
+	color: white;
+	text-shadow: 2px 2px black;
+}
+
+.container {
+	background-color: rgba(102, 102, 102, 0.75);
+	width: 300px;
+	border-radius: 25px;
+	padding: 10px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+</style>
+
+</html>
+
+	

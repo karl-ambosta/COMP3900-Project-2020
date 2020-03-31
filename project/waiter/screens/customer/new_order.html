@@ -1,0 +1,123 @@
+<!-- New Order Page for Waiter/App/Site -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+        <title>Waiter - New Order</title>
+    </head>
+
+<script>
+    function addFromMenu() {
+        window.open("customer_menu.html", "_self");
+    }
+
+    function finishOrder() {
+        // send order to kitchen
+        window.open("customer_orders.html", "_self");
+    }
+
+    function callWaiter() {
+        // call waiter
+    }
+</script>
+
+    <body>
+        <div class="title">Create Order</div>
+
+        <div class="container">
+            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="addFromMenu()">Add To Order</button>
+            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="finishOrder()">Finish Order</button>
+        </div>
+        
+        
+        <br>
+            
+
+        <div class="container" style="overflow-x:auto;">          
+            <table class="table table-borderless table-hover display nowrap">
+              <thead>
+                <tr>
+                  <th nowrap>Item Name:</th>
+                  <th nowrap>Quantity</th>
+                  <th nowrap>Notes for Chef</th>
+                  <th nowrap>Price per Item</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td nowrap>Item #1</td>
+                    <td>1</td>
+                    <td nowrap>Extra Chilli</td>
+                    <td nowrap>$2.50</td>
+                </tr>
+                <tr>
+                    <td nowrap>Item #2</td>
+                    <td>1</td>
+                    <td nowrap>No Tomato</td>
+                    <td nowrap>$3.75</td>
+                </tr>
+                <tr>
+                    <td nowrap>Item #3</td>
+                    <td>2</td>
+                    <td nowrap>-</td>
+                    <td nowrap>$22.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+    </body>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow: 2px 2px black;
+}
+
+.table {
+    background-color: #ECEFF1;
+    border-radius: 10px;
+
+}
+
+.menuButton {
+    position: absolute;
+    margin-left: 5%;
+}
+
+.finishButton {
+    position: absolute;
+    margin-left: 75%;
+}
+
+.container {
+    position: relative;
+    text-align: center;
+}
+
+.container2 {
+    position: relative;
+    text-align: center;
+    width: 75%;
+}
+
+
+
+
+
+</style>
+
+</html>

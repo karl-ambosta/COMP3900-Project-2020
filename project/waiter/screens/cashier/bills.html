@@ -1,0 +1,146 @@
+<!-- Current Customer Bills Page (Waiter view) for Waiter App/Site -->
+<!DOCTYPE html>
+<html>
+
+<script>
+    function viewmenu() {
+        window.open("cashiers_menu.html", "_self");
+    }
+
+    function dailystats() {
+        window.open("dailystats.html", "_self");
+    }
+
+</script>
+<head>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+    <title>Cashier - Bills</title>
+</head>
+<body>
+    <div class="title2">Active Bills for ~Restaurant~</div>
+    <div class="container1 text-center">
+        <button type="button" class="btn btn-lg btn-secondary" onclick="dailystats()">Daily Statistics</button>
+        <button type="button" class="btn btn-lg btn-info" onclick="viewmenu()">View Menu</button>
+    </div>
+    <div class="container" style="overflow-x:auto;">          
+        <table class="table table-sm table-borderless table-striped table-hover display nowrap">
+            <thead>
+            <tr>
+                <th style="width: 40%"">Table Number</th>
+                <th style="width: 40%">Total</th>
+                <th class="text-center" style="width: 20%">View Bill</th>
+            </tr>
+            </thead>
+            <!-- Start of table, dynamic space-->
+            <tbody>
+            <tr>
+                <td class="align-middle">
+                    Table 1
+                </td>
+                <td class="align-middle">
+                    $XXX.XX
+                </td>
+                <td nowrap class="text-center align-middle">
+                    <button type="button" class="btn btn-danger">View Bill</button>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-middle">
+                    Table 2
+                </td>
+                <td class="align-middle">
+                    $XXX.XX
+                </td>
+                <td nowrap class="text-center align-middle">
+                    <button type="button" class="btn btn-danger">View Bill</button>
+                </td>
+            </tr>
+            <tr>
+                <td class="align-middle">
+                    Table 5
+                </td>
+                <td class="align-middle">
+                    $XXX.XX
+                </td>
+                <td nowrap class="text-center align-middle">
+                    <button type="button" class="btn btn-danger">View Bill</button>
+                </td>
+            </tr>
+            <!--
+            Format for dynamic rows
+            <tr>
+                <td class="align-middle">
+                    Table 1
+                </td>
+                <td class="align-middle">
+                    $XXX.XX
+                </td>
+                <td nowrap class="text-center align-middle">
+                    <button type="button" class="btn btn-danger">View Bill</button>
+                </td>
+            </tr>
+            -->
+            </tbody>
+        </table>
+        </div>
+
+</body>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.title2 {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 40px;
+    position: relative;
+    color: white;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+
+.container {
+    background-color: #ECEFF1;
+    position: relative;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.changeScreens {
+    position: absolute;
+    left: 50%;
+    width: 400px;
+    transform: translate(-50%, -50%);
+}
+
+a {
+    color: red;
+}
+
+
+
+
+
+
+
+</style>
+
+</html>

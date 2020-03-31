@@ -1,0 +1,291 @@
+<!-- Menu Page for Waiter App/Site-->
+<!DOCTYPE html>
+<html>
+<script>
+	function hideTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+    		x[i].style.display = "none";
+		}
+	}
+
+	function changeType(name) {
+		hideTypes();
+		document.getElementById(name).style.display = "block"
+		document.getElementById("info").style.display = "none"
+	}
+
+	function toLogin() {
+		window.location.href='login.html'
+	}
+
+	
+</script>
+
+	<body>
+		<head>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+			<title>Waiter - Menu</title>
+		</head>
+
+		<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background-color:#6f42c1; width: 100%;">
+			<img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white">Waiter</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="landing_page.html">Home</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link disabled" href="#" >Menu <span class="sr-only">(current)</span> </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="contact.html">Contact Us</a>
+					</li>
+				</ul>
+				<button class="btn btn-outline-success my-2 my-sm-0"onclick="toLogin()">Login</button>
+			</div>
+		</nav>
+		
+			<div class="title" style="text-align: center;">Menu</div>
+
+			
+	
+			<div class="container"> 
+				<div class="category_title">Breakfast</div>
+					<div class="row">
+						<div class="col">
+							<div class="border">
+								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+								<div class="item_text">
+									<h5>Breakfast 1</h5>
+									<p>Description of item</p>
+									<h6>$Price</h6>
+								</div>
+							</div>
+						</div>
+	
+						<div class="col">
+							<div class="border">
+								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+								<div class="item_text">
+									<h5>Breakfast 2</h5>
+									<p>Description of item</p>
+									<h6>$Price</h6>
+								</div>
+							</div>
+						</div>
+						<br>
+					</div>
+	
+					<div class="row">
+						<div class="col">
+							<div class="border">
+								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+								<div class="item_text">
+									<h5>Breakfast 3</h5>
+									<p>Description of item</p>
+									<h6>$Price</h6>
+								</div>
+							</div>
+						</div>
+	
+						<div class="col">
+							<div class="border">
+								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+								<div class="item_text">
+									<h5>Breakfast 4</h5>
+									<p>Description of item</p>
+									<h6>$Price</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<hr><div class="category_title">Lunch</div><br>
+				
+					<div class="row">
+						<div class="col">
+							<div class="border">
+								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+								<div class="item_text">
+									<h5>Lunch 1</h5>
+									<p>Description of item</p>
+									<h6>$Price</h6>
+								</div>
+							</div>
+						</div>
+	
+						<div class="col"> 
+							<div class="border">
+								<img class="thumbnail zoom" src="" align="left" width="100" height="100">
+								<div class="item_text">
+									<h5>Lunch 2</h5>
+									<p>Description of item</p>
+									<h6>$Price</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<hr><div class="category_title">Dinner</div><br>
+									
+					<div class="row">
+						<div class="col">
+							<div class="border">
+								<img class="thumbnail zoom" src="" align="left" width="100" height="100">
+								<div class="item_text">
+									<h5>Dinner 1</h5>
+									<p>Description of item</p>
+									<h6>$Price</h6>
+								</div>
+							</div>
+						</div>
+	
+						<div class="col"> 
+							<div class="border">
+								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+								<div class="item_text">
+									<h5>Dinner 2</h5>
+									<p>Description of item</p>
+									<h6>$Price</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+
+			</div>
+			
+	</body>
+
+<style type="text/css">
+body {
+	background-image: url("../pictures/menu-bg.jpg");
+}
+
+.title {
+	font-family: 'Courgette', cursive;
+	font-size: 75px;
+	color: white;
+	position: relative;
+	margin-top: 5%;
+	text-shadow: 2px 2px grey;
+}
+
+.menu {
+	position: fixed;
+	left: 2%;
+	top: 15%;
+	border-radius: 5px;
+	background-color: grey;
+	padding: 5px;
+}
+
+.container {
+	position: relative;
+	padding: 10px;
+}
+
+.row {
+	width: 100%;
+	margin: auto;
+}
+
+
+.border {
+	border-radius: 5px;
+	background-color: white;
+	padding: 5px;
+	height: 125px;
+}
+
+.sidebar_text {
+	font-family: 'Courgette', cursive;
+	font-size: 30px;
+	text-decoration: underline;
+}
+
+.category {
+	font-family: 'Courgette', cursive;
+	font-size: 30px;
+	color: white;
+}
+
+.category_title {
+	font-family: 'Courgette', cursive;
+	font-size: 30px;
+	color: white;
+	text-decoration: underline;
+	text-align: center;
+}
+
+.category:hover {
+	color:red;
+}
+
+.item_text {
+	margin-left: 7em;
+}
+
+.price_text {
+	position: absolute;
+
+}
+
+
+/**THE SAME CSS IS USED IN ALL 3 DEMOS**/    
+/**gallery margins**/  
+ul.gallery{    
+margin-left: 3vw;     
+margin-right:3vw;  
+}    
+
+.zoom {      
+-webkit-transition: all 0.35s ease-in-out;    
+-moz-transition: all 0.35s ease-in-out;    
+transition: all 0.35s ease-in-out;     
+cursor: -webkit-zoom-in;      
+cursor: -moz-zoom-in;      
+cursor: zoom-in;  
+}     
+
+.zoom:hover,  
+.zoom:active,   
+.zoom:focus {
+/**adjust scale to desired size, 
+add browser prefixes**/
+-ms-transform: scale(2.5);    
+-moz-transform: scale(2.5);  
+-webkit-transform: scale(2.5);  
+-o-transform: scale(2.5);  
+transform: scale(2.5);    
+position:relative;      
+z-index:100;  
+}
+
+/**To keep upscaled images visible on mobile, 
+increase left & right margins a bit**/  
+@media only screen and (max-width: 768px) {   
+ul.gallery {      
+margin-left: 15vw;       
+margin-right: 15vw;
+}
+
+/**TIP: Easy escape for touch screens,
+give gallery's parent container a cursor: pointer.**/
+.DivName {cursor: pointer}
+}
+
+</style>
+</html>

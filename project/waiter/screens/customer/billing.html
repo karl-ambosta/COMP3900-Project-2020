@@ -1,0 +1,128 @@
+<!-- Order Billing Page for Waiter/App/Site -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+        <title>Waiter - Billing</title>
+    </head>
+
+<script>
+    function payBill() {
+        // Pay Bill
+        window.open("feedback.html", "_self");
+    }
+    
+</script>
+
+    <body>
+        <div class="title">Order Billing</div>
+
+        <br>
+
+        <div class="container">          
+            <table class="table table-borderless table-hover" style="text-align: center;">
+              <thead>
+                <tr>
+                  <th colspan="3" style="text-align: center;"><h4>Orders</h4></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td><b>Order #------</b></td>
+                    <td><b>Total</b></td>
+                </tr>
+                <tr>
+                    <td>Order #1</td>
+                    <td>$22.00</td>
+                </tr>
+                <tr>
+                    <td>Order #2</td>
+                    <td>14.50</td>
+                </tr>
+                <tr>
+                    <td>Order #3</td>
+                    <td>5.50</td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <td><b><i>SubTotal</i></b></td>
+                    <td><b>$xx.xx</b></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <br>
+
+        <div class="container">          
+            <table class="table table-borderless table-hover" style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th colspan="3" style="text-align: center;"><h4>Billing</h4></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b><i>SubTotal</i></b></td>
+                        <td><b>$xx.xx</b></td  >
+                    </tr>
+                    <tr>
+                    <td><b><i>GST/Tax</i></b></td>
+                    <td><b>$xx.xx</b></td>
+                    </tr>
+                    <tr>
+                        <td><b><i>Discounts</i></b></td>
+                        <td><b>$xx.xx</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td><b><i>Billing Total</i></b></td>
+                        <td><b>$xx.xx</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <div class="container" style="text-align: center; background-color: transparent;">
+            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="payBill()">Pay Bill</button>
+        </div>
+          
+
+
+    </body>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.container {
+    background-color: #ECEFF1;
+    position: relative;
+    border-radius: 20px;  
+    width: 350px;
+}
+
+</style>
+
+</html>

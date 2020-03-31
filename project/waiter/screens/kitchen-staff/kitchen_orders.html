@@ -1,0 +1,174 @@
+<!-- Kitchen Orders Page for Waiter App/Site -->
+<!DOCTYPE html>
+<html>
+
+<script>
+    function previousorders() {
+        window.open("kitchen_prev_orders.html", "_self");
+    }
+
+    function viewmenu() {
+        window.open("kitchen_menu.html", "_self");
+    }
+
+</script>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+        <title>Kitchen - Orders</title>
+    </head>
+    <body>
+        <div class="title2">Orders for ~Restaurant~</div>
+        <div class="container1 text-center">
+            <button type="button" class="btn btn-lg btn-danger" onclick="previousorders()">Previous Orders</button>
+            <button type="button" class="btn btn-lg btn-primary" onclick="viewmenu()">View Menu</button>
+        </div>
+        <div class="container" style="overflow-x:auto;">          
+            <table class="table table-sm table-borderless table-striped table-hover display nowrap">
+              <thead>
+                <tr>
+                  <th style="width: 50%"">Order</th>
+                  <th class="text-center" style="width: 20%">Status</th>
+                  <th class="text-center" style="width: 30%">Change Status</th>
+                </tr>
+              </thead>
+              <!-- Start of table, dynamic space-->
+              <tbody>
+                <tr>
+                    <td nowrap>Order #1 - Placed at datetime<br>
+                        <ul>
+                            <li>Item 1</li>
+                            <li>Item 2</li>
+                            <li>Item 3</li>
+                            <li>Item 4</li>
+                        </ul>
+                    </td>
+                    <td class="text-center align-middle">
+                        Completed
+                    </td>
+                    <td class="text-center align-middle" nowrap>
+                        <button type="button" class="btn btn-info">Preparing</button>
+                        <button type="button" class="btn btn-warning">Cooking</button>
+                        <button type="button" class="btn btn-success">Pickup Ready</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>Order #2 - Placed at datetime
+                        <ul>
+                            <li>Item 1 - No tomatoes</li>
+                            <li>Item 2 - Remove onion please</li>
+                            <li>Item 3</li>
+                            <li>Item 4</li>
+                            <li>Item 5</li>
+                            <li>Item 6</li>
+                        </ul>
+                    </td>
+                    <td class="text-center align-middle">
+                        Cooking
+                    </td>
+                    <td class="text-center align-middle" nowrap>
+                        <button type="button" class="btn btn-info">Preparing</button>
+                        <button type="button" class="btn btn-warning">Cooking</button>
+                        <button type="button" class="btn btn-success">Pickup Ready</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td nowrap>Order #3 - Placed at datetime
+                        <ul>
+                            <li>Item 1</li>
+                            <li>Item 2</li>
+                            <li>Item 3</li>
+                        </ul>
+                    </td>
+                    <td class="text-center align-middle">
+                        Recieved
+                    </td>
+                    <td class="text-center align-middle" nowrap>
+                        <button type="button" class="btn btn-info">Preparing</button>
+                        <button type="button" class="btn btn-warning">Cooking</button>
+                        <button type="button" class="btn btn-success">Pickup Ready</button>
+                    </td>
+                </tr>
+                <!--
+                Format for dynamic rows
+                <tr>
+                    <td nowrap>Order #3 - Placed at datetime
+                        <ul>
+                            <li>Item 1</li>
+                            <li>Item 2</li>
+                            <li>Item 3</li>
+                        </ul>
+                    </td>
+                    <td class="text-center align-middle">
+                        Recieved
+                    </td>
+                    <td class="text-center align-middle" nowrap>
+                        <button type="button" class="btn btn-info">Preparing</button>
+                        <button type="button" class="btn btn-warning">Cooking</button>
+                        <button type="button" class="btn btn-success">Pickup Ready</button>
+                    </td>
+                </tr>
+                -->
+              </tbody>
+            </table>
+          </div>
+
+    </body>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.title2 {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 40px;
+    position: relative;
+    color: white;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+
+.container {
+    background-color: #ECEFF1;
+    position: relative;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.changeScreens {
+    position: absolute;
+    left: 50%;
+    width: 400px;
+    transform: translate(-50%, -50%);
+}
+
+a {
+    color: red;
+}
+
+
+
+
+
+
+
+</style>
+
+</html>

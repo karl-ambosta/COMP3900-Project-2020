@@ -1,0 +1,134 @@
+<!-- Customer Order Page for Waiter App/Site -->
+<!DOCTYPE html>
+<html>
+
+<script>
+    function viewOrderInfo() {
+        window.open("order_info.html", "_self");
+    }
+
+    function newOrder() {
+        window.open("new_order.html", "_self");
+    }
+
+    function finishOrdering() {
+        window.open("billing.html", "_self");
+    }
+
+    function callWaiter() {
+        // To call waiter
+    }
+</script>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+        <title>Waiter - Customer Orders</title>
+    </head>
+    <body>
+        <div class="title">Welcome User!</div>
+        <br>
+        <div class="title2">Orders for Table #-- <br> at ~Restaurant~</div>
+
+        <br>
+
+        <div class="container" style="width:100%; text-align:center; background-color: transparent;">
+            <div class="callWaiter">
+                <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="callWaiter()">Call Waiter</button>
+            </div>
+            <br><br>
+            <div class="changeScreens">
+                <button type="button" style="width: 150px;" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="newOrder()">New Order</button>
+                <button type="button" style="width: 150px;" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="finishOrdering()">Get Bill</button>
+            </div>
+        </div>
+
+        <br><br>
+
+        <div class="container" style="overflow-x:auto;">          
+            <table class="table table-borderless table-hover display nowrap">
+              <thead>
+                <tr>
+                  <th>Order Info</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td nowrap>Order #1 - Placed at datetime</td>
+                    <td>Completed</td>
+                    <td nowrap><a class="Order 1" href="#" onclick="viewOrderInfo()">View Order Info</a></td>
+                </tr>
+                <tr>
+                    <td nowrap>Order #2 - Placed at datetime</td>
+                    <td>Cooking</td>
+                    <td nowrap><a class="Order 2" href="#" onclick="viewOrderInfo()">View Order Info</a></td>
+                </tr>
+                <tr>
+                    <td nowrap>Order #3 - Placed at datetime</td>
+                    <td>Recieved</td>
+                    <td nowrap><a class="Order 2" href="#" onclick="viewOrderInfo()">View Order Info</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+    </body>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.title2 {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 40px;
+    position: relative;
+    color: white;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+
+.container {
+    background-color: #ECEFF1;
+    position: relative;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.changeScreens {
+    position: absolute;
+    left: 50%;
+    width: 400px;
+    transform: translate(-50%, -50%);
+}
+
+a {
+    color: red;
+}
+
+
+
+
+
+
+
+</style>
+
+</html>

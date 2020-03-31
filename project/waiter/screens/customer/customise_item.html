@@ -1,0 +1,75 @@
+<!-- Item Customisation Page for Waiter/App/Site -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="text/javascript" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+        <link rel="application/javascript" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+        <title>Waiter - Customise Item</title>
+    </head>
+
+<script>
+    function confirmItem() {
+        document.getElementById('customerInfo').action = "new_order.html";
+    }
+
+</script>
+
+
+    <body>
+        <div class="title">Customise Item</div>
+
+        <div class="container">
+            <form id="customerInfo" class="customer_info" onsubmit="confirmItem()" method="POST">
+                <label for="itemName">Item Name: </label>
+                <input type="text" id="itemName" name="itemName" placeholder="itemName" disabled><br><br>
+
+                <label for="itemDesc">Item Description: </label>
+                <input type="text" id="itemDesc" name="itemDesc" placeholder="itemDesc" disabled><br><br>
+                
+                <label for="itemQuantity">Item Quantity: </label>
+                <input type="number" id="itemQuantity" name="itemQuantity" value="1" min="1" max="10" step="1"/><br><br><br>
+
+                <label for="chefNotes">Notes for Chef: </label><br>
+                <textarea type="text" id="chefNotes" name="chefNotes" rows="3" cols="100" placeholder="Add any notes for the chef. e.g. Add more, less of something"></textarea><br><br>
+
+                <button class="btn btn-primary btn-block" type="submit" style="width: 200px;">Confirm Item</button>
+            </form>
+        </div>
+        
+
+
+    </body>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: absolute;
+    color: white;
+    top:  5%;
+    left: 5%;
+    transform: translate(-10%,-10%);
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.container {
+    color: white;
+    position: absolute;
+    top: 20%;
+    left: 5%;
+}
+
+
+</style>
+
+<html>

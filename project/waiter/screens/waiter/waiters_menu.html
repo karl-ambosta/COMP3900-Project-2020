@@ -1,0 +1,152 @@
+<!-- Waiters Menu Page for Waiter App/Site -->
+<!DOCTYPE html>
+<html>
+
+<script>
+    function createorder() {
+        window.open("customer_menu.html", "_self");
+    }
+
+    function callouts() {
+        window.open("waiters_call.html", "_self");
+    }
+
+    function activeorders() {
+        window.open("waiters_orders.html", "_self");
+    }
+
+</script>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+        <title>Waiter - Menu</title>
+    </head>
+    <body>
+        <div class="title2">Waiter Menu for ~Restaurant~</div>
+        <div class="container1 text-center">
+            <button type="button" class="btn btn-lg btn-danger" onclick="callouts()">Call Outs</button>
+			<button type="button" class="btn btn-lg btn-success" onclick="activeorders()">Active Orders</button>
+            <button type="button" class="btn btn-lg btn-primary" onclick="createorder()">Create Order</button>
+        </div>
+        <div class="container" style="overflow-x:auto;">          
+            <table class="table table-sm table-borderless table-striped table-hover display nowrap">
+              <thead>
+                <tr>
+                  <th style="width: 15%">Item</th>
+                  <th style="width: 75%">Description</th>
+                  <th style="width: 10%">Price</th>
+                </tr>
+              </thead>
+              <!-- Start of table, dynamic space-->
+              <tbody>
+                <tr>
+                    <td>
+						Breakfast 1
+                    </td>
+                    <td>
+                        Description of item
+                    </td>
+                    <td>
+						$XX.XX
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+						Breakfast 2
+                    </td>
+                    <td>
+                        Description of item
+                    </td>
+                    <td>
+						$XX.XX
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+						Lunch 1
+                    </td>
+                    <td>
+                        Description of item
+                    </td>
+                    <td>
+						$XX.XX
+                    </td>
+                </tr>
+                </tr>
+                <!--
+                Format for dynamic rows
+                <tr>
+                    <td>
+						Breakfast 1
+                    </td>
+                    <td>
+                        Ingredient1, Ingredient2, Ingredient3
+                    </td>
+                    <td>
+						$XX.XX
+                    </td>
+                </tr>
+                -->
+              </tbody>
+            </table>
+          </div>
+
+    </body>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.title2 {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 40px;
+    position: relative;
+    color: white;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+
+.container {
+    background-color: #ECEFF1;
+    position: relative;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.changeScreens {
+    position: absolute;
+    left: 50%;
+    width: 400px;
+    transform: translate(-50%, -50%);
+}
+
+a {
+    color: red;
+}
+
+
+
+
+
+
+
+</style>
+
+</html>

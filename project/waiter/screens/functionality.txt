@@ -1,0 +1,111 @@
+General: (pages everyone can access - no login required)
+Notes:
+- The app should start by opening the landing_page
+- The landing page is connected to the other general pages through navbar
+- Only login page has been made, there are no register / forgot password pages yet
+Pages:
+	- landing_page : page that is the first one that anyone sees contians basic info
+	- menu : page that gives a view of the current menu which all info and a sidebar that makes filtering through the menu items easier
+	- contact : page that gives contact info for restaurant/app and allows customers to submit feedback/inquiries through a form
+	- login : page that shows the login form, where users enter username and password to login
+
+Customer:
+Notes:
+- Most customer pages, after entering info on 'customer.html', has a button to call waiter.
+	- "Call Waiter" should send a notification to a waiter
+- From customer_menu, the customer can click "Add to Order" and a popup will display that allows them to customise their order (how much? and any notes for chef)
+
+Pages:
+	- customer : page where customer MUST enter their name, choose thier restaurant and enter their table number. They can also optionally input their email or mobile number.
+		- "Enter Details" submits the info and directs to the order screen
+	- customer_orders : page that shows the current orders associated to the specific user.
+		- "New Order" displays the new order page
+		- "Get Bill" displays the billing page
+		- "Get Order Info" opens a page that details what is in the order specified
+	- new_order : page that shows the current order that is being built (not yet submitted to kitchen).
+		- "Add to Order" displays the menu page 
+		- "Finish Order" sends the order to kitchen
+	- customer_menu : page that shows the menu items, where customers add and customise items to their order. Can also filter by category type.
+	- order_info : shows the progression of their order and summary of the items in the order
+		- "Back to Orders" returns to customer_orders
+	- billing : Shows a total of all bills, and calculates a total sum (maybe adding discounts and taxes)
+		- "Pay Bill" opens payment system that allows user to pay the bill, then displays end feedback page.
+	- feedback : 
+		- "Open Survey" opens a survey of questions (as a popup)
+			- "Submit" sends the input info and closes popup
+		- "Finish" logouts the user and redirects back to login page
+
+Waiter:
+Notes:
+- Logout button needs to be added
+
+Pages:
+	- waiters_orders : shows a list of active orders (orders not yet served to customers, completed orders probably shouldn't be shown here)
+		- "Call Outs" directs to call out page
+		- "Create Order" allows the waiter to place an order for a customer
+			- Currently just redirects to the customer_menu, so somehow, should be placed in the name of user.
+		- "View Menu" directs to employee view of menu
+	- waiters_call : shows all callout requests that have not been addressed (completed callouts probably shouldn't be shown here)
+		- "Active Orders" directs back to the list of active orders
+		- Status of call out should be changed here, when needed
+	- waiters_menu : shows menu items, as list, without pictures	
+
+Cashier:
+Notes:
+- Logout button needs to be added
+- Statistics page need to be completed
+- View Bill page needs to be completed
+
+Pages:
+	- bills : shows a list of active bills that should be paid.
+		- bills appear here once an order is finished i.e. once the customer clicks "Pay Bill" from their billing page 
+		- "View Bill" shows details of the bill (possibly option to print bill, maybe send to email/mobile)
+	- dailystats : shows data for the day (to be confirmed, ideas for now, free number of tables, daily earnings, etc.)
+	- cashiers_menu : shows menu items, as list, without pictures
+
+Kitchen Staff:
+Pages:
+	- kitchen_orders : shows a list of orders that have been recieved. The status of the order can be changed from here, so the customer can view it.
+	- kitchen_prev_orders : shows a list of previous, recent orders and an overview of details
+	- kitchen_menu : shows menu items, as list, without pictures
+
+Management:
+Notes:
+- "Update Chart" needs to be completed
+- "Generate Report" needs to be completed
+- "Add Category" needs to be completed
+- "Add Menu Item" needs to be completed
+
+- "Logout" returns the user to the login screen
+
+Pages:
+	- dashboard : shows an overview of the restaurant
+		- shows a sum of monthly and yearly earnings
+		- number of tasks set for him, by himself or others (extra feature that might be implemented)
+		- number of unread messages (extra feature, for employees)
+		- "Generate Report" compiles data for printing, saving, etc (extra feature, for admin)
+		- Shows a display a earnings (chart should be able to change scale i.e view earnings over the week, the month, the year...)
+		- "Update Chart" updates the scale of the chart, based on dropdown input
+	- menu_edit : shows a list of menu items (separated into categories), and can be edited (via popup), removed and sorted (via use of arrows, both order of categories and items in categories)
+		- "Add Category" displays a popup to enter category title (and possibly placement?)
+		- "Add Menu Item" displays a popup to add item details, to add to menu
+	- history : shows a list of purchases by the restaurant (still to confirm the contents of this page)
+	- old_menu : shows a list of old menu items and their old details that have been removed from the current menu
+		- "Add to Menu" adds the item to the current menu and removes from this list
+		- For recycling menu items
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

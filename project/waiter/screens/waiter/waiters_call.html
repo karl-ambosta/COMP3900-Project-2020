@@ -1,0 +1,170 @@
+<!-- Waiter Call Outs Page for Waiter App/Site -->
+<!DOCTYPE html>
+<html>
+
+<script>
+    function createorder() {
+        window.open("customer_menu.html", "_self");
+    }
+
+    function viewmenu() {
+        window.open("waiters_menu.html", "_self");
+    }
+
+    function activeorders() {
+        window.open("waiters_orders.html", "_self");
+    }
+
+</script>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+        <title>Waiter - Call Outs</title>
+    </head>
+    <body>
+        <div class="title2">Orders for ~Restaurant~</div>
+        <div class="container1 text-center">
+            <button type="button" class="btn btn-lg btn-success" onclick="activeorders()">Active Orders</button>
+            <button type="button" class="btn btn-lg btn-primary" onclick="createorder()">Create Order</button>
+            <button type="button" class="btn btn-lg btn-secondary" onclick="viewmenu()">View Menu</button>
+        </div>
+        <div class="container" style="overflow-x:auto;">          
+            <table class="table table-sm table-borderless table-striped table-hover display nowrap">
+              <thead>
+                <tr>
+                  <th style="width: 25%"">Table Number</th>
+                  <th style="width: 25%">Caller</th>
+                  <th style="width: 25%">Status</th>
+                  <th class="text-center" style="width: 25%">Change Status</th>
+                </tr>
+              </thead>
+              <!-- Start of table, dynamic space-->
+              <tbody>
+                <tr>
+                    <td class="align-middle">
+                        Table 1
+                    </td>
+                    <td class="align-middle">
+                        Kitchen
+                    </td>
+                    <td nowrap class="align-middle">
+                        Order #1 ready for pick up
+                    </td>
+                    <td class="text-center align-middle" nowrap>
+                        <button type="button" class="btn btn-success">Completed</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-middle">
+                        Table 2
+                    </td>
+                    <td class="align-middle">
+                        Customer
+                    </td>
+                    <td nowrap class="align-middle">
+                        Customer requires attention
+                    </td>
+                    <td class="text-center align-middle" nowrap>
+                        <button type="button" class="btn btn-success">Completed</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-middle">
+                        Table 5
+                    </td>
+                    <td class="align-middle">
+                        Customer
+                    </td>
+                    <td nowrap class="align-middle">
+                        Customer requires attention
+                    </td>
+                    <td class="text-center align-middle" nowrap>
+                        <button type="button" class="btn btn-success">Completed</button>
+                    </td>
+                </tr>
+                <!--
+                Format for dynamic rows
+                <tr>
+                    <td class="align-middle">
+                        Table 1
+                    </td>
+                    <td class="align-middle">
+                        Completed
+                    </td>
+                    <td nowrap class="align-middle">
+                        Order #1 - Placed at datetime
+                        <ul>
+                            <li>Item 1</li>
+                            <li>Item 2</li>
+                            <li>Item 3</li>
+                            <li>Item 4</li>
+                        </ul>
+                    </td>
+                    <td class="text-center align-middle" nowrap>
+                        <button type="button" class="btn btn-success">Delivered</button>
+                    </td>
+                </tr>
+                -->
+              </tbody>
+            </table>
+          </div>
+
+    </body>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.title2 {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 40px;
+    position: relative;
+    color: white;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+
+.container {
+    background-color: #ECEFF1;
+    position: relative;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.changeScreens {
+    position: absolute;
+    left: 50%;
+    width: 400px;
+    transform: translate(-50%, -50%);
+}
+
+a {
+    color: red;
+}
+
+
+
+
+
+
+
+</style>
+
+</html>

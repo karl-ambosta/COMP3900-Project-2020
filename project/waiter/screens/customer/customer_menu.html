@@ -1,0 +1,398 @@
+<!-- Menu Page for Waiter App/Site-->
+<!DOCTYPE html>
+<html>
+<script>
+
+	function hideTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+    		x[i].style.display = "none";
+		}
+	}
+
+	function changeType(name) {
+		hideTypes();
+		document.getElementById(name).style.display = "block"
+	}
+
+	function showTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+    		x[i].style.display = "block";
+		}
+    }
+    
+    function addQuantitytoOrder() {
+        // Add to order
+        window.open("customise_item.html", "_self");
+    }
+
+	function openModal(itemName) {
+		var iName = "<div><b>Item Name: </b>" + itemName + "</div><br>";
+		var iDesc = "<div><b>Item Desc: </b></div><br>";
+		var quant = "<div><b>Quantity: </b><input type='number' id='itemQuantity' name='itemQuantity' value='1' min='1' max='10' step='1'/ required=''> </div><br>";
+		var comments = "<div><b>Comments for Chef: </b><br> <textarea type='text' id='chefNotes' name='chefNotes' style='min-width: 100%; border: solid 1px black;' placeholder='Add any notes for the chef. e.g. Add more, less of something'></textarea></div><br><br>";
+
+		document.getElementsByClassName("modal-body")[0].innerHTML = iName + iDesc + quant + comments;
+	}
+
+</script>
+
+	<body>
+		<head>
+			<meta name="viewport" content="width=device-width">
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+			<title>Waiter - Order from Menu</title>
+        </head>
+        
+		<div class="title">Menu</div>
+
+		<br>
+
+		<div class="container">
+			<div class="menu">
+				<h3 class="sidebar_text" align="center">Filter by:</h3>
+				<div class="category_cont" align="center">
+					<a class="category" href="#"  onclick="showTypes()">All</a>
+				</div>
+				<hr>
+				<div class="category_cont" align="center">
+					<a class="category" href="#"  onclick="changeType('breakfast')">Breakfast</a>
+				</div>
+				<hr>
+				<div class="category_cont" align="center">
+					<a class="category" href="#" onclick="changeType('lunch')">Lunch</a>
+				</div>
+				<hr>
+				<div class="category_cont" align="center">
+					<a class="category" href="#" onclick="changeType('dinner')">Dinner</a>
+				</div>
+				<hr>
+				<div class="category_cont" align="center">
+					<a class="category" href="#" onclick="changeType('specials')">Specials</a>
+				</div>
+				<hr>
+				<div class="category_cont" align="center">
+					<button type="button" class="btn btn-danger btn-lg">Call Waiter</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="container" style="margin-left: 150px;"> 
+
+			<div class="items" id="breakfast">
+				<div class="row">
+					<div class="col"> <!-- ITEM 1 -->
+						<div class="border">
+							<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+							<div class="item_text">
+								<h4>Breakfast 1</h4>
+								<p>Description of item</p>
+							</div>
+							<div class="price_text">
+								<h4>$Price</h4>
+							</div>
+							<div class="addButton">
+								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Breakfast 1')" data-toggle="modal" data-target="#myModal" >Add to Order</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col"> <!-- ITEM 2 -->
+						<div class="border">
+							<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+							<div class="item_text">
+								<h4>Breakfast 2</h4>
+								<p>Description of item</p>
+							</div>
+							<div class="price_text">
+								<h4>$Price</h4>
+							</div>
+							<div class="addButton">
+								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Breakfast 2')" data-toggle="modal" data-target="#myModal">Add to Order</button>
+							</div>
+						</div>
+					</div>
+					<br>
+				</div>
+
+				<div class="row">
+					<div class="col"> <!-- ITEM 3 -->
+						<div class="border">
+							<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+							<div class="item_text">
+								<h4>Breakfast 3</h4>
+								<p>Description of item</p>
+							</div>
+							<div class="price_text">
+								<h4>$Price</h4>
+							</div>
+							<div class="addButton">
+								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Breakfast 3')" data-toggle="modal" data-target="#myModal">Add to Order</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col"> <!-- ITEM 4 -->
+						<div class="border">
+							<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+							<div class="item_text">
+								<h4>Breakfast 4</h4>
+								<p>Description of item</p>
+							</div>
+							<div class="price_text">
+								<h4>$Price</h4>
+							</div>
+							<div class="addButton">
+								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Breakfast 4')" data-toggle="modal" data-target="#myModal">Add to Order</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br>
+			</div>
+
+			<div class="items" id="lunch">
+				<div class="row">
+					<div class="col"> <!-- ITEM 1 -->
+						<div class="border">
+							<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+							<div class="item_text">
+								<h4>Lunch 1</h4>
+								<p>Description of item</p>
+							</div>
+							<div class="price_text">
+								<h4>$Price</h4>
+							</div>
+							<div class="addButton">
+								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Lunch 1')" data-toggle="modal" data-target="#myModal">Add to Order</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col"> <!-- ITEM 2 -->
+						<div class="border">
+							<img class="thumbnail zoom" src="" align="left" width="100" height="100">
+							<div class="item_text">
+								<h4>Lunch 2</h4>
+								<p>Description of item</p>
+							</div>
+							<div class="price_text">
+								<h4>$Price</h4>
+							</div>
+							<div class="addButton">
+								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Lunch 2')" data-toggle="modal" data-target="#myModal">Add to Order</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br>
+			</div>
+			
+
+			<div class="items" id="dinner">
+				<div class="row">
+					<div class="col"> <!-- ITEM 1 -->
+						<div class="border">
+							<img class="thumbnail zoom" src="" align="left" width="100" height="100">
+							<div class="item_text">
+								<h4>Dinner 1</h4>
+								<p>Description of item</p>
+							</div>
+							<div class="price_text">
+								<h4>$Price</h4>
+							</div>
+							<div class="addButton">
+								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Dinner 1')" data-toggle="modal" data-target="#myModal">Add to Order</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col"> <!-- ITEM 2 -->
+						<div class="border">
+							<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+							<div class="item_text">
+								<h4>Dinner 2</h4>
+								<p>Description of item</p>
+							</div>
+							<div class="price_text">
+								<h4>$Price</h4>
+							</div>
+							<div class="addButton">
+								<button id="dinner2" type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Dinner 2')" data-toggle="modal" data-target="#myModal">Add to Order</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br>
+			</div>
+
+
+			<div class="items" id="specials">
+				<div class="col" style="font-family: 'Courgette', cursive; font-size: 25px; color: white;">No specials available for now</div>
+			</div>
+		</div>					
+
+		<!-- The Modal -->
+		<div class="modal" id="myModal">
+			<div class="modal-dialog">
+			<div class="modal-content">
+		
+				<!-- Modal Header -->
+				<div class="modal-header">
+				<h4 class="modal-title">Customise Item</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+		
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div class="itemName">Item Name: </div><br>
+					<div class="_quantity">Quantity: </div><br>
+					<div class="comments">Comments to Chef: </div><br>
+				</div>
+		
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-lg btn-primary" data-dismiss="modal" onclick="window.open('new_order.html', '_self')">Add to Order</button>
+				</div>
+			</div>
+			</div>
+		</div>
+
+	</body>
+
+<style type="text/css">
+body {
+	background-color: #6f42c1;
+}
+
+.title {
+	font-family: 'Courgette', cursive;
+	font-size: 75px;
+	color: white;
+	position: relative;
+	margin-top: 5%;
+	margin-left: 250px;
+	text-shadow: 2px 2px grey;
+}
+
+.menu {
+	position: fixed;
+	left: 2%;
+	top: 15%;
+	border-radius: 5px;
+	background-color: grey;
+	padding: 5px;
+}
+
+.container {
+	position: relative;
+	padding: 5px;
+	margin-left: 200px;
+}
+
+.column {
+	padding: 5px;
+	border-radius: 5px;
+	width: 50%;
+}
+
+.border {
+	border-radius: 5px;
+	background-color: white;
+	padding: 5px;
+	height: 125px;
+	width: 400px;
+	margin: auto;
+}
+
+.sidebar_text {
+	font-family: 'Courgette', cursive;
+	font-size: 30px;
+	text-decoration: underline;
+}
+
+.category {
+	font-family: 'Courgette', cursive;
+	font-size: 30px;
+	color: white;
+}
+
+.category:hover {
+	color:red;
+}
+
+.item_text {
+	margin-left: 7em;
+}
+
+.price_text {
+	position: relative;
+	margin-top: -20%;
+	margin-left: 80%;
+}
+
+.addButton {
+	position: absolute;
+	top: 58%;
+	left: 35%;
+
+}
+
+.modal-backdrop {
+    opacity:75% !important;
+	height: 100%;
+	width: 100%;
+}
+
+/**THE SAME CSS IS USED IN ALL 3 DEMOS**/    
+/**gallery margins**/  
+ul.gallery{    
+margin-left: 3vw;     
+margin-right:3vw;  
+}    
+
+.zoom {      
+-webkit-transition: all 0.35s ease-in-out;    
+-moz-transition: all 0.35s ease-in-out;    
+transition: all 0.35s ease-in-out;     
+cursor: -webkit-zoom-in;      
+cursor: -moz-zoom-in;      
+cursor: zoom-in;  
+}     
+
+.zoom:hover,  
+.zoom:active,   
+.zoom:focus {
+/**adjust scale to desired size, 
+add browser prefixes**/
+-ms-transform: scale(2.5);    
+-moz-transform: scale(2.5);  
+-webkit-transform: scale(2.5);  
+-o-transform: scale(2.5);  
+transform: scale(2.5);    
+position:relative;      
+z-index:100;  
+}
+
+/**To keep upscaled images visible on mobile, 
+increase left & right margins a bit**/  
+@media only screen and (max-width: 768px) {   
+ul.gallery {      
+margin-left: 15vw;       
+margin-right: 15vw;
+}
+
+/**TIP: Easy escape for touch screens,
+give gallery's parent container a cursor: pointer.**/
+.DivName {cursor: pointer}
+}
+
+</style>
+</html>

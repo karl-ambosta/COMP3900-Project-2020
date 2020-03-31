@@ -1,0 +1,307 @@
+<!-- Order Information Page for Waiter/App/Site -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="text/javascript" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+        <link rel="application/javascript" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+        <title>Waiter - Order # Information</title>
+    </head>
+
+<script>
+    
+</script>
+
+    <body>
+        <div class="title">Order Information</div>
+
+        <!-- Order Progress Bar -->
+        <div class="container px-1 py-5 mx-auto" style="width: 100%;">
+            
+            <div class="card" >
+                <div class="row d-flex justify-content-between px-3 top">
+                    <div class="d-flex">
+                        <h5>ORDER <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
+                    </div>
+                    <div class="d-flex flex-column text-sm-right">
+                        <p class="mb-0">Expected Arrival: <span class="font-weight-bold">12.40 pm</span></p>
+                        <p>Order Placed at: <span class="font-weight-bold">12:30 pm</span></p>
+                    </div>
+                </div> <!-- Add class 'active' to progress -->
+                <div class="row d-flex justify-content-center">
+                    <div class="col-12">
+                        <ul id="progressbar" class="text-center">
+                            <li class="active step0"></li>
+                            <li class="active step0"></li>
+                            <li class="active step0"></li>
+                            <li class="step0"></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row justify-content-between top">
+                    <div class="row d-flex icon-content"> <img class="icon" src="../../pictures/order_processed.png">
+                        <div class="d-flex flex-column">
+                            <p class="font-weight-bold">1. Order<br>Processed</p>
+                        </div>
+                    </div>
+                    <div class="row d-flex icon-content"> <img class="icon" src="../../pictures/cooking_icon.png">
+                        <div class="d-flex flex-column">
+                            <p class="font-weight-bold">2. Order<br>Cooking</p>
+                        </div>
+                    </div>
+                    <div class="row d-flex icon-content"> <img class="icon" src="../../pictures/served_icon.png">
+                        <div class="d-flex flex-column">
+                            <p class="font-weight-bold">3. Serving<br>Order</p>
+                        </div>
+                    </div>
+                    <div class="row d-flex icon-content"> <img class="icon" src="../../pictures/order_finish.png">
+                        <div class="d-flex flex-column">
+                            <p class="font-weight-bold">4. Order<br>Served</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons" style="text-align: center;">
+            <button class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="history.back()">Back to Orders</button>
+            <button class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="callWaiter()">Call Waiter</button>
+        </div>
+        
+        <hr>
+        <div class="container" style="overflow-x: auto;">          
+            <table class="table table-borderless table-hover display nowrap">
+              <thead>
+                <tr>
+                  <th nowrap>Item Name</th>
+                  <th>Quantity</th>
+                  <th nowrap>Notes for Chef</th>
+                  <th nowrap>Price per Item</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td nowrap>Item #1</td>
+                    <td>1</td>
+                    <td>Extra Chilli</td>
+                    <td nowrap>$2.50</td>
+                </tr>
+                <tr>
+                    <td nowrap>Item #2</td>
+                    <td>1</td>
+                    <td>No Tomato</td>
+                    <td nowrap>$3.75</td>
+                </tr>
+                <tr>
+                    <td v>Item #3</td>
+                    <td>2</td>
+                    <td>No Peanuts</td>
+                    <td nowrap>$22.00</td>
+                </tr>
+                <tr>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td nowrap colspan="1"><b>Order SubTotal</b></td>
+                    <td>$---</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td nowrap colspan="1"><b>GST/Tax</b></td>
+                    <td nowrap>$---</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td nowrap colspan="1"><b>Discounts</b></td>
+                    <td nowrap>$---</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td nowrap colspan="1"><b>Total</b></td>
+                    <td nowrap>$---</td>
+                </tr>
+              </tbody>
+            </table>
+
+          
+    </body>
+
+<style>
+body {
+    color: #000;
+    overflow-x: hidden;
+    height: 100%;
+    background-color: #6f42c1;
+    background-repeat: no-repeat
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    margin-top: 5%;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px black;
+}
+
+.table {
+    background-color: #ECEFF1;
+    border-radius: 10px;
+    
+}
+
+.buttons {
+    width: 100%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.button {
+    top: 2%;
+    left: 9%;
+    position: absolute;
+    margin-top: 80px;
+    margin-left: 80px;
+}
+
+.button2 {
+    top: 2%;
+    right: 9%;
+    position: absolute;
+    margin-top: 80px;
+    margin-right: 80px;
+}
+
+
+.card {
+    z-index: 0;
+    background-color: #ECEFF1;
+    padding-bottom: 10px;
+    margin-top: 90px;
+    border-radius: 10px;
+}
+
+.top {
+    padding-top: 10px;
+    padding-left: 13% !important;
+    padding-right: 13% !important
+}
+
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    color: #455A64;
+    padding-left: 0px;
+    margin-top: 30px;
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 13px;
+    width: 25%;
+    float: left;
+    position: relative;
+    font-weight: 400
+}
+
+#progressbar .step0:before {
+    font-family: FontAwesome;
+    content: "\f10c";
+    color: #fff
+}
+
+#progressbar li:before {
+    width: 40px;
+    height: 40px;
+    line-height: 45px;
+    display: block;
+    font-size: 20px;
+    background: #C5CAE9;
+    border-radius: 50%;
+    margin: auto;
+    padding: 0px
+}
+
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 12px;
+    background: #C5CAE9;
+    position: absolute;
+    left: 0;
+    top: 16px;
+    z-index: -1
+}
+
+#progressbar li:last-child:after {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: absolute;
+    left: -50%
+}
+
+#progressbar li:nth-child(2):after,
+#progressbar li:nth-child(3):after {
+    left: -50%
+}
+
+#progressbar li:first-child:after {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    position: absolute;
+    left: 50%
+}
+
+#progressbar li:last-child:after {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px
+}
+
+#progressbar li:first-child:after {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+    background: #651FFF
+}
+
+#progressbar li.active:before {
+    font-family: FontAwesome;
+    content: "\f00c"
+}
+
+.icon {
+    width: 60px;
+    height: 60px;
+}
+
+.icon-content {
+    padding-bottom: 10px;
+    width: 90px;
+}
+
+.flex-column {
+    margin-left: 5px;
+}
+
+@media screen and (max-width: 992px) {
+    .icon-content {
+        width: 50%
+    }
+}
+
+</style>
+
+</html>

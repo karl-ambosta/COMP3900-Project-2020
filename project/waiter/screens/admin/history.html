@@ -1,0 +1,68 @@
+<!-- Management Dashboard -->
+<!DOCTYPE html>
+<html>
+    <script>
+        function logout() {
+            window.location.href='login.html'
+        }
+    </script>
+<head>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+    <title>Management - Restauraunt History</title>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+        <img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+        <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="menu_edit.html" >Edit Menu</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link disabled" href="history.html">Restauraunt History<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="old_items.html">Old Menu Items</a>
+                </li>
+            </ul>
+            <button class="btn btn-outline-success my-2 my-sm-0" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="title">Restaurant History</div>
+
+    <div class="container">
+        Things that can be added here: <br>
+            - Graph of total earnings for past time periods (past month, year, etc)  <- can possibly be done on dashboard graph<br>
+            - History of purchases for company <br>
+    </div>
+
+</body>
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 2%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+</style>
+</html>
