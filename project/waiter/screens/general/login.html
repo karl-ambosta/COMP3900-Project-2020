@@ -7,12 +7,13 @@
 	}
 
 	function toCustomer() {
-		window.open("customer.html", "_self");
+		document.getElementById('loginForm').action = "../customer/customer.html"
 	}
 
 </script>
 	<head>
 		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" type="text/css" href="login.css">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -20,79 +21,77 @@
 		<title>Waiter - Login</title>
 	</head>
 
-	<body>
-		<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background-color:#6f42c1;">
-			<img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
-			<a class="navbar-brand" style="color:white">Waiter</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<button class="btn btn-outline-success my-2 my-sm-0" onclick="goBack()">Back</button>
+	<body class="text-center">
+		<form id="loginForm" class="form-signin" onsubmit="toCustomer()">
+			<img class="mb-4" src="../../pictures/logo_transp.png" alt="" width="72" height="72">
+			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+			<label for="inputEmail" class="sr-only">Email address</label>
+			<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+			<label for="inputPassword" class="sr-only">Password</label>
+			<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+			<div class="checkbox mb-3">
+			<label>
+				<input type="checkbox" value="remember-me"> Remember me
+			</label>
 			</div>
-		</nav>
-
-		<br>
-
-		<div class="container">
-			<form class="sign_in" action="customer.html">
-				<div class="text-center mb-4">
-					<img class="mb-4" src="../../pictures/logo_transp.png" alt="" width="72" height="72">
-					<h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
-				</div>
-				<div class="col-xs-4">
-					<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-				</div>
-				<br>
-				<div class="form-label-group">
-					<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-				</div>
-				<br>
-				<div class="checkbox mb-3" align="center">
-					<label>
-						<input type="checkbox" value="remember-me"> Remember me
-					</label>
-				</div>
-				<button class="btn btn-lg btn-primary btn-block" type="submit" onclick="toCustomer()">Sign in</button>
-			</form>
-		</div>
-
-		
-  
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			<p class="mt-5 mb-3 text-info">© 2017-2018</p>
+		</form>
 
 </body>
-
-<style type="text/css">
+<style>
+html,
+body {
+    height: 100%;
+}
 
 body {
-	background-image: url("../pictures/bkg-repeat.png");
-	background-size: cover;
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -ms-flex-align: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-image: url(../../pictures/bkg-repeat.png);
 }
 
-.sign_in {
-	align-content: center;
-	font-family: 'Courgette', cursive; 
-	font-style: normal; 
-	font-variant: normal; 
-	font-weight: 700;
-	line-height: 26.4px;
-	position: relative;
-	color: white;
-	text-shadow: 2px 2px black;
+.form-signin {
+	background-color: rgba(128, 128, 128, 0.75);
+    color: white;
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+	margin: 0 auto;
+	border-radius: 10px;
 }
-
-.container {
-	background-color: rgba(102, 102, 102, 0.75);
-	width: 300px;
-	border-radius: 25px;
-	padding: 10px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+.form-signin .checkbox {
+    font-weight: 400;
 }
-
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
 </style>
 
 </html>
