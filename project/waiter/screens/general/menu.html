@@ -1,38 +1,16 @@
 <!-- Menu Page for Waiter App/Site-->
 <!DOCTYPE html>
 <html>
-<script>
-	function hideTypes() {
-		var x = document.getElementsByClassName("items");
-		var i;
-		for (i = 0; i < x.length; i++) {
-    		x[i].style.display = "none";
-		}
-	}
-
-	function changeType(name) {
-		hideTypes();
-		document.getElementById(name).style.display = "block"
-		document.getElementById("info").style.display = "none"
-	}
-
-	function toLogin() {
-		window.location.href='login.html'
-	}
-
-	
-</script>
-
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<title>Waiter - Menu</title>
+	</head>
 	<body>
-		<head>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-			<title>Waiter - Menu</title>
-		</head>
-
 		<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background-color:#6f42c1; width: 100%;">
 			<img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
 			<a class="navbar-brand" style="color:white">Waiter</a>
@@ -57,11 +35,57 @@
 		</nav>
 		
 			<div class="title" style="text-align: center;">Menu</div>
-
 			
-	
-			<div class="container"> 
-				<div class="category_title">Breakfast</div>
+		<!--	
+			<div id="app">
+				<template v-for="t in types">
+					<p style="color: white;">{{t.name }}</p>
+					<p v-for="item in itemsOfType(t.name)" style="color: white;">
+						{{ item }}
+					</p>
+				</template>
+
+				-->
+			</div>
+			
+			<div class="container">
+				<div id="app">
+					<template v-for="t in types">
+						<div class="category_title">{{ t.name }}</div>
+						<template v-for="(item,index) in itemsOfType(t.name)">
+							<template v-if="index % 2 == 0">
+								<div class="row">
+									<div class="col">
+										<div class="border">
+											<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+											<div class="item_text">
+												<h5>{{ item.name }}</h5>
+												<p>{{ item.description }}</p>
+												<h6>${{ item.price }}</h6>
+											</div>
+										</div>
+									</div>
+							</template>
+							<div v-else>
+								<div class="col">
+									<div class="border">
+										<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+										<div class="item_text">
+											<h5>{{ item.name }}</h5>
+											<p>{{ item.description }}</p>
+											<h6>${{ item.price }}</h6>
+										</div>
+									</div>
+								</div>
+							</div>
+							</div>
+						</template>
+						<br>
+					</template>
+				</div>
+			</div>
+				
+			<!--
 					<div class="row">
 						<div class="col">
 							<div class="border">
@@ -166,12 +190,66 @@
 	
 
 			</div>
-			
+		-->
 	</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+	var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+          itemList: '',
+		  items: [
+			  { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
+			  { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
+			  { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
+			  { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
+			  { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
+			  { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
+		  ],
+		  types: [
+			  {name: 'Breakfast'},
+			  {name: 'Lunch'},
+			  {name: 'Dinner'}
+		  ]
+        },
+		computed: {
+						
+		},
+		methods: {
+			itemsOfType: function(type) {
+				return this.items.filter(function(item) {
+					if(item.category == type) {
+						return item;
+					};
+				})
+			}
+		}
+      })
+	function hideTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "none";
+		}
+	}
+
+	function changeType(name) {
+		hideTypes();
+		document.getElementById(name).style.display = "block"
+		document.getElementById("info").style.display = "none"
+	}
+
+	function toLogin() {
+		window.location.href='login.html'
+	}
+	
+</script>
 
 <style type="text/css">
 body {
-	background-image: url("../pictures/menu-bg.jpg");
+	background-image: url("../../pictures/menu-bg.jpg");
 }
 
 .title {
@@ -195,6 +273,7 @@ body {
 .container {
 	position: relative;
 	padding: 10px;
+	width: 50%;
 }
 
 .row {
@@ -207,7 +286,7 @@ body {
 	border-radius: 5px;
 	background-color: white;
 	padding: 5px;
-	height: 125px;
+	height: 113px;
 }
 
 .sidebar_text {
