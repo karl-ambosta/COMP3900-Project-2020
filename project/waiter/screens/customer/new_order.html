@@ -8,6 +8,78 @@
         <title>Waiter - New Order</title>
     </head>
 
+    <body>
+        <div class="title">Create Order</div>
+
+        <div class="container">
+            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="addFromMenu()">Add To Order</button>
+            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="finishOrder()">Finish Order</button>
+        </div>
+        
+        
+        <br>
+            
+        <div id="app">
+            <div class="container" style="overflow-x:auto;">          
+                <table class="table table-borderless table-hover display nowrap">
+                    <thead>
+                        <tr>
+                            <th nowrap>Item Name:</th>
+                            <th nowrap>Quantity</th>
+                            <th nowrap>Notes for Chef</th>
+                            <th nowrap>Price per Item</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-for="item in itemList">
+                            <tr>
+                                <td nowrap>{{ item.itemName }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td nowrap>{{ item.notes }}</td>
+                                <td nowrap>${{ item.price.toFixed(2) }}</td>
+                            </tr>
+                        </template>
+                </tbody>
+                </table>
+            </div>
+
+            <div class="container">          
+                <table class="table table-borderless table-hover" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th colspan="3" style="text-align: center;"><h4>Pricing</h4></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b><i>SubTotal</i></b></td>
+                            <td><b>${{ orderTotals.toFixed(2) }}</b></td  >
+                        </tr>
+                        <tr>
+                        <td><b><i>GST/Tax</i></b></td>
+                        <td><b>${{ GSTcalc.toFixed(2) }}</b></td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Discounts</i></b></td>
+                            <td><b>${{ getDiscounts.toFixed(2) }}</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Billing Total</i></b></td>
+                            <td><b>${{ finalTotal.toFixed(2) }}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </body>
+
+    
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
     function addFromMenu() {
         window.open("customer_menu.html", "_self");
@@ -21,54 +93,42 @@
     function callWaiter() {
         // call waiter
     }
+
+    var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            itemList: [
+                {itemName: "item1", quantity: 1, notes: "Please make fresh", price: 2.50},
+                {itemName: "item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
+                {itemName: "item3", quantity: 2, notes: "No peanuts", price: 7.00},
+                {itemName: "item4", quantity: 6, notes: "Extra chilli", price: 3.50},
+            ]
+        },
+        computed: {
+            orderTotals: function() {
+                var total = 0
+                for(i = 0; i < this.itemList.length; i++) {
+                    total = total + this.itemList[i].price * this.itemList[i].quantity 
+                }
+                return total
+            },
+            GSTcalc: function() {
+                return 0.10 * this.orderTotals
+            },
+            getDiscounts: function() {
+                return 0.50 * 1
+            },
+            finalTotal: function() {
+                var total = this.orderTotals + this.GSTcalc - this.getDiscounts
+                return total
+            }
+        }
+        
+    
+    })
+
 </script>
-
-    <body>
-        <div class="title">Create Order</div>
-
-        <div class="container">
-            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="addFromMenu()">Add To Order</button>
-            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="finishOrder()">Finish Order</button>
-        </div>
-        
-        
-        <br>
-            
-
-        <div class="container" style="overflow-x:auto;">          
-            <table class="table table-borderless table-hover display nowrap">
-              <thead>
-                <tr>
-                  <th nowrap>Item Name:</th>
-                  <th nowrap>Quantity</th>
-                  <th nowrap>Notes for Chef</th>
-                  <th nowrap>Price per Item</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                    <td nowrap>Item #1</td>
-                    <td>1</td>
-                    <td nowrap>Extra Chilli</td>
-                    <td nowrap>$2.50</td>
-                </tr>
-                <tr>
-                    <td nowrap>Item #2</td>
-                    <td>1</td>
-                    <td nowrap>No Tomato</td>
-                    <td nowrap>$3.75</td>
-                </tr>
-                <tr>
-                    <td nowrap>Item #3</td>
-                    <td>2</td>
-                    <td nowrap>-</td>
-                    <td nowrap>$22.00</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-    </body>
 
 <style>
 body {

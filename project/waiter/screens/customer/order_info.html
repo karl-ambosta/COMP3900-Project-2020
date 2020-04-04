@@ -11,33 +11,50 @@
         <title>Waiter - Order # Information</title>
     </head>
 
-<script>
-    
-</script>
-
     <body>
         <div class="title">Order Information</div>
 
         <!-- Order Progress Bar -->
-        <div class="container px-1 py-5 mx-auto" style="width: 100%;">
-            
-            <div class="card" >
+    <div id="app" style="width: 100%;">
+        <div class="container px-1 py-5 mx-auto">
+                        
+            <div class="card">
                 <div class="row d-flex justify-content-between px-3 top">
                     <div class="d-flex">
-                        <h5>ORDER <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
+                        <h5>ORDER <span class="text-primary font-weight-bold">#{{ orderNumber }}</span></h5>
                     </div>
                     <div class="d-flex flex-column text-sm-right">
-                        <p class="mb-0">Expected Arrival: <span class="font-weight-bold">12.40 pm</span></p>
-                        <p>Order Placed at: <span class="font-weight-bold">12:30 pm</span></p>
+                        <p class="mb-0">Expected Arrival: <span class="font-weight-bold">{{ getTimes[1] }}</span></p>
+                        <p>Order Placed at: <span class="font-weight-bold">{{ getTimes[0] }}</span></p>
                     </div>
                 </div> <!-- Add class 'active' to progress -->
                 <div class="row d-flex justify-content-center">
                     <div class="col-12">
                         <ul id="progressbar" class="text-center">
-                            <li class="active step0"></li>
-                            <li class="active step0"></li>
-                            <li class="active step0"></li>
-                            <li class="step0"></li>
+                            <template v-if="status == 'Processed'">
+                                <li class="active step0"></li>
+                                <li class="step0"></li>
+                                <li class="step0"></li>
+                                <li class="step0"></li>
+                            </template>
+                            <template v-if="status == 'Cooking'">
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="step0"></li>
+                                <li class="step0"></li>
+                            </template>
+                            <template v-if="status == 'Serving'">
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="step0"></li>
+                            </template>
+                            <template v-if="status == 'Completed'">
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                            </template>
                         </ul>
                     </div>
                 </div>
@@ -64,71 +81,120 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="buttons" style="text-align: center;">
-            <button class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="history.back()">Back to Orders</button>
-            <button class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="callWaiter()">Call Waiter</button>
-        </div>
         
+            
+            <div class="buttons" style="text-align: center;">
+                <button class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="history.back()">Back to Orders</button>
+                <button class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="callWaiter()">Call Waiter</button>
+            </div>
+        </div>
+            
         <hr>
-        <div class="container" style="overflow-x: auto;">          
-            <table class="table table-borderless table-hover display nowrap">
-              <thead>
-                <tr>
-                  <th nowrap>Item Name</th>
-                  <th>Quantity</th>
-                  <th nowrap>Notes for Chef</th>
-                  <th nowrap>Price per Item</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                    <td nowrap>Item #1</td>
-                    <td>1</td>
-                    <td>Extra Chilli</td>
-                    <td nowrap>$2.50</td>
-                </tr>
-                <tr>
-                    <td nowrap>Item #2</td>
-                    <td>1</td>
-                    <td>No Tomato</td>
-                    <td nowrap>$3.75</td>
-                </tr>
-                <tr>
-                    <td v>Item #3</td>
-                    <td>2</td>
-                    <td>No Peanuts</td>
-                    <td nowrap>$22.00</td>
-                </tr>
+
+        <div class="container" style="overflow-x: auto;">
+            <table class="table table-borderless table-hover " style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th style="width: 30%" >Item Name</th>
+                        <th style="width: 5%">Quantity</th>
+                        <th style="width: 50%" >Notes for Chef</th>
+                        <th style="width: 15%" >Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="items in itemList">
+                        <tr>
+                            <td nowrap>{{ items.itemName }}</td>
+                            <td>{{ items.quantity }}</td>
+                            <td>{{ items.notes }}</td>
+                            <td nowrap>${{ items.price.toFixed(2) }} * {{ items.quantity }} = {{ (items.price*items.quantity).toFixed(2) }} </td>
+                        </tr>
+                    </template>
                 <tr>
                     <td colspan="5"></td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
                     <td nowrap colspan="1"><b>Order SubTotal</b></td>
-                    <td>$---</td>
+                    <td>${{ orderTotals.toFixed(2) }}</td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
                     <td nowrap colspan="1"><b>GST/Tax</b></td>
-                    <td nowrap>$---</td>
+                    <td nowrap>${{ GSTcalc.toFixed(2) }}</td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
                     <td nowrap colspan="1"><b>Discounts</b></td>
-                    <td nowrap>$---</td>
+                    <td nowrap>${{ getDiscounts.toFixed(2) }}</td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
                     <td nowrap colspan="1"><b>Total</b></td>
-                    <td nowrap>$---</td>
+                    <td nowrap>${{ finalTotal.toFixed(2) }}</td>
                 </tr>
               </tbody>
             </table>
-
-          
+        </div>
+    </div>
+     
     </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+
+   var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            orderNumber: "00003",
+            orderTime: "13:40",
+            status: "Cooking",
+            itemList: [
+                {itemName: "item1", description: "Description for item1", quantity: 1, notes: "Please make fresh", price: 2.50},
+                {itemName: "item2", description: "Description for item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
+                {itemName: "item3", description: "Description for item3", quantity: 2, notes: "No peanuts", price: 7.00},
+                {itemName: "item4", description: "Description for item4", quantity: 6, notes: "Extra chilli", price: 3.50},
+            ]
+        },
+        computed: {
+            getTimes: function() {
+                var time = moment(this.orderTime, "HH:mm")
+                var timeFormat = time.format('hh:mm A')
+                var expectedTime = time.add(10, 'minutes').format('hh:mm A')
+                return [timeFormat, expectedTime];
+            },
+            orderTotals: function() {
+                var total = 0
+                for(i = 0; i < this.itemList.length; i++) {
+                    total = total + this.itemList[i].total
+                }
+                return total
+            },
+            GSTcalc: function() {
+                return 0.10 * this.orderTotals
+            },
+            getDiscounts: function() {
+                return 0.50 * 1
+            },
+            finalTotal: function() {
+                var total = this.orderTotals + this.GSTcalc - this.getDiscounts
+                return total
+            }
+
+        },
+        methods: {
+			processForm: function() {
+				// send input to database
+      			console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
+    		}
+		}
+    
+    })
+
+</script>
+
 
 <style>
 body {
@@ -154,7 +220,6 @@ body {
 .table {
     background-color: #ECEFF1;
     border-radius: 10px;
-    
 }
 
 .buttons {
@@ -164,7 +229,6 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
 
 .button {
     top: 2%;
@@ -299,6 +363,12 @@ body {
 @media screen and (max-width: 992px) {
     .icon-content {
         width: 50%
+    }
+    .card {
+        width: auto;
+    }
+    .table {
+        width: 100%;
     }
 }
 
