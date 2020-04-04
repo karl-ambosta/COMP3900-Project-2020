@@ -1,12 +1,6 @@
 <!-- Contact Page for Waiter App/Site-->
 <!DOCTYPE html>
 <html>
-<script type="text/javascript">
-	function toLogin() {
-		window.location.href='login.html'
-	}
-</script>
-
 	<body>
 		<head>
 			<meta name="viewport" content="width=device-width">
@@ -14,6 +8,7 @@
 			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+			<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 			<title>Waiter - Home</title>
 		</head>
 
@@ -36,7 +31,9 @@
 						<a class="nav-link disabled" href="#">Contact Us <span class="sr-only">(current)</span> </a>
 					</li>
 				</ul>
-				<button class="btn btn-outline-success my-2 my-sm-0" onclick="toLogin()">Login</button>
+				<button class="btn btn-outline-success my-2 my-sm-0" onclick="toLogin()">Login
+					<span><i class="fas fa-sign-in-alt" aria-hidden="true"></i></span>
+				</button>
 			</div>
 		</nav>
 		
@@ -74,6 +71,7 @@
 
 		<div class="container"> <!-- CONTACT SUBMIT FORM -->
 			<div class="text" style="text-align:center">
+				<br>
 				<h1>Contact Us</h1>
 				<h4>Leave us a message:</h4>
 			</div>
@@ -81,17 +79,17 @@
 				<div class="column">
 					<img src="../../pictures/restaurant.jpeg" style="width:100%">
 				</div>
-				<div class="column">
-					<form> <!-- TRY AND MAKE IT WRITE TO FILE UNTIL DATABASE HAS BEEN ESTABLISHED -->
+				<div id="app" class="column">
+					<form @submit.prevent="processForm"> <!-- TRY AND MAKE IT WRITE TO FILE UNTIL DATABASE HAS BEEN ESTABLISHED -->
 						<label class="text" for="fname">First Name</label>
-						<input class="text"  type="text" id="fname" name="firstname" placeholder="Your name..">
+						<input class="text" v-model="firstName" type="text" id="fname" name="firstname" placeholder="Your name..">
 						<label class="text" for="lname">Last Name</label>
-						<input class="text" type="text" id="lname" name="lastname" placeholder="Your last name..">
+						<input class="text" v-model="lastName" type="text" id="lname" name="lastname" placeholder="Your last name..">
 						<label class="text" for="email">Email</label>
-						<input class="text" type="text" id="email" name="email" placeholder="Your email address..">
+						<input class="text" v-model="email" type="text" id="email" name="email" placeholder="Your email address..">
 						<label class="text" for="subject">Subject</label>
-						<textarea class="text" id="subject" name="subject" placeholder="Write something.." style="height:170px"></textarea>
-						<input class="text" type="submit" value="Submit" onclick="submitResponse()">
+						<textarea class="text" v-model="subject" id="subject" name="subject" placeholder="Write something.." style="height:170px"></textarea>
+						<input class="text" type="submit" value="Submit">
 					</form>
 				</div>
 			</div>
@@ -99,9 +97,35 @@
 
 	</body>
 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+	var app = new Vue ({
+		el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+			firstName: '',
+			lastName: '',
+			email: '',
+			subject: ''
+		},
+		methods: {
+			processForm: function() {
+				// send input to database
+      			console.log({ name: this.firstName + " " + this.lastName, email: this.email, subject: this.subject });
+    		}
+		}
+	})
+
+	function toLogin() {
+		window.location.href='login.html'
+	}
+</script>
+
+
 <style type="text/css">
 body {
-	background-image: url(../pictures/restaurant.jpeg);
+	background-image: url(../../pictures/restaurant.jpeg);
 }
 
 input[type=text], select, textarea {

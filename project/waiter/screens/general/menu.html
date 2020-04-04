@@ -1,38 +1,16 @@
 <!-- Menu Page for Waiter App/Site-->
 <!DOCTYPE html>
 <html>
-<script>
-	function hideTypes() {
-		var x = document.getElementsByClassName("items");
-		var i;
-		for (i = 0; i < x.length; i++) {
-    		x[i].style.display = "none";
-		}
-	}
-
-	function changeType(name) {
-		hideTypes();
-		document.getElementById(name).style.display = "block"
-		document.getElementById("info").style.display = "none"
-	}
-
-	function toLogin() {
-		window.location.href='login.html'
-	}
-
-	
-</script>
-
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+		<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+		<title>Waiter - Menu</title>
+	</head>
 	<body>
-		<head>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-			<title>Waiter - Menu</title>
-		</head>
-
 		<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background-color:#6f42c1; width: 100%;">
 			<img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
 			<a class="navbar-brand" style="color:white">Waiter</a>
@@ -52,126 +30,130 @@
 						<a class="nav-link" href="contact.html">Contact Us</a>
 					</li>
 				</ul>
-				<button class="btn btn-outline-success my-2 my-sm-0"onclick="toLogin()">Login</button>
+				<button class="btn btn-outline-success my-2 my-sm-0" onclick="toLogin()">Login
+					<span><i class="fas fa-sign-in-alt" aria-hidden="true"></i></span>
+				</button>
 			</div>
 		</nav>
 		
-			<div class="title" style="text-align: center;">Menu</div>
+		<div class="title" style="text-align: center;">Menu</div>
 
-			
-	
-			<div class="container"> 
-				<div class="category_title">Breakfast</div>
-					<div class="row">
-						<div class="col">
-							<div class="border">
-								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
-								<div class="item_text">
-									<h5>Breakfast 1</h5>
-									<p>Description of item</p>
-									<h6>$Price</h6>
+		<div class="container">
+			<div id="app">
+				<template v-for="t in types">
+					<div class="category_title">{{ t.name }}</div>
+					<template v-for="(item,index) in itemsOfType(t.name)">
+						<div class="row">
+							<div class="col">
+								<div class="border">
+									<img id="myImg" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<div class="item_text">
+										<h5>{{ item.name }}</h5>
+										<p>{{ item.description }}</p>
+										<h6>${{ item.price }}</h6>
+									</div>
 								</div>
 							</div>
 						</div>
-	
-						<div class="col">
-							<div class="border">
-								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
-								<div class="item_text">
-									<h5>Breakfast 2</h5>
-									<p>Description of item</p>
-									<h6>$Price</h6>
-								</div>
-							</div>
-						</div>
-						<br>
-					</div>
-	
-					<div class="row">
-						<div class="col">
-							<div class="border">
-								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
-								<div class="item_text">
-									<h5>Breakfast 3</h5>
-									<p>Description of item</p>
-									<h6>$Price</h6>
-								</div>
-							</div>
-						</div>
-	
-						<div class="col">
-							<div class="border">
-								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
-								<div class="item_text">
-									<h5>Breakfast 4</h5>
-									<p>Description of item</p>
-									<h6>$Price</h6>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<hr><div class="category_title">Lunch</div><br>
-				
-					<div class="row">
-						<div class="col">
-							<div class="border">
-								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
-								<div class="item_text">
-									<h5>Lunch 1</h5>
-									<p>Description of item</p>
-									<h6>$Price</h6>
-								</div>
-							</div>
-						</div>
-	
-						<div class="col"> 
-							<div class="border">
-								<img class="thumbnail zoom" src="" align="left" width="100" height="100">
-								<div class="item_text">
-									<h5>Lunch 2</h5>
-									<p>Description of item</p>
-									<h6>$Price</h6>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<hr><div class="category_title">Dinner</div><br>
-									
-					<div class="row">
-						<div class="col">
-							<div class="border">
-								<img class="thumbnail zoom" src="" align="left" width="100" height="100">
-								<div class="item_text">
-									<h5>Dinner 1</h5>
-									<p>Description of item</p>
-									<h6>$Price</h6>
-								</div>
-							</div>
-						</div>
-	
-						<div class="col"> 
-							<div class="border">
-								<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
-								<div class="item_text">
-									<h5>Dinner 2</h5>
-									<p>Description of item</p>
-									<h6>$Price</h6>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-	
-
+					</template>
+					<br>
+				</template>
 			</div>
-			
+		</div>
+
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+
+			<!-- The Close Button -->
+			<span class="close">&times;</span>
+		
+			<!-- Modal Content (The Image) -->
+			<img class="modal-content" id="img01">
+		
+			<!-- Modal Caption (Image Text) -->
+			<div id="caption"></div>
+  		</div>
+
 	</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+	var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+		  items: [
+			  // get set of items here 
+			  { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
+			  { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
+			  { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
+			  { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
+			  { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
+			  { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
+		  ],
+		  types: [
+			  // get set of categories here
+			  {name: 'Breakfast'},
+			  {name: 'Lunch'},
+			  {name: 'Dinner'}
+		  ]
+        },
+		methods: {
+			itemsOfType: function(type) {
+				return this.items.filter(function(item) {
+					if(item.category == type) {
+						return item;
+					};
+				})
+			}
+		}
+      })
+	/*
+	function hideTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "none";
+		}
+	}
+
+	function changeType(name) {
+		hideTypes();
+		document.getElementById(name).style.display = "block"
+		document.getElementById("info").style.display = "none"
+	}
+	*/
+
+	function toLogin() {
+		window.location.href='login.html'
+	}
+
+	// Get the modal
+	var modal = document.getElementById("myModal");
+
+	// Get the image and insert it inside the modal - use its "alt" text as a caption
+	var img = document.getElementById("myImg");
+	var modalImg = document.getElementById("img01");
+	var captionText = document.getElementById("caption");
+	img.onclick = function(){
+		modal.style.display = "block";
+		modalImg.src = this.src;
+		captionText.innerHTML = this.alt;
+	}
+
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
+
+	// When the user clicks on <span> (x), close the modal
+	span.onclick = function() {
+		modal.style.display = "none";
+	}
+	
+</script>
 
 <style type="text/css">
 body {
-	background-image: url("../pictures/menu-bg.jpg");
+	background-image: url("../../pictures/menu-bg.jpg");
 }
 
 .title {
@@ -183,18 +165,10 @@ body {
 	text-shadow: 2px 2px grey;
 }
 
-.menu {
-	position: fixed;
-	left: 2%;
-	top: 15%;
-	border-radius: 5px;
-	background-color: grey;
-	padding: 5px;
-}
-
 .container {
 	position: relative;
 	padding: 10px;
+	width: 50%;
 }
 
 .row {
@@ -207,13 +181,7 @@ body {
 	border-radius: 5px;
 	background-color: white;
 	padding: 5px;
-	height: 125px;
-}
-
-.sidebar_text {
-	font-family: 'Courgette', cursive;
-	font-size: 30px;
-	text-decoration: underline;
+	height: 113px;
 }
 
 .category {
@@ -241,6 +209,78 @@ body {
 .price_text {
 	position: absolute;
 
+}
+
+/* Style the Image Used to Trigger the Modal */
+#myImg {
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: relative;
+
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 
@@ -276,10 +316,12 @@ z-index:100;
 
 /**To keep upscaled images visible on mobile, 
 increase left & right margins a bit**/  
-@media only screen and (max-width: 768px) {   
-ul.gallery {      
-margin-left: 15vw;       
-margin-right: 15vw;
+@media only screen and (max-width: 700px) {   
+.container {
+	width: 100%
+}
+.modal-content {
+    width: 100%;
 }
 
 /**TIP: Easy escape for touch screens,

@@ -1,30 +1,14 @@
 <!-- Customer Order Page for Waiter App/Site -->
 <!DOCTYPE html>
 <html>
-
-<script>
-    function viewOrderInfo() {
-        window.open("order_info.html", "_self");
-    }
-
-    function newOrder() {
-        window.open("new_order.html", "_self");
-    }
-
-    function finishOrdering() {
-        window.open("billing.html", "_self");
-    }
-
-    function callWaiter() {
-        // To call waiter
-    }
-</script>
     <head>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
         <title>Waiter - Customer Orders</title>
     </head>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <body>
         <div class="title">Welcome User!</div>
         <br>
@@ -45,36 +29,81 @@
 
         <br><br>
 
-        <div class="container" style="overflow-x:auto;">          
+        <div id="app" class="container" style="overflow-x:auto;">          
             <table class="table table-borderless table-hover display nowrap">
-              <thead>
-                <tr>
-                  <th>Order Info</th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                    <td nowrap>Order #1 - Placed at datetime</td>
-                    <td>Completed</td>
-                    <td nowrap><a class="Order 1" href="#" onclick="viewOrderInfo()">View Order Info</a></td>
-                </tr>
-                <tr>
-                    <td nowrap>Order #2 - Placed at datetime</td>
-                    <td>Cooking</td>
-                    <td nowrap><a class="Order 2" href="#" onclick="viewOrderInfo()">View Order Info</a></td>
-                </tr>
-                <tr>
-                    <td nowrap>Order #3 - Placed at datetime</td>
-                    <td>Recieved</td>
-                    <td nowrap><a class="Order 2" href="#" onclick="viewOrderInfo()">View Order Info</a></td>
-                </tr>
-              </tbody>
+                <thead>
+                    <tr>
+                        <th>Order Info</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="order in orderList">
+                        <tr>
+                            <td nowrap> Order #{{ order.id }} - Placed at {{ convertTime(order.time) }}</td>
+                            <td>{{ order.status }}</td>
+                            <td nowrap><a class="Order 1" href="#" onclick="viewOrderInfo()">View Order Info</a></td>
+                        </tr>
+                    </template>
+                </tbody>
             </table>
           </div>
 
     </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    function viewOrderInfo() {
+        window.open("order_info.html", "_self");
+    }
+
+    function newOrder() {
+        window.open("new_order.html", "_self");
+    }
+
+    function finishOrdering() {
+        window.open("billing.html", "_self");
+    }
+
+    function callWaiter() {
+        // To call waiter
+    }
+
+    var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            // get list of orders here
+            orderList: [
+                {id: '00001', items: [ 
+                                        { name: 'Item 1', description: 'Description for Item1', price: '2.50'}, 
+                                        { name: 'Item 3', description: 'Description for Item3', price: '5.50'}  
+                                    ],
+                    time: '13:40', status: 'Completed'
+                },
+                {id: '00002', items: [ 
+                                        { name: 'Item 2', description: 'Description for Item2', price: '10.00'}, 
+                                        { name: 'Item 4', description: 'Description for Item4', price: '3.00'}  
+                                    ],
+                    time: '14:00', status: 'Cooking'
+                },
+            ]
+        },
+        methods: {
+			processForm: function() {
+				// send input to database
+      			console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
+    		},
+            convertTime: function(timeString) {
+                console.log(timeString)
+                var s = moment(timeString, "HH:mm A").format('hh:mm A')
+                return s;
+            }
+		}
+    
+    })
+
+</script>
 
 <style>
 body {
