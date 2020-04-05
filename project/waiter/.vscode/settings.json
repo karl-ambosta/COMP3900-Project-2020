@@ -1,4 +1,3 @@
 {
-    "git.ignoreLimitWarning": true,
-    "python.dataScience.jupyterCommandLineArguments": []
+    "git.ignoreLimitWarning": true
 }

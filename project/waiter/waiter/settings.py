@@ -37,19 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     'rest_framework',
-    'rest_framework.authtoken',
-    'rest_auth',
-    'rest_auth.registration',
-    'allauth',
-    'allauth.account', 
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
+    'oauth2_provider',
+    'social_django',
+    'rest_framework_social_oauth2',
     'customer',
 ]
-
-SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,10 +121,28 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = { 
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+}
+
+AUTHENTICATION_BACKENDS = (
+   'social_core.backends.facebook.FacebookAppOAuth2',
+   'social_core.backends.facebook.FacebookOAuth2', 
+   'rest_framework_social_oauth2.backends.DjangoOAuth2',
+   'django.contrib.auth.backends.ModelBackend',
+)
 
 SOCIAL_AUTH_FACEBOOK_KEY = '2644917989071874'
 SOCIAL_AUTH_FACEBOOK_SECRET = '7b8ddf38ddaa6bc67800a496eb0f9c55'
