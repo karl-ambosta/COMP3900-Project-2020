@@ -1,17 +1,6 @@
 <!-- Kitchen Previous Orders Page for Waiter App/Site -->
 <!DOCTYPE html>
 <html>
-
-<script>
-    function viewmenu() {
-        window.open("kitchen_menu.html", "_self");
-    }
-
-    function activeorders() {
-        window.open("kitchen_orders.html", "_self");
-    }
-
-</script>
     <head>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -24,56 +13,29 @@
             <button type="button" class="btn btn-lg btn-success" onclick="activeorders()">Active Orders</button>
             <button type="button" class="btn btn-lg btn-primary" onclick="viewmenu()">View Menu</button>
         </div>
-        <div class="container" style="overflow-x:auto;">          
+        <div id="app" class="container" style="overflow-x:auto;">          
             <table class="table table-sm table-borderless table-striped table-hover display nowrap">
               <thead>
                 <tr>
-                  <th style="width: 40%"">Order</th>
+                  <th style="width: 40%">Order</th>
                   <th style="width: 60%">Items</th>
                 </tr>
               </thead>
               <!-- Start of table, dynamic space-->
               <tbody>
-                <tr>
-                    <td nowrap class="align-middle">
-                        Order #1 - Placed at datetime
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 2</li>
-                            <li>Item 3</li>
-                            <li>Item 4</li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td nowrap class="align-middle">
-                        Order #2 - Placed at datetime
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Item 1 - No tomatoes</li>
-                            <li>Item 2 - Remove onion please</li>
-                            <li>Item 3</li>
-                            <li>Item 4</li>
-                            <li>Item 5</li>
-                            <li>Item 6</li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td nowrap class="align-middle">
-                        Order #3 - Placed at datetime
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 2</li>
-                            <li>Item 3</li>
-                        </ul>
-                    </td>
-                </tr>
+                    <template v-for="order in orderList">
+                        <tr>
+                            <td nowrap class="align-middle">Order #{{ order.id }} - Placed at {{ convertTime(order.time) }}</td>
+                            <td>
+                                <ul>
+                                    <template v-for="item in order.itemList">
+                                        <li>{{ item.quantity }} x {{ item.itemName }} - {{ item.notes }}</li>
+                                    </template>
+                                </ul>
+                            </td>
+                        </tr>
+                    </template>
+                
                 <!--
                 Format for dynamic rows
                 <tr>
@@ -94,6 +56,48 @@
           </div>
 
     </body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+    function viewmenu() {
+        window.open("kitchen_menu.html", "_self");
+    }
+
+    function activeorders() {
+        window.open("kitchen_orders.html", "_self");
+    }
+
+    var app = new Vue ({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            orderList: [
+                        { id: '00004', time:'12:20:00', itemList: [ 
+                                                            {itemName: "item1", quantity: 1, notes: "Please make fresh", price: 2.50},
+                                                            {itemName: "item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
+                                                            {itemName: "item3", quantity: 2, notes: "No peanuts", price: 7.00},
+                                                            {itemName: "item4", quantity: 6, notes: "Extra chilli", price: 3.50},
+                                                        ]
+                        },
+                        { id: '00002', time:'17:00:00', itemList: [ 
+                                                            {itemName: "item9", quantity: 1, notes: "Item9 note", price: 1.10},
+                                                            {itemName: "item10", quantity: 2, notes: "Item10 note", price: 4.50},
+                                                            {itemName: "item11", quantity: 2, notes: "Item11 note", price: 7.50},
+                                                            {itemName: "item12", quantity: 6, notes: "Item12 note", price: 4.50},
+                                                        ]
+                        }
+            ]
+        },
+        methods: {
+            convertTime: function(timeString) {
+                var s = moment(timeString, "HH:mm A").format('hh:mm A')
+                return s;
+            },      
+        }
+    })
+
+</script>
+
 
 <style>
 body {
