@@ -3,13 +3,17 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import permissions
-from .serializers import UserSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer
-from .models import MenuItem, MenuCategory, OrderList, OrderRequest
+from .serializers import UserSerializer, UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_framework.decorators import action
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import Http404, HttpResponseBadRequest
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
+from rest_auth.social_serializers import TwitterLoginSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -90,3 +94,22 @@ class OrderRequestViewSet(viewsets.ModelViewSet):
 
     def create(self, request): 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request): 
+        return Response(status=status.HTTP_204_NO_CONTENT)  
+
+class CustomGoogleOAuth2Adapter(GoogleOAuth2Adapter):
+    basic_auth = False
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = CustomGoogleOAuth2Adapter
+    client_class = OAuth2Client  
+
+class TwitterLogin(SocialLoginView):
+    serializer_class = TwitterLoginSerializer
+    adapter_class = TwitterOAuthAdapter
