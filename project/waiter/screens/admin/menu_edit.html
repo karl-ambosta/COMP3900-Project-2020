@@ -371,7 +371,6 @@
                 item[0].category = this.editing.category;
             },
             removeItem: function(itemName) {
-                console.log("removing item: " + itemName)
                 var idx = this.items.findIndex(x => x.name == itemName)
                 this.items.splice(idx, 1)
                 this.isRemove = false
@@ -433,7 +432,6 @@
                 isNew = false
             },
             addNewCategory: function() {
-                console.log("adding category named:" + this.newCategoryName)
                 categoryName = this.newCategoryName
                 this.types.push({name: categoryName})
                 console.log(this.types)
