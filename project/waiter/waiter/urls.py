@@ -17,16 +17,21 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from customer import views
+from django.views.generic.base import TemplateView
 
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet, 'user')
 router.register(r'menuItems', views.MenuItemViewSet, 'menuItem')
 router.register(r'menuCategories', views.MenuCategoryViewSet, 'menuCategories')
+router.register(r'orderList', views.OrderListViewSet, 'orderList')
+router.register(r'orderRequest', views.OrderRequestViewSet, 'orderRequest')
 
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('auth/', include('rest_framework_social_oauth2.urls'))
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/register/', include('rest_auth.registration.urls')),
+    path('rest-auth/facebook/', views.FacebookLogin.as_view(), name='facebook_login')
 ]

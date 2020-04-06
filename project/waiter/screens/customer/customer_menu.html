@@ -47,7 +47,7 @@
 			<template v-for="t in types">
 				<div v-bind:id="t.name" class="items">
 					<div class="category_title">{{ t.name }}</div>
-					<template v-for="(item,index) in itemsOfType(t.name)">
+					<template v-for="item in itemsOfType(t.name)">
 						<div class="row">
 							<div class="col">
 								<div class="border">
@@ -114,7 +114,7 @@
 					<!-- Modal footer -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
-						<button v-on:click="processForm" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal" @click="processForm">Add to Order</button>
+						<button v-on:click="processForm" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal">Add to Order</button>
 					</div>
 				</div>
 			</div>

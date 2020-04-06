@@ -1,15 +1,6 @@
 <!-- Management Dashboard -->
 <!DOCTYPE html>
 <html>
-    <script>
-        function logout() {
-            window.location.href='login.html'
-        }
-
-        function returntoMenu() {
-            // Add Item back to Menu
-        }
-    </script>
 <head>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -47,7 +38,7 @@
 
     <div class="title">Old Menu Items</div>
 
-    <div class="container" style="overflow-x:auto;">          
+    <div id="app" class="container" style="overflow-x:auto;">          
         <table class="table table-sm table-borderless table-striped table-hover display nowrap" style="text-align: center;">
             <thead>
             <tr>
@@ -59,30 +50,16 @@
             </thead>
             <!-- Start of table, dynamic space-->
             <tbody>
-            <tr>
-                <td class="align-middle">Item</td>
-                <td class="align-middle">--------</td>
-                <td class="align-middle">$XXX.XX</td>
-                <td nowrap class="text-center align-middle">
-                    <button id="item1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Add to Menu</button>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-middle">Item</td>
-                <td class="align-middle">--------</td>
-                <td class="align-middle">$XXX.XX</td>
-                <td nowrap class="text-center align-middle">
-                    <button id="item2" type="button" class="btn btn-danger" onclick="returntoMenu('item2')">Add to Menu</button>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-middle">Item</td>
-                <td class="align-middle">--------</td>
-                <td class="align-middle">$XXX.XX</td>
-                <td nowrap class="text-center align-middle">
-                    <button id="item3" type="button" class="btn btn-danger" onclick="returntoMenu('item3')">Add to Menu</button>
-                </td>
-            </tr>
+                <template v-for="item in itemList">
+                    <tr>
+                        <td class="align-middle">{{ item.itemName }}</td>
+                        <td class="align-middle">{{ item.description }}</td>
+                        <td class="align-middle">${{ item.price.toFixed(2) }}</td>
+                        <td nowrap class="text-center align-middle">
+                            <button id="item1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Add to Menu</button>
+                        </td>
+                    </tr>
+                </template>
             </tbody>
         </table>
     </div>
@@ -111,8 +88,40 @@
         </div>
         </div>
     </div>
-
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+    function logout() {
+        window.location.href='login.html'
+    }
+
+    function returntoMenu() {
+        // Add Item back to Menu
+    }
+
+    var app = new Vue ({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            itemList: [ 
+                {itemName: "item1", description: 'Description for Item1', price: 2.50},
+                {itemName: "item2", description: 'Description for Item2', price: 5.50},
+                {itemName: "item3", description: 'Description for Item3', price: 7.00},
+                {itemName: "item4", description: 'Description for Item4', price: 3.50},
+            ]
+        },
+        methods: {
+            convertTime: function(timeString) {
+                var s = moment(timeString, "HH:mm A").format('hh:mm A')
+                return s;
+            },      
+        }
+    })
+
+</script>
+
 <style>
 body {
     background-color: #6f42c1;

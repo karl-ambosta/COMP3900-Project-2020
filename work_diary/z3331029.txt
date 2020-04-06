@@ -25,11 +25,11 @@ Team met and discussed a move from task based sprints to design and conceptual p
 
 Week 5
 
-*notes here*
+Assisted with initial design and planning of front end layout with Karl. Tasked other three with working on authorisation systems. Move team online via MS teams.
 
 Week 6
 
-*notes here*
+Built kitchen, cashier and waiter pages. Followed up on back end teams work. Set out template for final report.
 
 Week 7
 
