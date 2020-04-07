@@ -23,7 +23,7 @@ from django.conf.urls import url
 router = routers.DefaultRouter()
 
 router.register(r'users', views.UserViewSet, 'user')
-router.register(r'user/profile', views.UserProfileViewSet,'userProfile')
+router.register(r'profile', views.UserProfileViewSet,'userProfile')
 router.register(r'menuItems', views.MenuItemViewSet, 'menuItem')
 router.register(r'menuCategories', views.MenuCategoryViewSet, 'menuCategories')
 router.register(r'orderList', views.OrderListViewSet, 'orderList')

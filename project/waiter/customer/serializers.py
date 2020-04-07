@@ -6,14 +6,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = User
-        fields = ('url','username', 'email', 'is_staff')
-
+        fields = ['url','username', 'email', 'is_staff']
 
 class UserProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserProfile
-        fields = ['id','user']
+        fields = '__all__'
+        #fields = ['id','name', 'email','created']
 
 
 class MenuCategorySerializer(serializers.ModelSerializer):
