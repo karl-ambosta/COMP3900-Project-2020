@@ -11,7 +11,8 @@
 
 <body>
     <div class="title2">
-        Orders for ~Restaurant~
+        <h1>Orders for ~Restaurant~</h1>
+        <h5>Waiter View</h5>
     </div>
     <div class="container" style="overflow-x:auto;">   
         <!-- Navbar -->
@@ -42,7 +43,7 @@
                 </thead>
                 <!-- Start of table, dynamic space-->
                 <tbody>
-                    <template v-for="item in items">
+                    <template v-for="(item,index) in items">
                         <tr>
                             <td class="align-middle">
                                 {{ item.tablenumber }}
@@ -54,7 +55,7 @@
                                 {{ item.status }}
                             </td>
                             <td class="text-center align-middle" nowrap>
-                                <button type="button" class="btn btn-success">Completed</button>
+                                <button v-on:click.prevent="rowRemove(index)" type="button" class="btn btn-success">Completed</button>
                             </td>
                         </tr>
                         </template>
@@ -139,6 +140,11 @@
                 { tablenumber: 'Table 4', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
                 { tablenumber: 'Table 12', caller: 'Customer', status: 'Customer requires attention'},
             ],
+        },
+        methods: {
+            rowRemove: function (index) {
+                this.$delete(this.items, index)
+            }
         }
     })
 
