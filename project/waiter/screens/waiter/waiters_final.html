@@ -34,7 +34,7 @@
             <table id="calloutsapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
                 <thead>
                   <tr>
-                    <th style="width: 25%"">Table Number</th>
+                    <th style="width: 25%">Table Number</th>
                     <th style="width: 25%">Caller</th>
                     <th style="width: 25%">Status</th>
                     <th class="text-center" style="width: 25%">Change Status</th>
@@ -42,71 +42,22 @@
                 </thead>
                 <!-- Start of table, dynamic space-->
                 <tbody>
-                  <tr>
-                      <td class="align-middle">
-                          Table 1
-                      </td>
-                      <td class="align-middle">
-                          Kitchen
-                      </td>
-                      <td nowrap class="align-middle">
-                          Order #1 ready for pick up
-                      </td>
-                      <td class="text-center align-middle" nowrap>
-                          <button type="button" class="btn btn-success">Completed</button>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td class="align-middle">
-                          Table 2
-                      </td>
-                      <td class="align-middle">
-                          Customer
-                      </td>
-                      <td nowrap class="align-middle">
-                          Customer requires attention
-                      </td>
-                      <td class="text-center align-middle" nowrap>
-                          <button type="button" class="btn btn-success">Completed</button>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td class="align-middle">
-                          Table 5
-                      </td>
-                      <td class="align-middle">
-                          Customer
-                      </td>
-                      <td nowrap class="align-middle">
-                          Customer requires attention
-                      </td>
-                      <td class="text-center align-middle" nowrap>
-                          <button type="button" class="btn btn-success">Completed</button>
-                      </td>
-                  </tr>
-                  <!--
-                  Format for dynamic rows
-                  <tr>
-                      <td class="align-middle">
-                          Table 1
-                      </td>
-                      <td class="align-middle">
-                          Completed
-                      </td>
-                      <td nowrap class="align-middle">
-                          Order #1 - Placed at datetime
-                          <ul>
-                              <li>Item 1</li>
-                              <li>Item 2</li>
-                              <li>Item 3</li>
-                              <li>Item 4</li>
-                          </ul>
-                      </td>
-                      <td class="text-center align-middle" nowrap>
-                          <button type="button" class="btn btn-success">Delivered</button>
-                      </td>
-                  </tr>
-                  -->
+                    <template v-for="item in items">
+                        <tr>
+                            <td class="align-middle">
+                                {{ item.tablenumber }}
+                            </td>
+                            <td class="align-middle">
+                                {{ item.caller }}
+                            </td>
+                            <td class="align-middle">
+                                {{ item.status }}
+                            </td>
+                            <td class="text-center align-middle" nowrap>
+                                <button type="button" class="btn btn-success">Completed</button>
+                            </td>
+                        </tr>
+                        </template>
                 </tbody>
               </table>
             <hr>
@@ -114,83 +65,29 @@
             <table id="activeordersapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
                 <thead>
                 <tr>
-                    <th style="width: 20%"">Table Number</th>
-                    <th style="width: 20%">Status</th>
-                    <th style="width: 60%">Order Details</th>
+                    <th style="width: 25%">Table Number</th>
+                    <th style="width: 25%">Status</th>
+                    <th style="width: 50%">Order Details</th>
                 </tr>
                 </thead>
                 <!-- Start of table, dynamic space-->
                 <tbody>
-                <tr>
-                    <td class="align-middle">
-                        Table 1
-                    </td>
-                    <td class="align-middle">
-                        Completed
-                    </td>
-                    <td nowrap class="align-middle">
-                        Order #1 - Placed at datetime
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 2</li>
-                            <li>Item 3</li>
-                            <li>Item 4</li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-middle">
-                        Table 2
-                    </td>
-                    <td class="align-middle">
-                        Completed
-                    </td>
-                    <td nowrap class="align-middle">
-                        Order #2 - Placed at datetime
-                        <ul>
-                            <li>Item 1 - comments</li>
-                            <li>Item 2</li>
-                            <li>Item 3</li>
-                            <li>Item 4</li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-middle">
-                        Table 5
-                    </td>
-                    <td class="align-middle">
-                        Completed
-                    </td>
-                    <td nowrap class="align-middle">
-                        Order #3 - Placed at datetime
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 2</li>
-                            <li>Item 3</li>
-                        </ul>
-                    </td>
-                </tr>
-                <!--
-                Format for dynamic rows
-                <tr>
-                    <td class="align-middle">
-                        Table 1
-                    </td>
-                    <td class="align-middle">
-                        Completed
-                    </td>
-                    <td nowrap class="align-middle">
-                        Order #1 - Placed at datetime
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 2</li>
-                            <li>Item 3</li>
-                            <li>Item 4</li>
-                        </ul>
-                    </td>
-                </tr>
-                -->
+                    <template v-for="item in items">
+                        <tr>
+                            <td class="align-middle">
+                                {{ item.tablenumber }}
+                            </td>
+                            <td class="align-middle">
+                                {{ item.status }}
+                            </td>
+                            <td class="align-middle">
+                                Ordered at: {{ item.ordertime }}
+                                <li v-for="dish in item.orderdetails">
+                                    {{ dish }}
+                                </li>
+                            </td>
+                        </tr>
+                        </template>
                 </tbody>
             </table>
         </div>
@@ -214,20 +111,6 @@
                             <td>${{ item.price }}</td>
                         </tr>
                         </template>
-                    <!--
-                    Format for dynamic rows
-                    <tr>
-                        <td>
-                            Breakfast 1
-                        </td>
-                        <td>
-                            Ingredient1, Ingredient2, Ingredient3
-                        </td>
-                        <td>
-                            $XX.XX
-                        </td>
-                    </tr>
-                    -->
                 </tbody>
                 </table>
         </div>
@@ -244,6 +127,39 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
 <script>
+    var calloutsapp = new Vue ({
+        el: '#calloutsapp',
+        delimiters: ['{{', '}}'],
+        data: {
+            items: [
+                // get set of items here 
+                { tablenumber: 'Table 1', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
+                { tablenumber: 'Table 10', caller: 'Customer', status: 'Customer requires attention'},
+                { tablenumber: 'Table 6', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
+                { tablenumber: 'Table 4', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
+                { tablenumber: 'Table 12', caller: 'Customer', status: 'Customer requires attention'},
+            ],
+        }
+    })
+
+    var activeordersapp = new Vue ({
+        el: '#activeordersapp',
+        delimiters: ['{{', '}}'],
+        data: {
+            items: [
+                // get set of items here 
+                { tablenumber: 'Table 1', status: 'Pickup Ready', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
+                { tablenumber: 'Table 2', status: 'Pickup Ready', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
+                { tablenumber: 'Table 3', status: 'Cooking', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
+                { tablenumber: 'Table 4', status: 'Cooking', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
+                { tablenumber: 'Table 5', status: 'Preparing', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
+                { tablenumber: 'Table 6', status: 'Preparing', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
+                { tablenumber: 'Table 7', status: 'Order Received', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
+                { tablenumber: 'Table 8', status: 'Order Received', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
+            ],
+        }
+    })
+
     var menuapp = new Vue ({
         el: '#menuapp',
         delimiters: ['{{', '}}'],
