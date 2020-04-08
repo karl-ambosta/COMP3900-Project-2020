@@ -1,0 +1,17 @@
+Ensure the head meta line matches:
+
+<meta name="viewport" content="width-device-width, initial-scale=1">
+
+
+
+-------------------------------
+
+Paste the following at the start of body:
+
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+intent="WELCOME"
+chat-title="UNSW Cafe"
+agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
+language-code="en"
+></df-messenger>

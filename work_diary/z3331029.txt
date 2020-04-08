@@ -33,7 +33,7 @@ Built kitchen, cashier and waiter pages. Followed up on back end teams work. Set
 
 Week 7
 
-*notes here*
+Reviewed feedback from Ali. Combined kitchen into a single page, combined cashier into a single page, combined waiter into a single page. Investigated additional features including chatbot options.
 
 Week 8
 
