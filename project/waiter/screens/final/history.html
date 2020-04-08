@@ -1,13 +1,8 @@
 <!-- Management Dashboard -->
 <!DOCTYPE html>
 <html>
-    <script>
-        function logout() {
-            window.location.href='login.html'
-        }
-    </script>
 <head>
-    <meta name="viewport" content="width-device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
     <title>Management - Restauraunt History - UNSW Cafe</title>
@@ -48,20 +43,137 @@
 
     <div class="title">Restaurant History</div>
 
-    <div class="container">
-        Things that can be added here: <br>
-            - Graph of total earnings for past time periods (past month, year, etc)  <- can possibly be done on dashboard graph<br>
-            - History of purchases for company <br>
+    
+    <br>
+
+    <div id="app" class="container">
+        
+        <template v-for="p in purchases">
+            <div class="invoice-box">
+                <table cellpadding="0" cellspacing="0">
+                    <tr class="top">
+                        <td colspan="5">
+                            <table>
+                                <tr>
+                                    <td class="title">
+                                        <img src="../../pictures/logo.jpg">
+                                    </td>
+                                    <td>
+                                        Invoice #: {{ p.invoiceNo }}<br>
+                                        Created: {{ parseDate(p.date) }}<br>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    
+                    <tr class="information">
+                        <td colspan="5">
+                            <table>
+                                <tr>
+                                    <td>
+                                        {{ info.name }}<br>
+                                        {{ info.street }}<br>
+                                        {{ info.city }}, {{ info.state }} {{ info.postcode }}
+                                    </td>
+
+                                    <td>
+                                        {{ user.name }}<br>
+                                        {{ user.email }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="heading">
+                        <td nowrap>Item</td>
+                        <td nowrap style="text-align: center;">Description</td>
+                        <td nowrap style="text-align: center;">Rate</td>
+                        <td nowrap style="text-align: center;">Quantity</td>
+                        <td nowrap style="text-align: right;">Price</td>
+                    </tr>
+                    <template v-for="item in p.itemList">
+                        <tr class="item">
+                            <td nowrap>{{ item.name }}</td>
+                            <td nowrap style="text-align: center;">{{ item.description }}</td>
+                            <td nowrap style="text-align: center;">${{ (item.rate*1.00).toFixed(2) }}</td>
+                            <td nowrap style="text-align: center;">{{ item.quantity }}</td>
+                            <td nowrap style="text-align: right;">${{ (item.rate*item.quantity).toFixed(2) }}</td>
+                        </tr>
+                    </template>
+                                    
+                    <tr class="total" colspan="4" style="text-align: right;">
+                        <td colspan="4"></td>
+                        
+                        <td>
+                           Total: ${{ getTotal(p.itemList).toFixed(2) }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <hr>
+        </template>
     </div>
 
+
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+    function logout() {
+        window.location.href='login.html'
+    }
+
+    var app = new Vue ({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            user: {name: 'Manager Name', email: 'manager@manager.com'},
+            info: { name: 'Company Name', street: 'Street Name', city: 'City', state: 'State', postcode: 'Postcode'},
+            purchases: [
+                { invoiceNo: '001', date: '31-03-2020', itemList: [
+                                                            {name: 'Item #1', description: 'description for item', rate: 30.00, quantity: 4},
+                                                            {name: 'Item #2', description: 'description for item', rate: 12.50, quantity: 4},
+                                                            {name: 'Item #3', description: 'description for item', rate: 6.25, quantity: 4},
+                                                            {name: 'Item #4', description: 'description for item', rate: 11.00, quantity: 5}
+                                                        ]
+                },
+                { invoiceNo: '002', date: '04-04-2020', itemList: [
+                                                            {name: 'Item #1', description: 'description for item', rate: 12.50, quantity: 2},
+                                                            {name: 'Item #2', description: 'description for item', rate: 105.00, quantity: 2},
+                                                            {name: 'Item #3', description: 'description for item', rate: 40.00, quantity: 1},
+                                                            {name: 'Item #4', description: 'description for item', rate: 30.00, quantity: 2}
+                                                        ]
+                }, 
+            ]
+        },
+        methods: {
+            parseDate: function(string) {
+                l = moment(string, "DD-MM-YYYY")
+                time = l.format('MMM. D, YYYY')
+                return time
+            },
+            getTotal: function(itemList) {
+                var sum = 0
+                for(i = 0; i < itemList.length; i++) {
+                    sum = sum + (itemList[i].rate*itemList[i].quantity)
+                }
+                return sum
+            }
+        }
+    })
+</script>
+
 <style>
 body {
     background-color: #6f42c1;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
-    font-family: 'Courgette', cursive; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -71,5 +183,100 @@ body {
     text-align: center;
     text-shadow:  2px 2px black;
 }
+
+
+.invoice-box {
+    max-width: 800px;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #eee;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+    font-size: 16px;
+    line-height: 24px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
+    color: #555;
+    background-color: white;
+}
+
+.invoice-box table {
+    width: 100%;
+    line-height: inherit;
+    text-align: left;
+}
+
+.invoice-box table td {
+    padding: 5px;
+    vertical-align: top;
+}
+
+.invoice-box table tr td:nth-child(2) {
+    text-align: right;
+}
+
+.invoice-box table tr.top table td {
+    padding-bottom: 20px;
+}
+
+.invoice-box table tr.top table td.title {
+    font-size: 45px;
+    line-height: 45px;
+    color: #333;
+}
+
+.invoice-box table tr.information table td {
+    padding-bottom: 40px;
+}
+
+.invoice-box table tr.heading td {
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+}
+
+.invoice-box table tr.details td {
+    padding-bottom: 20px;
+}
+
+.invoice-box table tr.item td{
+    border-bottom: 1px solid #eee;
+}
+
+.invoice-box table tr.item.last td {
+    border-bottom: none;
+}
+
+.invoice-box table tr.total td:nth-child(2) {
+    border-top: 2px solid #eee;
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 600px) {
+    .invoice-box table tr.top table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+    
+    .invoice-box table tr.information table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+}
+
+/** RTL **/
+.rtl {
+    direction: rtl;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
+}
+
+.rtl table {
+    text-align: right;
+}
+
+.rtl table tr td:nth-child(2) {
+    text-align: left;
+}
+
 </style>
 </html>
