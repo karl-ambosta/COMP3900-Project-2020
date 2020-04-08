@@ -3,11 +3,10 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width">
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-                <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-                <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
         <title>Management - Menu Edit</title>
     </head>
 <body>
@@ -33,7 +32,9 @@
                     <a class="nav-link" href="old_items.html">Old Menu Items</a>
                 </li>
             </ul>
-            <button class="btn btn-outline-success my-2 my-sm-0" onclick="logout()">Logout</button>
+            <button class="btn btn-outline-light my-2 my-sm-0" onclick="logout()">Logout
+                <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+            </button>
         </div>
     </nav>
 
@@ -261,37 +262,6 @@
             </div>
             </template>
         </template>
-
-        <div class="modal" id="catModal">
-            <div class="modal-dialog">
-            <div class="modal-content">
-                
-                <!-- Modal Header -->
-                <div class="modal-header">
-                <h4 class="modal-title">New Category</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-        
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <form class="itemInfo" @submit.prevent="addNewCategory">
-                        <label for="newCategory">New Category Name: </label>
-                        <input type="text" name="newCategory" id="newCategory" style="width:25%" v-model="newCategoryName"  required=''>
-                    
-
-                </div>
-        
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">Back to Edit</button>
-                    <button v-on:click="addNewCategory" type="submit" class="btn btn-lg btn-danger" data-dismiss="modal"  data-backdrop="false">Save</button>
-                </div>
-            </form>
-            </div>
-            </div>
-        </div>
-
-
     </div>
     
 
@@ -456,10 +426,10 @@
 <style>
 body {
     background-color: #6f42c1;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
-    font-family: 'Courgette', cursive; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -488,7 +458,7 @@ body {
 }
 
 .categoryTitle {
-    font-family: 'Courgette', cursive; 
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 25px;

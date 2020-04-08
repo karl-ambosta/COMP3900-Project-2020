@@ -5,7 +5,6 @@
 		<head>
 			<meta name="viewport" content="width=device-width">
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 			<script src='https://kit.fontawesome.com/a076d05399.js'></script>
@@ -31,7 +30,11 @@
 						<a class="nav-link disabled" href="#">Contact Us <span class="sr-only">(current)</span> </a>
 					</li>
 				</ul>
-				<button class="btn btn-outline-success my-2 my-sm-0" onclick="toLogin()">Login
+				<button class="btn btn-outline-light my-2 my-sm-0" onclick="">Register
+					<span><i class="fas fa-plus-square" aria-hidden="true"></i></span>
+				</button>
+				&nbsp;&nbsp;
+				<button class="btn btn-outline-light my-2 my-sm-0" onclick="toLogin()">Login
 					<span><i class="fas fa-sign-in-alt" aria-hidden="true"></i></span>
 				</button>
 			</div>
@@ -126,6 +129,8 @@
 <style type="text/css">
 body {
 	background-image: url(../../pictures/restaurant.jpeg);
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
+
 }
 
 input[type=text], select, textarea {
@@ -170,7 +175,6 @@ input[type=submit]:hover {
 }
 
 .title {
-	font-family: 'Courgette', cursive;
 	font-size: 40px;
 	color: white;
 	position: relative;
@@ -179,12 +183,8 @@ input[type=submit]:hover {
 	text-shadow: 2px 2px grey;
 }
 
-.text {
-	font-family: 'Courgette', cursive;
-}
-
 .text2 {
-	font-family: 'Courgette', cursive;
+	
 	font-size: 50px;
 }
 
