@@ -25,3 +25,5 @@ project/venv/
 
 # Mac Pains #
 *.DS_Store
+
+*.pyc

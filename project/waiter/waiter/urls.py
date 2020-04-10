@@ -17,7 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from customer import views
+<<<<<<< HEAD
 from django.conf.urls import url
+=======
+from django.views.generic.base import TemplateView
+>>>>>>> master
 
 
 router = routers.DefaultRouter()

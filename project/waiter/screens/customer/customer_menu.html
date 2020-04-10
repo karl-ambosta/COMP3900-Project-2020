@@ -6,7 +6,6 @@
 		<head>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 			<title>Waiter - Order from Menu</title>
@@ -47,15 +46,15 @@
 			<template v-for="t in types">
 				<div v-bind:id="t.name" class="items">
 					<div class="category_title">{{ t.name }}</div>
-					<template v-for="(item,index) in itemsOfType(t.name)">
+					<template v-for="item in itemsOfType(t.name)">
 						<div class="row">
 							<div class="col">
 								<div class="border">
 									<img id="myImg" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
 									<div class="item_text">
-										<h5>{{ item.name }}</h5>
+										<h5><b>{{ item.name }}</b></h5>
 										<p>{{ item.description }}</p>
-										<h6>${{ item.price }}</h6>
+										<h5 class="price_text"><b>${{ item.price }}</b></h5>
 									</div>
 									<div class="addButton">
 										<button v-bind:id="item.name" type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" @click="updateItemDetails(item.name)" onclick="openModal(this)" data-toggle="modal" data-target="#customiseModal" data-backdrop="false" >Add to Order</button>
@@ -69,26 +68,7 @@
 				
 			</template>
 		</div>
-<!--
-			<div class="items" id="breakfast">
-				<div class="row">
-					<div class="col">
-						<div class="border">
-							<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
-							<div class="item_text">
-								<h4>Breakfast 1</h4>
-								<p>Description of item</p>
-							</div>
-							<div class="price_text">
-								<h4>$Price</h4>
-							</div>
-							<div class="addButton">
-								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Breakfast 1')" data-toggle="modal" data-target="#customiseModal" >Add to Order</button>
-							</div>
-						</div>
-					</div>
-					
-	-->
+
 		<!-- The Modal -->
 		<div class="modal" id="customiseModal">
 			<form @submit.prevent="processForm">
@@ -114,7 +94,7 @@
 					<!-- Modal footer -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
-						<button v-on:click="processForm" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal" @click="processForm">Add to Order</button>
+						<button v-on:click="processForm" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal">Add to Order</button>
 					</div>
 				</div>
 			</div>
@@ -257,10 +237,10 @@ span.onclick = function() {
 <style type="text/css">
 body {
 	background-color: #6f42c1;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
-	font-family: 'Courgette', cursive;
 	font-size: 75px;
 	color: white;
 	position: relative;
@@ -292,7 +272,6 @@ body {
 }
 
 .category_title {
-	font-family: 'Courgette', cursive;
 	font-size: 30px;
 	color: white;
 	text-align: center;
@@ -306,11 +285,7 @@ body {
 	margin-left: 7em;
 }
 
-.price_text {
-	position: relative;
-	margin-top: -20%;
-	margin-left: 80%;
-}
+
 
 .addButton {
 	position: absolute;
@@ -441,6 +416,13 @@ ul.gallery {
 
 .modal-content {
     width: 100%;
+}
+
+.price_text {
+	position: relative;
+	margin-top: -35%;
+	margin-left: 65%;
+	text-align: right;
 }
 
 /**TIP: Easy escape for touch screens,

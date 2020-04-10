@@ -2,14 +2,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-    <title>Management - Restauraunt History</title>
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+    <title>Management - Restauraunt History - UNSW Cafe</title>
 </head>
 <body>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+    intent="WELCOME"
+    chat-title="UNSW Cafe"
+    agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
+    language-code="en"
+    ></df-messenger>
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
         <img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
         <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
@@ -38,8 +43,9 @@
         </div>
     </nav>
 
-    <div class="title">Restaurant Purchase History</div>
+    <div class="title">Restaurant History</div>
 
+    
     <br>
 
     <div id="app" class="container">
@@ -52,7 +58,7 @@
                             <table>
                                 <tr>
                                     <td class="title">
-                                        <img src="../../pictures/logo.jpg" style="">
+                                        <img src="../../pictures/logo.jpg">
                                     </td>
                                     <td>
                                         Invoice #: {{ p.invoiceNo }}<br>
@@ -84,19 +90,19 @@
                     </tr>
 
                     <tr class="heading">
-                        <td>Item</td>
-                        <td style="text-align: center;">Description</td>
-                        <td style="text-align: center;">Rate</td>
-                        <td style="text-align: center;">Quantity</td>
-                        <td style="text-align: right;">Price</td>
+                        <td nowrap>Item</td>
+                        <td nowrap style="text-align: center;">Description</td>
+                        <td nowrap style="text-align: center;">Rate</td>
+                        <td nowrap style="text-align: center;">Quantity</td>
+                        <td nowrap style="text-align: right;">Price</td>
                     </tr>
                     <template v-for="item in p.itemList">
                         <tr class="item">
-                            <td>{{ item.name }}</td>
-                            <td style="text-align: center;">{{ item.description }}</td>
-                            <td style="text-align: center;">${{ (item.rate*1.00).toFixed(2) }}</td>
-                            <td style="text-align: center;">{{ item.quantity }}</td>
-                            <td style="text-align: right;">${{ (item.rate*item.quantity).toFixed(2) }}</td>
+                            <td nowrap>{{ item.name }}</td>
+                            <td nowrap style="text-align: center;">{{ item.description }}</td>
+                            <td nowrap style="text-align: center;">${{ (item.rate*1.00).toFixed(2) }}</td>
+                            <td nowrap style="text-align: center;">{{ item.quantity }}</td>
+                            <td nowrap style="text-align: right;">${{ (item.rate*item.quantity).toFixed(2) }}</td>
                         </tr>
                     </template>
                                     
@@ -189,7 +195,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, .15);
     font-size: 16px;
     line-height: 24px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     color: #555;
     background-color: white;
 }

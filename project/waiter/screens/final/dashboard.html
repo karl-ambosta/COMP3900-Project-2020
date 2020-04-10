@@ -1,18 +1,36 @@
 <!-- Management Dashboard -->
 <!DOCTYPE html>
 <html>
+    <script>
+        function logout() {
+            window.location.href='login.html'
+        }
+
+        /*
+Things that can be added here: <br>
+        - Graph of daily earnings over the past week <br>
+            - Total earnings today (or so far) <br>
+            - List of purchases for company <br>
+            - Messages to manager? <br>
+            - Reminders? <br>
+        */
+    </script>
 <head>
-    <meta name="viewport" content="width=device-width">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-	
-    <title>Management - Dashboard</title>
+    <title>Management - Dashboard - UNSW Cafe</title>
 </head>
 <body>
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger
+  intent="WELCOME"
+  chat-title="UNSW Cafe"
+  agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
+  language-code="en"
+  ></df-messenger>
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
         <img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
         <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
@@ -36,11 +54,13 @@
                 </li>
             </ul>
             <button class="btn btn-outline-light my-2 my-sm-0" onclick="logout()">Logout
-                <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
-            </button>
+              <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+          </button>
         </div>
     </nav>
 
+
+    
 
     <div class="container">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -73,7 +93,7 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Av. Earnings (Annual)</div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
                     </div>
                     <div class="col-auto">
@@ -131,151 +151,59 @@
     </div>
     
 
-    <div id="app" class="container">
+    <div class="container">
         <div class="card shadow mb-4">
           <!-- Card Header - Dropdown -->
           <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-
+            <!--
+            <div class="dropdown no-arrow">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 19px, 0px);">
+                <div class="dropdown-header">Dropdown Header:</div>
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </div>
+            -->
           </div>
           <!-- Card Body -->
           <div class="card-body">
-			  <line-chart :data="dataChart" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
+            <div class="chart-area"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+            <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" width="2376" height="1002" style="display: block; height: 501px; width: 1188px;"></canvas>
+    
+            </div>
           </div>
         </div>
+      </div>
 
-		<div class="container" style="text-align: center;">
-			<select id="timePeriod" v-model="type">
-				<option value="hourly">by Hour</option>
-				<option value="weekly">by Week</option>
-				<option value="daily">by Day</option>
-				<option value="monthly">by Month</option>
-			</select>
-			
-			<button class="btn btn-primary" type="submit" v-on:click="changeData">Update Chart</button>
-		</div>
-	</div>
+    <div class="container" style="text-align: center;">
+        <select id="timePeriod">
+            <option value="hourly">by Hour</option>
+            <option value="weekly">by Week</option>
+            <option value="daily">by Day</option>
+            <option value="monthly">by Month</option>
+          </select>
+        
+        <button class="btn btn-primary" type="submit" onclick="updateChart()">Update Chart</button>
+        </div>
 
+    
+    
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-<script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
-
-<script>
-
-	Vue.component("line-chart", {
-		extends: VueChartJs.Line,
-		props: ["data", "options"],
-		mounted() {
-			this.renderLineChart();
-		},
-		computed: {
-			chartData: function() {
-				return this.data;
-			}
-		},
-		methods: {
-			renderLineChart: function() {
-				this.renderChart(
-				{
-					labels: this.chartData.labels,
-					datasets: [
-						{
-							label: "Earnings",
-							backgroundColor: "#f87979",
-							data: this.chartData.earnings
-						}
-					]
-				},
-				{ scales: { yAxes: [
-								{ scaleLabel: {
-								display: true,
-        						labelString: 'Earnings / $'
-      							}, ticks: {
-									callback: function(value, index, values) {
-										return '$' + value;
-									}
-                				}
-					}] },responsive: true, maintainAspectRatio: false 
-				}
-				);      
-			}
-		},
-		watch: {
-			data: function() {
-				this.renderLineChart();
-			}
-		}
-	});
-
-	var vm = new Vue({
-		el: "#app",
-		data: {
-			message: "Hello World",
-			type: '',
-			hourlyData: {
-				labels: ["12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am"],
-				earnings: [6, 6, 3, 5, 5, 6, 6, 6, 3, 5, 5, 6, 11]
-			},
-			dailyData: {
-				labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-				earnings: [5, 7, 9, 11, 13, 15, 17]
-			},
-			weeklyData: {
-				labels: ["This week", "Last week", "2 weeks ago", "3 weeks ago", "4 weeks ago", "5 weeks ago", "6 weeks ago"],
-				earnings: [10, 5, 2.5, 0, 2.5, 5, 10]
-			},
-			monthlyData: {
-				labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-				earnings: [10, 39, 10, 40, 39, 10, 15, 23, 26, 3, 11, 20],
-			},
-
-			dataChart: {
-				labels: ["12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am"],
-				earnings: [6, 6, 3, 5, 5, 6, 6, 6, 3, 5, 5, 6, 11],
-				
-			}
-		},
-		methods: {
-			changeData: function() {
-				if(this.type == 'hourly') {
-					this.dataChart = {
-						labels: this.hourlyData.labels,
-						earnings: this.hourlyData.earnings,
-					}
-				} else if(this.type == 'daily') {
-					this.dataChart = {
-						labels: this.dailyData.labels,
-						earnings: this.dailyData.earnings,
-					}
-				} else if(this.type == 'weekly') {
-					this.dataChart = {
-						labels: this.weeklyData.labels,
-						earnings: this.weeklyData.earnings,
-					}
-				} else if(this.type == 'monthly') {
-					this.dataChart = {
-						labels: this.monthlyData.labels,
-						earnings: this.monthlyData.earnings,
-					}
-				}
-			}
-		}
-	});
-
-</script>
 <style>
 body {
     background-color: #6f42c1;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
-    
 }
 
-.title { 
-    font-style: normal; 
-    font-variant: normal;
+.title {
+    font-family: 'Courgette', cursive; 
+	font-style: normal; 
+	font-variant: normal;
     font-size: 50px;
     position: relative;
     color: white;
@@ -289,5 +217,43 @@ body {
     border-radius: 10px;
 }
 </style>
+<script>
 
+    function updateChart() {
+        var scale = document.getElementById("timePeriod").value;
+        console.log(scale);
+
+        var labels = document.getElementById("myChart").get
+        console.log(labels);
+    }
+    
+    var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          datasets: [{
+            data: [153, 213, 184, 240, 234, 240, 120],
+            lineTension: 0,
+            backgroundColor: 'transparent',
+            borderColor: '#007bff',
+            borderWidth: 4,
+            pointBackgroundColor: '#007bff'
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: false
+              }
+            }]
+          },
+          legend: {
+            display: false,
+          }
+        }
+      });
+    
+</script>
 </html>

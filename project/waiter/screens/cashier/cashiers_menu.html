@@ -1,17 +1,6 @@
 <!-- Cashiers Menu Page for Waiter App/Site -->
 <!DOCTYPE html>
 <html>
-
-<script>
-    function viewbills() {
-        window.open("bills.html", "_self");
-    }
-
-    function dailystats() {
-        window.open("dailystats.html", "_self");
-    }
-
-</script>
     <head>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -24,51 +13,24 @@
             <button type="button" class="btn btn-lg btn-primary" onclick="viewbills()">View Bills</button>
             <button type="button" class="btn btn-lg btn-secondary" onclick="dailystats()">Daily Statistics</button>
         </div>
-        <div class="container" style="overflow-x:auto;">          
+        <div id="app" class="container" style="overflow-x:auto;">          
             <table class="table table-sm table-borderless table-striped table-hover display nowrap">
-              <thead>
+                <thead>
                 <tr>
-                  <th style="width: 15%">Item</th>
-                  <th style="width: 75%">Description</th>
-                  <th style="width: 10%">Price</th>
+                    <th style="width: 15%">Item</th>
+                    <th style="width: 75%">Description</th>
+                    <th style="width: 10%">Price</th>
                 </tr>
-              </thead>
-              <!-- Start of table, dynamic space-->
-              <tbody>
-                <tr>
-                    <td>
-						Breakfast 1
-                    </td>
-                    <td>
-                        Description of item
-                    </td>
-                    <td>
-						$XX.XX
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-						Breakfast 2
-                    </td>
-                    <td>
-                        Description of item
-                    </td>
-                    <td>
-						$XX.XX
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-						Lunch 1
-                    </td>
-                    <td>
-                        Description of item
-                    </td>
-                    <td>
-						$XX.XX
-                    </td>
-                </tr>
-                </tr>
+                </thead>
+                <!-- Start of table, dynamic space-->
+                <tbody>
+                    <template v-for="item in items">
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>${{ item.price }}</td>
+                    </tr>
+                    </template>
                 <!--
                 Format for dynamic rows
                 <tr>
@@ -89,13 +51,43 @@
 
     </body>
 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    function viewbills() {
+        window.open("bills.html", "_self");
+    }
+
+    function dailystats() {
+        window.open("dailystats.html", "_self");
+    }
+
+    var app = new Vue ({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            items: [
+                // get set of items here 
+                { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
+                { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
+                { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
+                { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
+                { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
+                { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
+            ],
+        }
+
+    })
+
+</script>
+
+
 <style>
 body {
     background-color: #6f42c1;
 }
 
 .title {
-    font-family: 'Courgette', cursive; 
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -107,7 +99,7 @@ body {
 }
 
 .title2 {
-    font-family: 'Courgette', cursive; 
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 40px;
@@ -123,6 +115,7 @@ body {
     position: relative;
     border-radius: 20px;
     padding: 5px;
+    width: 50%;
 }
 
 .changeScreens {
@@ -136,11 +129,12 @@ a {
     color: red;
 }
 
-
-
-
-
-
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 768px) {
+  .container {
+      width: 100%;
+  }
+}
 
 </style>
 

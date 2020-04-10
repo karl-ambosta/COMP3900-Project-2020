@@ -1,17 +1,6 @@
 <!-- Kitchen Orders Page for Waiter App/Site -->
 <!DOCTYPE html>
 <html>
-
-<script>
-    function previousorders() {
-        window.open("kitchen_prev_orders.html", "_self");
-    }
-
-    function viewmenu() {
-        window.open("kitchen_menu.html", "_self");
-    }
-
-</script>
     <head>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -24,72 +13,37 @@
             <button type="button" class="btn btn-lg btn-danger" onclick="previousorders()">Previous Orders</button>
             <button type="button" class="btn btn-lg btn-primary" onclick="viewmenu()">View Menu</button>
         </div>
-        <div class="container" style="overflow-x:auto;">          
+        <div id="app" class="container" style="overflow-x:auto;">          
             <table class="table table-sm table-borderless table-striped table-hover display nowrap">
-              <thead>
+                <thead>
                 <tr>
-                  <th style="width: 50%"">Order</th>
-                  <th class="text-center" style="width: 20%">Status</th>
-                  <th class="text-center" style="width: 30%">Change Status</th>
+                    <th style="width: 50%">Order</th>
+                    <th class="text-center" style="width: 20%">Status</th>
+                    <th class="text-center" style="width: 30%">Change Status</th>
                 </tr>
-              </thead>
-              <!-- Start of table, dynamic space-->
-              <tbody>
+                </thead>
+                <!-- Start of table, dynamic space-->
+                <tbody>
+                    <template v-for="order in orderList">
+                        <tr>
+                            <td nowrap><b>Order #{{ order.id }} - Placed at {{ convertTime(order.time) }}</b><br>
+                                <ul>
+                                    <template v-for="item in order.itemList">
+                                        <li>{{ item.quantity }} x {{ item.itemName }} - {{ item.notes }}</li>
+                                    </template>
+                                </ul>
+                            </td>
+                            <td class="text-center align-middle">
+                                {{ order.status }}
+                            </td>
+                            <td class="text-center align-middle" nowrap>
+                                <button v-bind:id="order.id" type="button" class="btn btn-info" v-on:click="order.status = 'Preparing'">Preparing</button>
+                                <button v-bind:id="order.id" class="btn btn-warning" v-on:click="order.status = 'Cooking'">Cooking</button>
+                                <button v-bind:id="order.id" class="btn btn-success" v-on:click="order.status = 'Pickup Ready'">Pickup Ready</button>
+                            </td>
+                        </tr>
+                    </template>
                 <tr>
-                    <td nowrap>Order #1 - Placed at datetime<br>
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 2</li>
-                            <li>Item 3</li>
-                            <li>Item 4</li>
-                        </ul>
-                    </td>
-                    <td class="text-center align-middle">
-                        Completed
-                    </td>
-                    <td class="text-center align-middle" nowrap>
-                        <button type="button" class="btn btn-info">Preparing</button>
-                        <button type="button" class="btn btn-warning">Cooking</button>
-                        <button type="button" class="btn btn-success">Pickup Ready</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td nowrap>Order #2 - Placed at datetime
-                        <ul>
-                            <li>Item 1 - No tomatoes</li>
-                            <li>Item 2 - Remove onion please</li>
-                            <li>Item 3</li>
-                            <li>Item 4</li>
-                            <li>Item 5</li>
-                            <li>Item 6</li>
-                        </ul>
-                    </td>
-                    <td class="text-center align-middle">
-                        Cooking
-                    </td>
-                    <td class="text-center align-middle" nowrap>
-                        <button type="button" class="btn btn-info">Preparing</button>
-                        <button type="button" class="btn btn-warning">Cooking</button>
-                        <button type="button" class="btn btn-success">Pickup Ready</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td nowrap>Order #3 - Placed at datetime
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 2</li>
-                            <li>Item 3</li>
-                        </ul>
-                    </td>
-                    <td class="text-center align-middle">
-                        Recieved
-                    </td>
-                    <td class="text-center align-middle" nowrap>
-                        <button type="button" class="btn btn-info">Preparing</button>
-                        <button type="button" class="btn btn-warning">Cooking</button>
-                        <button type="button" class="btn btn-success">Pickup Ready</button>
-                    </td>
-                </tr>
                 <!--
                 Format for dynamic rows
                 <tr>
@@ -116,13 +70,61 @@
 
     </body>
 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+    function previousorders() {
+        window.open("kitchen_prev_orders.html", "_self");
+    }
+
+    function viewmenu() {
+        window.open("kitchen_menu.html", "_self");
+    }
+
+    var app = new Vue ({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            orderList: [
+                        { id: '00001', time:'13:40:00', status: 'Recieved', itemList: [ 
+                                                                                {itemName: "item1", quantity: 1, notes: "Please make fresh", price: 2.50},
+                                                                                {itemName: "item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
+                                                                                {itemName: "item3", quantity: 2, notes: "No peanuts", price: 7.00},
+                                                                                {itemName: "item4", quantity: 6, notes: "Extra chilli", price: 3.50},
+                                                                            ]
+                        },
+                        { id: '00003', time:'15:30:00', status: 'Recieved', itemList: [ {itemName: "item9", quantity: 1, notes: "Item9 note", price: 1.10},
+                                                                                {itemName: "item10", quantity: 2, notes: "Item10 note", price: 4.50},
+                                                                                {itemName: "item11", quantity: 2, notes: "Item11 note", price: 7.50},
+                                                                                {itemName: "item12", quantity: 6, notes: "Item12 note", price: 4.50},
+                                                                            ]
+                        }
+            ]
+        },
+        methods: {
+            convertTime: function(timeString) {
+                var s = moment(timeString, "HH:mm A").format('hh:mm A')
+                return s;
+            },
+            getOrder: function(orderID) {
+                return this.orderList.filter(function(order) {
+					if(order.id == orderID) {
+						return order;
+                    }
+                })
+            },            
+        }
+    })
+
+</script>
+
 <style>
 body {
     background-color: #6f42c1;
 }
 
 .title {
-    font-family: 'Courgette', cursive; 
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -134,7 +136,7 @@ body {
 }
 
 .title2 {
-    font-family: 'Courgette', cursive; 
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 40px;

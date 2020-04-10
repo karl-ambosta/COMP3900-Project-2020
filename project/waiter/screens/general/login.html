@@ -1,16 +1,6 @@
 <!-- Login Page for Waiter App/Site-->
 <!DOCTYPE html>
 <html>
-<script type="text/javascript">
-	function goBack() {
-		window.open("landing_page.html", "_self");
-	}
-
-	function toCustomer() {
-		document.getElementById('loginForm').action = "../customer/customer.html"
-	}
-
-</script>
 	<head>
 		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -22,29 +12,46 @@
 	</head>
 
 	<div class="backButton">
-		<button class="btn btn-outline-success my-2 my-sm-0" onclick="goBack()">Back
+		<button class="btn btn-outline-light my-2 my-sm-0" onclick="goBack()">Back
 			<span><i class="fas fa-undo" aria-hidden="true"></i></span>
 		</button>
 	</div>
-
-	<body class="text-center">
-		<form id="loginForm" class="form-signin" onsubmit="toCustomer()">
-			<img class="mb-4" src="../../pictures/logo_transp.png" alt="" width="72" height="72">
-			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-			<label for="inputEmail" class="sr-only">Email address</label>
-			<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-			<label for="inputPassword" class="sr-only">Password</label>
-			<input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-			<div class="checkbox mb-3">
-			<label>
-				<input type="checkbox" value="remember-me"> Remember me
-			</label>
-			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-			<p class="mt-5 mb-3 text-info">© 2017-2018</p>
-		</form>
-
+	
+	<body>
+		<div id="app" style="width: 100%; text-align: center;">
+			<form id="loginForm" class="form-signin" @submit.prevent="login">
+				<img class="mb-4" src="../../pictures/logo_transp.png" alt="" width="72" height="72">
+				<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+				<label for="inputEmail" class="sr-only">Username</label>
+				<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
+				<label for="inputPassword" class="sr-only">Password</label>
+				<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+				<div class="checkbox mb-3">
+				<label>
+					<input type="checkbox" value="remember-me"> Remember me
+				</label>
+				</div>
+				<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button>
+				<p class="mt-5 mb-3 text-info">© 2017-2018</p>
+			</form>
+		</div>
 </body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="login.js"></script>
+<script type="text/javascript">
+	function goBack() {
+		window.open("landing_page.html", "_self");
+	}
+
+	function toCustomer() {
+		document.getElementById('loginForm').action = "../customer/customer.html"
+	}
+
+	
+
+</script>
+
 <style>
 html,
 body {

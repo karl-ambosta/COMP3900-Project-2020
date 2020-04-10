@@ -2,14 +2,22 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-        <title>Management - Menu Edit</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+                <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+                <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+        <title>Management - Menu Edit - UNSW Cafe</title>
     </head>
 <body>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+    intent="WELCOME"
+    chat-title="UNSW Cafe"
+    agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
+    language-code="en"
+    ></df-messenger>
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
         <img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
         <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
@@ -262,6 +270,37 @@
             </div>
             </template>
         </template>
+
+        <div class="modal" id="catModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">New Category</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form class="itemInfo" @submit.prevent="addNewCategory">
+                        <label for="newCategory">New Category Name: </label>
+                        <input type="text" name="newCategory" id="newCategory" style="width:25%" v-model="newCategoryName"  required=''>
+                    
+
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">Back to Edit</button>
+                    <button v-on:click="addNewCategory" type="submit" class="btn btn-lg btn-danger" data-dismiss="modal"  data-backdrop="false">Save</button>
+                </div>
+            </form>
+            </div>
+            </div>
+        </div>
+
+
     </div>
     
 
@@ -426,10 +465,10 @@
 <style>
 body {
     background-color: #6f42c1;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
+    font-family: 'Courgette', cursive; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -458,7 +497,7 @@ body {
 }
 
 .categoryTitle {
-    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
+    font-family: 'Courgette', cursive; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 25px;
