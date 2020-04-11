@@ -1,5 +1,6 @@
 # Don't track content of these folders
 project/venv/
+project/waiter/__pycache__
 
 # Compiled source #
 ###################
@@ -27,3 +28,6 @@ project/venv/
 *.DS_Store
 
 *.pyc
+
+
+###
