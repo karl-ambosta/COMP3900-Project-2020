@@ -5,7 +5,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
     <title>Kitchen - UNSW Cafe</title>
 </head>
 
@@ -137,6 +136,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <!--Other required script-->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
     var activeordersapp = new Vue ({
@@ -179,14 +179,37 @@
         delimiters: ['{{', '}}'],
         data: {
             items: [
-                // get set of items here 
-                { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
-                { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
-                { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
-                { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
-                { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
-                { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
+                // List of Menu Items
+			    // item = { name, description, price, menu_category }
             ],
+            types: [
+                // List of Menu Categories
+			    // type = { id, name, menu_item[] }
+            ],
+        },
+        created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://127.0.0.1:8000/menuItems/')
+                .then((response) => {
+					this.items = response.data
+                }).catch( error => {console.log(error); });
+                
+            axios
+                .get('http://127.0.0.1:8000/menuCategories/')
+                .then((response) => {
+					this.types = response.data
+                }).catch( error => {console.log(error); });
+        },
+        methods: {
+            getTypeName: function(typeID) {
+                return this.types.filter(function(t) {
+                    if(t.id == typeID) {
+                        return t;
+                    }
+                })
+            }
         }
 
     })
@@ -225,10 +248,10 @@
 <style>
 body {
     background-color: #6f42c1;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
-    font-family: 'Courgette', cursive; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -239,8 +262,7 @@ body {
     text-shadow:  2px 2px black;
 }
 
-.title2 {
-    font-family: 'Courgette', cursive; 
+.title2 { 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 40px;

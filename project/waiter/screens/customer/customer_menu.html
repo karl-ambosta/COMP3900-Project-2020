@@ -31,11 +31,6 @@
 							<a class="nav-link" onclick="filterType(this)" v-bind:value="t.name" style="text-align: center;">{{ t.name }}</a>
 						</li>
 					</template>
-<!--
-					<li class="nav-item active">
-						<a class="nav-link disabled" href="#" >Menu <span class="sr-only">(current)</span> </a>
-					</li>
--->
 				</ul>
 			</div>
 		</nav>
@@ -46,11 +41,11 @@
 			<template v-for="t in types">
 				<div v-bind:id="t.name" class="items">
 					<div class="category_title">{{ t.name }}</div>
-					<template v-for="item in itemsOfType(t.name)">
+					<template v-for="item in itemsOfType(t.id)">
 						<div class="row">
 							<div class="col">
 								<div class="border">
-									<img id="myImg" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<img v-bind:id="item.name" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100" v-on:click="viewModal(item.name)">
 									<div class="item_text">
 										<h5><b>{{ item.name }}</b></h5>
 										<p>{{ item.description }}</p>
@@ -121,6 +116,7 @@
 	</body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 
 	function hideTypes() {
@@ -157,29 +153,38 @@
         el: '#app',
         delimiters: ['{{', '}}'],
         data: {
-		  itemName: '',
-		  quantity: 0,
-		  notes: '',
-		  items: [
-			  // get set of items here 
-			  { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
-			  { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
-			  { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
-			  { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
-			  { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
-			  { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
-		  ],
-		  types: [
-			  // get set of categories here
-			  {name: 'Breakfast'},
-			  {name: 'Lunch'},
-			  {name: 'Dinner'}
-		  ]
+			itemName: '',
+			quantity: 0,
+			notes: '',
+			items: [
+				// List of Menu Items
+				// item = { name, description, price, menu_category }
+			],
+			types: [
+				// List of Menu Categories
+				// type = { id, name, menu_item[] }
+			],
+		},
+		created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://127.0.0.1:8000/menuItems/')
+                .then((response) => {
+					this.items = response.data
+				}).catch( error => {console.log(error); });
+				
+			axios
+				.get('http://127.0.0.1:8000/menuCategories/')
+				.then((response) => {
+					this.types = response.data
+				}).catch( error => {console.log(error); });
+			return;
         },
 		methods: {
-			itemsOfType: function(type) {
+			itemsOfType: function(typeID) {
 				return this.items.filter(function(item) {
-					if(item.category == type) {
+					if(item.menu_category == typeID) {
 						return item;
 					};
 				})
@@ -206,32 +211,32 @@
 				// send input to database
       			console.log("processed: " + this.itemName + " " + this.quantity + " " + this.notes);
 				  window.location.href = "new_order.html"
-    		},
+			},
+			viewModal: function(itemName) {
+				// Get the modal
+				var modal = document.getElementById("myModal");
+
+				// Get the image and insert it inside the modal - use its "alt" text as a caption
+				var img = document.getElementById(itemName);
+				var modalImg = document.getElementById("img01");
+				var captionText = document.getElementById("caption");
+				img.onclick = function(){
+					modal.style.display = "block";
+					modalImg.src = this.src;
+					captionText.innerHTML = this.alt;
+				}
+
+				// Get the <span> element that closes the modal
+				var span = document.getElementsByClassName("close")[0];
+
+				// When the user clicks on <span> (x), close the modal
+				span.onclick = function() {
+					modal.style.display = "none";
+				}
+			}
 			
 		}
       })
-
-// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the image and insert it inside the modal - use its "alt" text as a caption
-var img = document.getElementById("myImg");
-var modalImg = document.getElementById("img01");
-var captionText = document.getElementById("caption");
-img.onclick = function(){
-	modal.style.display = "block";
-	modalImg.src = this.src;
-	captionText.innerHTML = this.alt;
-}
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[1];
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-	modal.style.display = "none";
-}
-
 </script>
 
 <style type="text/css">
@@ -254,7 +259,6 @@ body {
 	left: 50%;
 	transform: translate(-50%, 0%);
 	z-index: 2;
-	
 }
 
 .container {
@@ -407,7 +411,6 @@ ul.gallery {
 	width: 100%;
 	left: 0%;
 	transform: translate(0%,0%);
-	
 }
 
 .container {
