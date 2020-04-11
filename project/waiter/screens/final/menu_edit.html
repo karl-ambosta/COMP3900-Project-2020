@@ -4,7 +4,6 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-                <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
                 <script src='https://kit.fontawesome.com/a076d05399.js'></script>
@@ -54,15 +53,26 @@
         <button id="saveButton" type="button" class="btn btn-lg btn-success" data-toggle="modal" data-target="#confirmModal">Save Changes</button>
     </div>
 
+    <br>
+    <h4 id="errorMessage" style="color: red; text-align: center;"></h4>
+
     <!-- Table per category -->
     <div id="app" class="container" style="overflow-x:auto;">   
         <template v-for="type in types">
             <div class="categoryTitle" style="text-align: center; background-color: transparent;">{{ type.name }}
                 <span class="table-up"><a href="#!" v-on:click="moveCategoryUp(type.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
-                    aria-hidden="true" style='font-size:24px; color: white;'></i></a></span>
+                    aria-hidden="true" style='font-size:24px; color: red;'></i></a></span>
                 <span class="table-down"><a href="#!" v-on:click="moveCategoryDown(type.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
-                    aria-hidden="true" style='font-size:24px; color: white;'></i></a></span>
-                </div><br>  
+                    aria-hidden="true" style='font-size:24px; color: red;'></i></a></span>
+                <!-- IMPLEMENT REMOVE AND EDIT MENU CATEGORIES
+                <button v-bind:id="type.name" type="button" class="btn btn-lg btn-link" v-on:click="seteditingItem(type.name)" data-toggle="modal" data-target="#itemModal">
+                    <span><i class="fas fa-edit" aria-hidden="true" style='font-size:24px; color: red;'></i></span>
+                </button>
+                <button v-bind:id="type.name" type="button" class="btn btn-lg btn-link" v-on:click="setRemoveItem(type.name)" data-toggle="modal" data-target="#confirmModal">
+                    <span><i class="fas fa-times" aria-hidden="true" style='font-size:24px; color: red;'></i></span>
+                </button>
+                -->
+            </div><br>  
                 <table v-bind:id="type.name" class="table table-sm table-borderless table-striped table-hover display nowrap" style="text-align: center;">
                     <thead>
                     <tr>
@@ -76,17 +86,17 @@
                     </thead>
                     <!-- Start of table, dynamic space-->
                     <tbody>
-                        <template v-for="(item,index) in itemsOfType(type.name)">  
+                        <template v-for="(item,index) in itemsOfType(type.id)"> 
                             <tr id="item.itemName">
                                 <td class="align-middle">{{ item.name }}</td>
                                 <td class="align-middle">{{ item.description }}</td>
                                 <td class="align-middle">${{ item.price }}</td>
                                 <td class="align-middle">
                                     <!-- Up Icon -->
-                                    <span class="table-up"><a href="#!" v-on:click="moveItemUp(type.name, item.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
+                                    <span class="table-up"><a href="#!" v-on:click="moveItemUp(type.id, item.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
                                         aria-hidden="true" style='font-size:24px'></i></a></span>
                                     <!-- Down Icon -->
-                                    <span class="table-down"><a href="#!" v-on:click="moveItemDown(type.name, item.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
+                                    <span class="table-down"><a href="#!" v-on:click="moveItemDown(type.id, item.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
                                         aria-hidden="true" style='font-size:24px'></i></a></span>
                                 </td>
                                 <td nowrap class="text-center align-middle"> <!-- Edit Icon -->
@@ -104,8 +114,6 @@
                     </tbody>
                 </table>
         </template>
-    
-
 
         <!-- Item Info Modal -->
         <div class="modal" id="newModal">
@@ -130,7 +138,7 @@
                         <input type="text" name="itemPrice" id="itemPrice" style="width:25%" pattern="\d+(\.\d{2})?" v-model="newItem.price" data-type="currency"  required=''>
                         <small>Format: x.xx</small><br><br>
                         <label for="itemCategory">Category: </label>
-                        <select id="itemCategory" v-model="newItem.category" class="itemCategory" style="width:50%" required="">
+                        <select id="itemCategory" v-model="newItem.menu_category" class="itemCategory" style="width:50%" required="">
                             <template v-for="t in types">
                                 <option >{{ t.name }}</option>
                             </template>
@@ -171,15 +179,15 @@
                         <label for="itemName">Item Name: </label>
                         <input type='text' id='itemName' name='itemName' required='' v-model="editing.name" style="width:75%"><br><br>
                         <div class="_quantity">Item Desc: </div>
-                        <textarea type='text' id='itemDesc' name='itemDesc' style='min-width: 100%; border: solid 1px black;' v-bind:value="editing.description" required=''></textarea><br><br>
+                        <textarea type='text' id='itemDesc' name='itemDesc' v-model="editing.description" style='min-width: 100%; border: solid 1px black;' required=''></textarea><br><br>
                         <label for="itemPrice">Price: </label>
-                        <input type="text" name="itemPrice" id="itemPrice" style="width:25%" pattern="\d+(\.\d{2})?" v-model="editing.price" data-type="currency"  required=''>
+                        <input type="text" name="itemPrice" v-model="editing.price" id="itemPrice" style="width:25%" pattern="\d+(\.\d{2})?" data-type="currency"  required=''>
                         <small>Format: x.xx</small><br><br>
                         <label for="itemCategory">Category: </label>
-                        <select id="itemCategory" v-model="editing.category" class="itemCategory"style="width:50%" required="">
+                        <select id="itemCategory" v-model="editing.menu_category" class="itemCategory"style="width:50%" required="">
                             <template v-for="t in types">
-                                <template v-if="t.name == editing.category">
-                                    <option  selected>{{ t.name }}</option>
+                                <template v-if="t.id == editing.menu_category">
+                                    <option selected>{{ t.name }}</option>
                                 </template>
                                 <template v-else>
                                     <option >{{ t.name }}</option>
@@ -222,13 +230,10 @@
                     <!-- Modal body -->
                     <div class="modal-body">
                         <div>Are you sure you want to remove this item from the current menu?</div><br>
-                        
                             <div><b>Item Name: </b>{{ item.name }}</div>
                             <div><b>Description: </b>{{ item.description }}</div>
                             <div><b>Price: </b>{{ item.price }}</div>
-                            <div><b>Category: </b>{{ item.category }}</div>
-                        
-                        
+                            <div><b>Category: </b>{{ item.menu_category }}</div>                        
                     </div>
             
                     <!-- Modal footer -->
@@ -299,13 +304,10 @@
             </div>
             </div>
         </div>
-
-
     </div>
-    
-
 </body>
 
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
@@ -316,26 +318,51 @@
         data: {
             isRemove: false,
             isNew: false,
-            editing: {itemName: '', description: '', price: '', category: ''},
-            newItem: {itemName: '', description: '', price: '', category: ''},
+            editing: {itemName: '', description: '', price: '', menu_category: ''},
+            newItem: {itemName: '', description: '', price: '', menu_category: ''},
             oldItemName: '',
             removingItemName: '',
             newCategoryName: '',
             items: [
-                // get set of items here 
-                { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
-                { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
-                { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
-                { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
-                { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
-                { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
+                // List of Menu Items
+			    // item = { name, description, price, menu_category }
 		    ],
 		    types: [
-                // get set of categories here
-                {name: 'Breakfast'},
-                {name: 'Lunch'},
-                {name: 'Dinner'}
+                // List of Menu Categories
+			    // type = { id, name, menu_item[] }
+            ],
+            newItems: [
+                // List of New Menu Items to POST to server
+                // item = { name, description, price, menu_category }
+            ],
+            newTypes: [
+                // List of New Types to POST to server
+                // type = { id, name, menu_item[] }
+            ],
+            itemsToRemove: [
+                // List of Menu Items to DELETE from server
+                // item = { name, description, price, menu_category }
+            ],
+            typesToRemove: [
+                // List of New Types to POST to server
+                // type = { id, name, menu_item[] }
             ]
+        },
+        created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://127.0.0.1:8000/menuItems/')
+                .then((response) => {
+					this.items = response.data
+				}).catch( error => {console.log(error); });
+				
+			axios
+				.get('http://127.0.0.1:8000/menuCategories/')
+				.then((response) => {
+					this.types = response.data
+				}).catch( error => {console.log(error); });
+			return;
         },
         computed: {
             removeItemData: function() {
@@ -346,12 +373,14 @@
                     }
                 })
             },
+            getEditingCategory: function() {
+                return this.editing.menu_category
+            }
         },
-        methods: {
-            
-			itemsOfType: function(type) {
+        methods: { 
+			itemsOfType: function(typeID) {
 				return this.items.filter(function(item) {
-					if(item.category == type) {
+					if(item.menu_category == typeID) {
 						return item;
 					};
 				})
@@ -367,23 +396,28 @@
                 item = this.getItemData(itemName)
                 isNew = false;
                 this.oldItemName = item[0].name
-                this.editing.name = item[0].name;
-                this.editing.description = item[0].description;
-                this.editing.price = item[0].price;
-                this.editing.category = item[0].category
+                this.editing = { name: item[0].name, description: item[0].description, price: item[0].price, menu_category: item[0].menu_category }
             },
             saveChanges: function() {
                 item = this.getItemData(this.oldItemName);
-                item[0].name = this.editing.name;
-                item[0].description = this.editing.description;
-                item[0].price = this.editing.price;
-                item[0].category = this.editing.category;
+                var idx = this.items.findIndex(x => x.name == this.oldItemName)
+                typeIdx = this.types.findIndex(x => x.name == this.editing.menu_category)
+                console.log(this.types)
+                typeID = this.types[typeIdx].id
+                editedItem = { name: this.editing.name, description: this.editing.description, price: this.editing.price, menu_category: typeID }
+                this.items.splice(idx, 1, editedItem);
             },
             removeItem: function(itemName) {
                 var idx = this.items.findIndex(x => x.name == itemName)
+                item = this.items[idx]
+                this.itemsToRemove.push(item)
                 this.items.splice(idx, 1)
+                console.log(this.itemsToRemove)
                 this.isRemove = false
                 return;
+            },
+            removeCategory: function() {
+
             },
             moveCategoryUp: function(name, type) {
                 rows = this.types;
@@ -425,39 +459,94 @@
                 this.isRemove = true
             } ,
             saveMenu: function() {
+                // post items to server
+                for(i = 0; i < this.newItems.length; i++) {
+                    axios
+                        .post('http://127.0.0.1:8000/menuItems/', this.newItems[i])
+                        .then((response) => {
+                            console.log(response.data)
+                        }).catch( error => {console.log(error); })
+                }
 
+                this.newItems = ''
+
+                for(j = 0; j < this.newTypes.length; j++) {
+                     // post types to server
+                    axios
+                        .post('http://127.0.0.1:8000/menuCategories/', this.newTypes[j])
+                        .then((response) => {
+                            console.log(response.data)
+                        }).catch( error => {console.log(error); });
+                }
+
+                this.newTypes = ''
+
+                for(k = 0; k < this.itemsToRemove.length; k++) {
+                    // delete menu items from server
+                    axios  
+                        .delete('http://127.0.0.1:8000/menuItems/' + this.itemsToRemove[k].id)
+                        .then((response) => {
+                            console.log("deleted item: " + response.data)
+                        }).catch( error => {console.log(error); })
+                }
+
+                this.itemsToRemove = ''
+
+                for(m = 0; m < this.typesToRemove.length; m++) {
+                    // delete types from server
+                    axios
+                        .delete('http://127.0.0.1:8000/menuCategory/' + this.typesToRemove[m].id)
+                        .then((response) => {
+                            console.log("deleted type: " + response.data)
+                        }).catch( error => {console.log(error); })
+                }
+
+                this.typesToRemove = ''
             },
             addNewItem: function() {
+                typeIdx = this.types.findIndex(x => x.name == this.newItem.menu_category)
                 newItem = {
+                        id: this.items.length+1,
                         name: this.newItem.name,
                         description: this.newItem.description,
                         price: this.newItem.price,
-                        category: this.newItem.category
+                        menu_category: this.types[typeIdx].id
                 }
-                this.items.push(newItem)
-                console.log(this.items)
-                this.resetNew()
-                
-                isNew = false
+                itemIdx = this.items.findIndex(x => x.name == newItem.name)
+                if(itemIdx == -1) { // item with same name is not in item list
+                    this.items.push(newItem)
+                    this.newItems.push( {name: this.newItem.name, description: this.newItem.description, price: this.newItem.price, menu_category: this.types[typeIdx].id })
+                    this.newItem = { name: '', description: '', price: '', menu_category: '' }                
+                    isNew = false
+                    return
+                } else {
+                    type = this.types.findIndex(x => x.id == this)
+                    document.getElementById('errorMessage').textContent = "Item with name '" + this.items[itemIdx].name + "' already exists in Category: '" + this.types[typeIdx].name + "'"
+                    this.newItem = { name: '', description: '', price: '', menu_category: '' }              
+                    isNew = false
+                }      
             },
             addNewCategory: function() {
                 categoryName = this.newCategoryName
-                this.types.push({name: categoryName})
-                console.log(this.types)
-                this.newCategoryName = ''
+                var type = this.types.findIndex(x => x.name == categoryName)
+                if(type == -1) { // name is not in type list
+                    this.types.push({id: this.types.length+1, name: categoryName})
+                    this.newCategoryName = ''
+                } else {
+                    document.getElementById('errorMessage').textContent = "Menu Category: '" + categoryName + "' already exists"
+                    return;
+                }  
             },
-            resetNew: function() {
-                this.newItem.name = ''
-                this.newItem.description = ''
-                this.newItem.price = ''
-                this.newItem.category = ''
-            }
-        }
+        },
     })
 
     function logout() {
         window.location.href='login.html'
     }
+
+    window.onbeforeunload = function(){
+            return "Are you sure you want to close the window?";
+}
 
 </script>
 
@@ -465,10 +554,10 @@
 <style>
 body {
     background-color: #6f42c1;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
-    font-family: 'Courgette', cursive; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -497,7 +586,6 @@ body {
 }
 
 .categoryTitle {
-    font-family: 'Courgette', cursive; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 25px;
