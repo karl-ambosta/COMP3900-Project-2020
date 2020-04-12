@@ -8,26 +8,27 @@
         <title>Waiter - Customer Orders</title>
     </head>
     <body>
-        <div class="title">Welcome User!</div>
+    <div id="app">
+        <div class="title">Welcome {{ user }}!</div>
         <br>
-        <div class="title2">Orders for Table #-- <br> at ~Restaurant~</div>
+        <div class="title2">Orders for Table #-- <br> at '{{ restaurant.name }}'</div>
 
         <br>
-
+    
         <div class="container" style="width:100%; text-align:center; background-color: transparent;">
             <div class="callWaiter">
                 <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="callWaiter()">Call Waiter</button>
             </div>
             <br><br>
             <div class="changeScreens">
-                <button type="button" style="width: 150px;" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="newOrder()">New Order</button>
+                <button type="button" style="width: 150px;" class="btn btn-lg btn-outline-light my-2 my-sm-0" v-on:click="newOrder">New Order</button>
                 <button type="button" style="width: 150px;" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="finishOrdering()">Get Bill</button>
             </div>
         </div>
 
         <br><br>
 
-        <div id="app" class="container" style="overflow-x:auto;">          
+        <div class="container" style="overflow-x:auto;">          
             <table class="table table-borderless table-hover display nowrap">
                 <thead>
                     <tr>
@@ -40,24 +41,22 @@
                         <tr>
                             <td nowrap> Order #{{ order.id }} - Placed at {{ convertTime(order.time) }}</td>
                             <td>{{ order.status }}</td>
-                            <td nowrap><a class="Order 1" href="#" onclick="viewOrderInfo()">View Order Info</a></td>
+                            <td nowrap><a class="Order 1" href="#" v-on:click="viewOrderInfo(order.id)">View Order Info</a></td>
                         </tr>
                     </template>
                 </tbody>
             </table>
           </div>
 
+    </div>
     </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
     function viewOrderInfo() {
         window.open("order_info.html", "_self");
-    }
-
-    function newOrder() {
-        window.open("new_order.html", "_self");
     }
 
     function finishOrdering() {
@@ -73,7 +72,10 @@
         delimiters: ['{{', '}}'],
         data: {
             // get list of orders here
+            user: '',
             orderList: [
+                // List of customer orders
+                // { id, owner, order_request: [] }
                 {id: '00001', items: [ 
                                         { name: 'Item 1', description: 'Description for Item1', price: '2.50'}, 
                                         { name: 'Item 3', description: 'Description for Item3', price: '5.50'}  
@@ -86,7 +88,32 @@
                                     ],
                     time: '14:00', status: 'Cooking'
                 },
-            ]
+            ],
+            restaurant: ''
+        },
+        created() {
+
+            this.user = sessionStorage.getItem('user')
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+
+            axios
+                .get('http://127.0.0.1:8000/orderList/')
+                .then((response) => {
+                    this.orderList = response.data
+                    console.log(this.orderList)
+                }).catch( error => {console.log(error); return});
+
+            axios
+                .get('http://127.0.0.1:8000/restaurant/')
+                .then((response) => {
+                    for(i = 0; i < response.data.length; i++) {
+                        if(response.data[i].name == sessionStorage.getItem('restaurant')) {
+                            this.restaurant = response.data[i]
+                        }
+                    }
+                   console.log(this.restaurant)
+                }).catch( error => {console.log(error); return });
         },
         methods: {
 			processForm: function() {
@@ -96,6 +123,20 @@
             convertTime: function(timeString) {
                 var s = moment(timeString, "HH:mm A").format('hh:mm A')
                 return s;
+            },
+            newOrder: function() {
+
+                axios
+                .post('http://127.0.0.1:8000/orderList/', '')
+                .then((response) => {
+                    newOrder = response.data
+                    sessionStorage.orderID = newOrder.id
+
+                    window.open("new_order.html", "_self")
+                }).catch( error => {console.log(error); return});
+            },
+            viewOrderInfo: function(orderID) {
+                sessionStorage.orderID = orderID
             }
 		}
     

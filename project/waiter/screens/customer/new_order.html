@@ -4,22 +4,22 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
         <title>Waiter - New Order</title>
     </head>
 
     <body>
         <div class="title">Create Order</div>
 
-        <div class="container">
-            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="addFromMenu()">Add To Order</button>
-            <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="finishOrder()">Finish Order</button>
-        </div>
-        
-        
-        <br>
-            
         <div id="app">
+
+            <div class="container">
+                <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" v-on:click="addFromMenu">Add To Order</button>
+                <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" v-on:click="finishOrder">Finish Order</button>
+            </div>
+            
+            
+            <br>
+            
             <div class="container" style="overflow-x:auto;">          
                 <table class="table table-borderless table-hover display nowrap">
                     <thead>
@@ -31,15 +31,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-for="item in itemList">
+                        <template v-for="id in order.order_request">
                             <tr>
-                                <td nowrap>{{ item.itemName }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td nowrap>{{ item.notes }}</td>
-                                <td nowrap>${{ item.price.toFixed(2) }}</td>
+                                <td nowrap>{{ getItemInfo(getRequest(id)[0].menu_item)[0].name }}</td>
+                                <td>{{ getRequest(id)[0].quantity }}</td>
+                                <td nowrap>{{ getRequest(id)[0].comments }}</td>
+                                <td nowrap>${{ getItemInfo(getRequest(id)[0].menu_item)[0].price }}</td>
                             </tr>
                         </template>
-                </tbody>
+                    </tbody>
                 </table>
             </div>
 
@@ -53,22 +53,22 @@
                     <tbody>
                         <tr>
                             <td><b><i>SubTotal</i></b></td>
-                            <td><b>${{ orderTotals.toFixed(2) }}</b></td  >
+                            <td><b>${{ orderTotals }}</b></td  >
                         </tr>
                         <tr>
                         <td><b><i>GST/Tax</i></b></td>
-                        <td><b>${{ GSTcalc.toFixed(2) }}</b></td>
+                        <td><b>${{ GSTcalc }}</b></td>
                         </tr>
                         <tr>
                             <td><b><i>Discounts</i></b></td>
-                            <td><b>${{ getDiscounts.toFixed(2) }}</b></td>
+                            <td><b>${{ getDiscounts }}</b></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
                         </tr>
                         <tr>
                             <td><b><i>Billing Total</i></b></td>
-                            <td><b>${{ finalTotal.toFixed(2) }}</b></td>
+                            <td><b>${{ finalTotal }}</b></td>
                         </tr>
                     </tbody>
                 </table>
@@ -80,15 +80,9 @@
     
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-    function addFromMenu() {
-        window.open("customer_menu.html", "_self");
-    }
 
-    function finishOrder() {
-        // send order to kitchen
-        window.open("customer_orders.html", "_self");
-    }
 
     function callWaiter() {
         // call waiter
@@ -98,30 +92,98 @@
         el: '#app',
         delimiters: ['{{', '}}'],
         data: {
-            itemList: [
-                {itemName: "item1", quantity: 1, notes: "Please make fresh", price: 2.50},
-                {itemName: "item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
-                {itemName: "item3", quantity: 2, notes: "No peanuts", price: 7.00},
-                {itemName: "item4", quantity: 6, notes: "Extra chilli", price: 3.50},
+            order: [
+                // { id, owner, order_request [] }
+            ],
+            requests: [
+                // "id", "order_list", "owner", "menu_item", "comments", "quantity": 1
+            ],
+            menu_items: [
+
             ]
+        },
+        created() {
+            this.request = ''
+            orderID = sessionStorage.getItem('orderID')
+            userName = sessionStorage.getItem('user')
+
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://127.0.0.1:8000/orderList/' + orderID)
+                .then((response) => {
+                    this.order = response.data
+                }).catch( error => {console.log(error); return});
+
+            axios
+                .get('http://127.0.0.1:8000/orderRequest/')
+                .then((response) => {
+                    for(i = 0; i < response.data.length; i++) {
+                        if(response.data[i].owner == userName) {
+                            this.requests.push(response.data[i])
+                        }
+                    }
+                }).catch( error => {console.log(error); return});
+
+            axios
+                .get('http://127.0.0.1:8000/menuItems/')
+                .then((response) => {
+                    this.menu_items = response.data
+                }).catch( error => {console.log(error); return});
+            
         },
         computed: {
             orderTotals: function() {
                 var total = 0
-                for(i = 0; i < this.itemList.length; i++) {
-                    total = total + this.itemList[i].price * this.itemList[i].quantity 
+                if(this.order.order_request != null) {
+                    for(i = 0; i < this.order.order_request.length; i++) {
+                        r = this.getRequest(this.order.order_request[i])
+                        total = total + this.getItemInfo(this.order.order_request[i])[0].price * r[0].quantity 
+                    }
+                    return total.toFixed(2)
+                } else {
+                    return '0.00'
                 }
-                return total
             },
             GSTcalc: function() {
-                return 0.10 * this.orderTotals
+                return (0.10 * Number(this.orderTotals)).toFixed(2)
             },
             getDiscounts: function() {
-                return 0.50 * 1
+                return '0.50'
             },
             finalTotal: function() {
-                var total = this.orderTotals + this.GSTcalc - this.getDiscounts
-                return total
+                var total = Number(this.orderTotals) + Number(this.GSTcalc) - Number(this.getDiscounts)
+                return total.toFixed(2)
+            }
+        },
+        methods: {
+            addFromMenu: function() {
+                window.open("customer_menu.html", "_self");
+            },
+            finishOrder: function() {
+                
+                axios  
+                    .get('http://127.0.0.1:8000/orderList/' + sessionStorage.getItem('orderID') + '/sendOrder/')
+                    .then((response) => {
+                        console.log("done")
+                        console.log(response.data)
+                        window.open("customer_orders.html", "_self")
+                    }).catch( error => {console.log(error); return});
+                //
+            },
+            getRequest: function(requestID) {
+                return this.requests.filter(function(item) {
+					if(item.id == requestID) {
+						return item;
+					};
+				})
+            },
+            getItemInfo: function(itemID) {
+                return this.menu_items.filter(function(item) {
+					if(item.id == itemID) {
+						return item;
+					};
+				})
             }
         }
         

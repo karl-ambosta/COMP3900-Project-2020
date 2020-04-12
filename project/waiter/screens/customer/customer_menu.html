@@ -209,8 +209,19 @@
 			},
 			processForm: function() {
 				// send input to database
-      			console.log("processed: " + this.itemName + " " + this.quantity + " " + this.notes);
-				  window.location.href = "new_order.html"
+				// POST { orderList object, menuItem object, comments, quantity}
+
+				idx = this.items.findIndex(x => x.name == this.itemName)
+				item = this.items[idx]
+
+				
+				axios
+					.post('http://127.0.0.1:8000/menuItems/' + item.id + '/order/', {comments: this.notes, quantity: Number(this.quantity)})
+					.then((response) => {
+						console.log(response.data)
+					}).catch( error => {console.log(error); return});
+
+				window.location.href = "new_order.html"
 			},
 			viewModal: function(itemName) {
 				// Get the modal

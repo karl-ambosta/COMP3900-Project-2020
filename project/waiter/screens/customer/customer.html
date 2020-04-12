@@ -4,7 +4,6 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
         <title>Waiter - Customer Details</title>
     </head>
 
@@ -17,17 +16,18 @@
             <h3 style="text-shadow: 1px 1px black;">Customer Information</h3>
             <form id="customerInfo" @submit.prevent="processForm" class="customer_info" method="POST">
                 <div>
-                    <label class="customer_name" for="cname">Customer Name</label>
-                    <input class="customer_name" v-model="custName" type="text" id="inputName" name="customername" placeholder="Your name.." required="">
+                    <label class="firstName" for="cname">First Name</label>
+                    <input class="firstName" v-model="custName.firstName" type="text" id="inputName" name="firstName" placeholder="First name.." required=""><br>
+                    <label class="lastName" for="cname">Last Name</label>
+                    <input class="lastName" v-model="custName.lastName" type="text" id="inputName" name="firstName" placeholder="Last name.." required="">
                 </div>
                 
                 <div>
                     <label class="restaurant" for="restaurant">Which restaurant are you dining at?</label><br>
-                    <select id="restaurant" v-model="restaurant" class="restaurant_name" required="">
-                        <option value="Restaurant 1">Restaurant 1</option>
-                        <option value="Restaurant 2">Restaurant 2</option>
-                        <option value="Restaurant 3">Restaurant 3</option>
-                        <option value="Restaurant 4">Restaurant 4</option>
+                    <select id="restaurant" v-model="chosen_restaurant" class="restaurant_name" required="">
+                        <template v-for="r in restaurants">
+                            <option v-bind:value="r.name">{{ r.name }}</option>
+                        </template>
                     </select>
                 </div>
                 <br>
@@ -56,6 +56,7 @@
 
     </body>
 
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
     function goBack() {
@@ -87,16 +88,51 @@
         el: '#app',
         delimiters: ['{{', '}}'],
         data: {
-            custName: '',
-            restaurant: '',
+            custName: {firstName: '', lastName: ''},
+            chosen_restaurant: '',
             table_no: '',
             email: '',
-            mobile: ''
+            mobile: '',
+            restaurants: ''
+        },
+        created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+
+            axios
+                .get('http://127.0.0.1:8000/restaurant/')
+                .then((response) => {
+                    this.restaurants = response.data
+                }).catch( error => {console.log(error); return });
+
         },
         methods: {
 			processForm: function() {
-				// send input to database
-      			console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
+                // send input to database
+                
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                userName = sessionStorage.getItem('user')
+                sessionStorage.restaurant = this.chosen_restaurant
+                axios.defaults.headers.common['Authorization'] = basicAuth
+
+                axios
+                    .get('http://127.0.0.1:8000/users/')
+                    .then((response) => {
+
+                        window.open("customer_orders.html", "_self")                        
+
+                    }).catch( error => {console.log(error); return});
+               
+                
+                /*
+                axios
+                    .post('http://127.0.0.1:8000/profile/', userInfo)
+                    .then((response) => {
+					    this.items = response.data
+                    }).catch( error => {console.log(error); });
+                */
+
+      			//console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
     		}
 		}
     
@@ -110,9 +146,9 @@ body {
     background-image: url("../../pictures/cust-bg2.png");
     background-size: cover;
     background-position: 50% 50%;
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 }
 .title {
-    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -131,7 +167,6 @@ body {
 }
 
 .customer_info {
-    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 18px;

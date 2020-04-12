@@ -9,18 +9,17 @@ var app = new Vue({
     },
     methods: {
         async login () {
-            var apiURL = 'http://127.0.0.1:8000/rest-auth/login/'
-
+ 
             var payload = {
                 username: this.username,
                 password: this.password,
             };
 
             await axios
-                .post(apiURL, payload)
+                .post('http://127.0.0.1:8000/rest-auth/login/', payload)
                 .then((response) => {
                     this.results = response.data.key;
-                    // sessionStorage.token = this.results
+                    sessionStorage.user = this.username
                     sessionStorage.btoa = btoa(this.username + ":" + this.password)
                     // token = sessionStorage.getItem('token')
                     var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')

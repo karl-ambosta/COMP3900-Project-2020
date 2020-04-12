@@ -4,7 +4,6 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
         <title>Waiter - Billing</title>
     </head>
 
@@ -86,6 +85,7 @@
     </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     function payBill() {
         // Pay Bill
@@ -98,9 +98,7 @@
         data: {
             // get list of orders here
             orderList: [
-                {id: '00001', total: 50.50},
-                {id: '00002', total: 5.50},
-                {id: '00003', total: 2.45}
+                // { id, owner, order_request []}
                 
             ]
         },
@@ -123,6 +121,24 @@
                 return total
             }
         },
+        created() {
+
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://127.0.0.1:8000/orderList')
+                .then((response) => {
+
+                    for(i = 0; i < response.data.length; i++) {
+                        if(response.data[i].owner == sessionStorage.getItem('user')) {
+                            this.orderList.push(response.data[i])
+                        }
+                    }
+
+                    console.log(this.orderList)
+                    
+                }).catch( error => {console.log(error); })
+        },
         methods: {
 			processForm: function() {
 				// send input to database
@@ -138,10 +154,10 @@
 <style>
 body {
     background-color: #6f42c1;
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 }
 
 .title {
-    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
