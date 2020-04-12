@@ -35,19 +35,18 @@ Week 5
 
 Gained an understanding of django rest framework.
 Worked with Burton on the backend, mainly the authentication. 
-Added auth api for google and twitter. 
 
 Week 6
 
-*notes here*
+Added auth api for google and twitter. 
 
 Week 7
 
-*notes here*
+Added profile model for users
 
 Week 8
 
-*notes here*
+Profile setup for different types of users
 
 Week 9
 
