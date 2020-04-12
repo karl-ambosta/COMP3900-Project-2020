@@ -25,6 +25,8 @@ router.register(r'menuItems', views.MenuItemViewSet, 'menuItem')
 router.register(r'menuCategories', views.MenuCategoryViewSet, 'menuCategories')
 router.register(r'orderList', views.OrderListViewSet, 'orderList')
 router.register(r'orderRequest', views.OrderRequestViewSet, 'orderRequest')
+router.register(r'restaurant', views.RestaurantViewSet, 'restaurant')
+router.register(r'openingHours', views.OpeningHoursViewSet, 'openingHours')
 
 
 urlpatterns = [
