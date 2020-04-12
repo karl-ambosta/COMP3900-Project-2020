@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
 from rest_framework import serializers
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -48,11 +48,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
         #fields = ['id','name', 'email','created']
 
 
+class RestaurantSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Restaurant
+        fields = ['id', 'name', 'description', 'opening_hours']
+
 class MenuCategorySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MenuCategory
-        fields = ['id', 'name', 'menu_item']
+        fields = ['id', 'name', 'menu_item', 'restaurant']
 
 class MenuItemSerializer(serializers.ModelSerializer):
     
@@ -65,7 +71,7 @@ class OrderListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderList
-        fields = ['id', 'owner', 'order_request']
+        fields = ['id', 'owner', 'order_request', 'restaurant']
 
 class OrderRequestSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -73,3 +79,9 @@ class OrderRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderRequest
         fields = ['id', 'order_list', 'owner', 'menu_item', 'comments', 'quantity']
+
+class OpeningHoursSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OpeningHours
+        fields = ['id', 'restaurant', 'day', 'from_hour', 'to_hour']

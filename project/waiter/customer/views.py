@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import permissions
-from .serializers import UserSerializer, UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer
-from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest
+from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_framework.decorators import action
@@ -40,23 +40,26 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             item = get_object_or_404(self.queryset, id=id)
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
             order_list = get_object_or_404(OrderList.objects.all(), owner=owner)
+            if order_list.restaurant.id != item.menu_category.restaurant.id:
+                return Response(status=status.HTTP_403_FORBIDDEN)
             order_list.order_request.create(order_list=order_list, owner=owner, menu_item=item, comments=request.data["comments"], quantity=request.data["quantity"])
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True)
-    def remove(self, request, id=None):
+    @action(detail=True, methods=['post'])
+    def update_order(self, request, id=None):
         try:
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
             order_list = get_object_or_404(OrderList.objects.all(), owner=owner)
             item = get_object_or_404(self.queryset, id=id)
             order_request = get_object_or_404(OrderRequest.objects.all(), owner=owner, order_list=order_list, menu_item=item)
-            if(order_request.quantity > 1):
-                order_request.quantity = order_request.quantity - 1
-                order_request.save()
-            else:   
+            if request.data["quantity"] == 0:   
                 order_request.delete()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            order_request.quantity = request.data["quantity"]
+            order_request.comments = request.data["comments"]
+            order_request.save()
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -68,6 +71,7 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -95,6 +99,28 @@ class OrderRequestViewSet(viewsets.ModelViewSet):
     def create(self, request): 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class RestaurantViewSet(viewsets.ModelViewSet):
+    queryset = Restaurant.objects.all()
+    serializer_class = RestaurantSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request): 
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+class OpeningHoursViewSet(viewsets.ModelViewSet):
+    queryset = OpeningHours.objects.all()
+    serializer_class = OpeningHoursSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request): 
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+            
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
