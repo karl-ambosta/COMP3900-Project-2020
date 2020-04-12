@@ -1,21 +1,12 @@
 <!-- Management Dashboard -->
 <!DOCTYPE html>
 <html>
-    <script>
-        function logout() {
-            window.location.href='login.html'
-        }
-
-        function returntoMenu() {
-            // Add Item back to Menu
-        }
-    </script>
 <head>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <title>Management - Old Items</title>
 </head>
 <body>
@@ -41,13 +32,15 @@
                     <a class="nav-link disabled" href="old_items.html">Old Menu Items<span class="sr-only">(current)</span></a>
                 </li>
             </ul>
-            <button class="btn btn-outline-success my-2 my-sm-0" onclick="logout()">Logout</button>
+            <button class="btn btn-outline-light my-2 my-sm-0" onclick="logout()">Logout
+                <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+            </button>
         </div>
     </nav>
 
     <div class="title">Old Menu Items</div>
 
-    <div class="container" style="overflow-x:auto;">          
+    <div id="app" class="container" style="overflow-x:auto;">          
         <table class="table table-sm table-borderless table-striped table-hover display nowrap" style="text-align: center;">
             <thead>
             <tr>
@@ -59,67 +52,116 @@
             </thead>
             <!-- Start of table, dynamic space-->
             <tbody>
-            <tr>
-                <td class="align-middle">Item</td>
-                <td class="align-middle">--------</td>
-                <td class="align-middle">$XXX.XX</td>
-                <td nowrap class="text-center align-middle">
-                    <button id="item1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Add to Menu</button>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-middle">Item</td>
-                <td class="align-middle">--------</td>
-                <td class="align-middle">$XXX.XX</td>
-                <td nowrap class="text-center align-middle">
-                    <button id="item2" type="button" class="btn btn-danger" onclick="returntoMenu('item2')">Add to Menu</button>
-                </td>
-            </tr>
-            <tr>
-                <td class="align-middle">Item</td>
-                <td class="align-middle">--------</td>
-                <td class="align-middle">$XXX.XX</td>
-                <td nowrap class="text-center align-middle">
-                    <button id="item3" type="button" class="btn btn-danger" onclick="returntoMenu('item3')">Add to Menu</button>
-                </td>
-            </tr>
+                <template v-for="item in itemList">
+                    <tr>
+                        <td class="align-middle">{{ item.itemName }}</td>
+                        <td class="align-middle">{{ item.description }}</td>
+                        <td class="align-middle">${{ item.price.toFixed(2) }}</td>
+                        <td nowrap class="text-center align-middle">
+                            <button v-on:click="setReturnItem(item.itemName)" id="item1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Add to Menu</button>
+                        </td>
+                    </tr>
+                </template>
             </tbody>
         </table>
-    </div>
+    
 
-    <!-- Remove Item Modal -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-dialog">
-        <div class="modal-content">
-    
-            <!-- Modal Header -->
-            <div class="modal-header">
-            <h4 class="modal-title">Remove Item?</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        
+        <!-- Remove Item Modal -->
+        <div class="modal" id="confirmModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+        
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">Add Back to Current Item?</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div>Are you sure you want to add this item back to the current menu?</div><br>
+                    <div><b>Item Name: </b>{{ returnItem.name }}</div>
+                    <div><b>Description: </b>{{ returnItem.description }}</div>
+                    <div><b>Price: </b>{{ returnItem.price }}</div>
+                    <div><b>Category: </b>
+                        <select id="itemCategory" v-model="returnItem.category" class="itemCategory" style="width:50%" required="">
+                            <template v-for="t in types">
+                                <option  selected>{{ t.name }}</option>
+                                </template>                                
+                        </select>
+                    
+                    </div>
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" v-on:click="removefromMenu">Yes</button>
+                    <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">No</button>
+                </div>
             </div>
-    
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div>Are you sure you want to add this item back to the current menu?</div><br>
-            </div>
-    
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" onclick="removefromMenu()">Yes</button>
-                <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">No</button>
             </div>
         </div>
-        </div>
     </div>
-
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+    function logout() {
+        window.location.href='login.html'
+    }
+
+    var app = new Vue ({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            returnItem: {itemName: '', description: '', price: ''},
+            itemList: [ 
+                {itemName: 'item1', description: 'Description for Item1', price: 2.50},
+                {itemName: 'item2', description: 'Description for Item2', price: 5.50},
+                {itemName: 'item3', description: 'Description for Item3', price: 7.00},
+                {itemName: 'item4', description: 'Description for Item4', price: 3.50},
+            ],
+            types: [
+                {name: 'Breakfast'},
+                {name: 'Lunch'},
+                {name: 'Dinner'}
+            ]
+        },
+        methods: {
+            convertTime: function(timeString) {
+                var s = moment(timeString, "HH:mm A").format('hh:mm A')
+                return s;
+            },
+            getItemData: function(name) {
+                return this.itemList.filter(function(item) {
+                    if(item.itemName == name) {
+                        return item;
+                    }
+                })
+            },
+            setReturnItem: function(name) {
+                item = this.getItemData(name)[0]
+                this.returnItem = {name: item.itemName, description: item.description, price: item.price, category: ''}
+            },
+            removefromMenu: function() {
+                idx = this.itemList.findIndex(x => x.itemName == this.returnItem.name)
+                this.itemList.splice(idx, 1)
+                this.returnItem = {name: '', description: '', price: '', category: ''}
+            }  
+        }
+    })
+
+</script>
+
 <style>
 body {
     background-color: #6f42c1;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
-.title {
-    font-family: 'Courgette', cursive; 
+.title { 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;

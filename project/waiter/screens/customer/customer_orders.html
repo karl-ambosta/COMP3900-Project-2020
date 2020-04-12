@@ -7,8 +7,6 @@
         <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
         <title>Waiter - Customer Orders</title>
     </head>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <body>
         <div class="title">Welcome User!</div>
         <br>
@@ -52,6 +50,7 @@
     </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
     function viewOrderInfo() {
         window.open("order_info.html", "_self");
@@ -95,7 +94,6 @@
       			console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
     		},
             convertTime: function(timeString) {
-                console.log(timeString)
                 var s = moment(timeString, "HH:mm A").format('hh:mm A')
                 return s;
             }
@@ -111,7 +109,7 @@ body {
 }
 
 .title {
-    font-family: 'Courgette', cursive; 
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -123,7 +121,7 @@ body {
 }
 
 .title2 {
-    font-family: 'Courgette', cursive; 
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 40px;

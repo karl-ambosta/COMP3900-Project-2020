@@ -4,7 +4,6 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-		<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 		<script src='https://kit.fontawesome.com/a076d05399.js'></script>
@@ -30,36 +29,62 @@
 						<a class="nav-link" href="contact.html">Contact Us</a>
 					</li>
 				</ul>
-				<button class="btn btn-outline-success my-2 my-sm-0" onclick="toLogin()">Login
+				<button class="btn btn-outline-light my-2 my-sm-0" onclick="">Register
+					<span><i class="fas fa-plus-square" aria-hidden="true"></i></span>
+				</button>
+				&nbsp;&nbsp;
+				<button class="btn btn-outline-light my-2 my-sm-0" onclick="toLogin()">Login
 					<span><i class="fas fa-sign-in-alt" aria-hidden="true"></i></span>
 				</button>
 			</div>
 		</nav>
 		
 		<div class="title" style="text-align: center;">Menu</div>
+		<div id="app">
+		<nav id="filters" class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+			<img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white; text-align: center;">Filter by:</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent2">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" onclick="filterType(this)" value="all" style="text-align: center;">Show All</a>
+					</li>
+					<template v-for="t in types">
+						<li class="nav-item">
+							<a class="nav-link" onclick="filterType(this)" v-bind:value="t.name" style="text-align: center;">{{ t.name }}</a>
+						</li>
+					</template>
+				</ul>
+			</div>
+		</nav>
 
 		<div class="container">
-			<div id="app">
-				<template v-for="t in types">
+			<template v-for="t in types">
+				<div v-bind:id="t.name" class="items">
 					<div class="category_title">{{ t.name }}</div>
-					<template v-for="(item,index) in itemsOfType(t.name)">
+					<template v-for="(item,index) in itemsOfType(t.id)">
 						<div class="row">
 							<div class="col">
 								<div class="border">
-									<img id="myImg" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<img v-bind:id="item.name" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100" v-on:click="viewModal(item.name)">
 									<div class="item_text">
-										<h5>{{ item.name }}</h5>
+										<h5><b>{{ item.name }}</b></h5>
 										<p>{{ item.description }}</p>
-										<h6>${{ item.price }}</h6>
+										<h6><b>${{ item.price }}</b></h6>
 									</div>
 								</div>
 							</div>
 						</div>
 					</template>
 					<br>
-				</template>
-			</div>
+				</div>
+			</template>
 		</div>
+	</div>
 
 		<!-- The Modal -->
 		<div id="myModal" class="modal">
@@ -75,41 +100,15 @@
   		</div>
 
 	</body>
-
+	
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
-	var app = new Vue({
-        el: '#app',
-        delimiters: ['{{', '}}'],
-        data: {
-          itemList: '',
-		  items: [
-			  // get set of items here 
-			  { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
-			  { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
-			  { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
-			  { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
-			  { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
-			  { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
-		  ],
-		  types: [
-			  // get set of categories here
-			  {name: 'Breakfast'},
-			  {name: 'Lunch'},
-			  {name: 'Dinner'}
-		  ]
-        },
-		methods: {
-			itemsOfType: function(type) {
-				return this.items.filter(function(item) {
-					if(item.category == type) {
-						return item;
-					};
-				})
-			}
-		}
-      })
-	/*
+
+function toLogin() {
+		window.location.href='login.html'
+	}
+
 	function hideTypes() {
 		var x = document.getElementsByClassName("items");
 		var i;
@@ -118,47 +117,101 @@
 		}
 	}
 
-	function changeType(name) {
+	function filterType(attribute) {
+		var c = attribute.getAttribute('value');
+		if(c == "all") {
+			showTypes();
+			return;
+		}
 		hideTypes();
-		document.getElementById(name).style.display = "block"
-		document.getElementById("info").style.display = "none"
-	}
-	*/
-
-	function toLogin() {
-		window.location.href='login.html'
+		document.getElementById(c).style.display = "block"
 	}
 
-	// Get the modal
-	var modal = document.getElementById("myModal");
-
-	// Get the image and insert it inside the modal - use its "alt" text as a caption
-	var img = document.getElementById("myImg");
-	var modalImg = document.getElementById("img01");
-	var captionText = document.getElementById("caption");
-	img.onclick = function(){
-		modal.style.display = "block";
-		modalImg.src = this.src;
-		captionText.innerHTML = this.alt;
+	function showTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "block";
+		}
 	}
 
-	// Get the <span> element that closes the modal
-	var span = document.getElementsByClassName("close")[0];
+	var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+		  items: [
+			  // List of Menu Items
+			  // item = { name, description, price, menu_category }
+		  ],
+		  types: [ 
+			// List of Menu Categories
+			// type = { id, name, menu_item[] }
+		  ] 
+        },
+		methods: {
+			itemsOfType: function(typeID) {
+				return this.items.filter(function(item) {
+					if(item.menu_category == typeID) {
+						return item;
+					};
+				})
+			},
+			viewModal: function(itemName) {
+				// Get the modal
+				var modal = document.getElementById("myModal");
 
-	// When the user clicks on <span> (x), close the modal
-	span.onclick = function() {
-		modal.style.display = "none";
-	}
+				// Get the image and insert it inside the modal - use its "alt" text as a caption
+				var img = document.getElementById(itemName);
+				var modalImg = document.getElementById("img01");
+				var captionText = document.getElementById("caption");
+				img.onclick = function(){
+					modal.style.display = "block";
+					modalImg.src = this.src;
+					captionText.innerHTML = this.alt;
+				}
+
+				// Get the <span> element that closes the modal
+				var span = document.getElementsByClassName("close")[0];
+
+				// When the user clicks on <span> (x), close the modal
+				span.onclick = function() {
+					modal.style.display = "none";
+				}
+			}
+		}, 
+		created() {
+			var basicAuth = 'Basic ' + btoa('admin' + ':' + 'admin')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://127.0.0.1:8000/menuItems/')
+                .then((response) => {
+					this.items = response.data
+				}).catch( error => {console.log(error); });
+				
+			axios
+				.get('http://127.0.0.1:8000/menuCategories/')
+				.then((response) => {
+					this.types = response.data
+				}).catch( error => {console.log(error); });
+			return;
+		}
+      })
+
+	
+
+	
+
+	
 	
 </script>
 
 <style type="text/css">
 body {
 	background-image: url("../../pictures/menu-bg.jpg");
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
-	font-family: 'Courgette', cursive;
 	font-size: 75px;
 	color: white;
 	position: relative;
@@ -186,13 +239,11 @@ body {
 }
 
 .category {
-	font-family: 'Courgette', cursive;
 	font-size: 30px;
 	color: white;
 }
 
 .category_title {
-	font-family: 'Courgette', cursive;
 	font-size: 30px;
 	color: white;
 	text-decoration: underline;
@@ -212,6 +263,13 @@ body {
 
 }
 
+#filters {
+	width: 50%;	
+	left: 50%;
+	transform: translate(-50%, 0%);
+	z-index: 2;
+}
+
 /* Style the Image Used to Trigger the Modal */
 #myImg {
   border-radius: 5px;
@@ -225,7 +283,7 @@ body {
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 3; /* Sit on top */
   padding-top: 100px; /* Location of the box */
   left: 0;
   top: 0;
@@ -323,7 +381,13 @@ increase left & right margins a bit**/
 }
 .modal-content {
     width: 100%;
-  }
+}
+
+#filters {
+	width: 100%;
+	left: 0%;
+	transform: translate(0%,0%);
+}
 
 /**TIP: Easy escape for touch screens,
 give gallery's parent container a cursor: pointer.**/

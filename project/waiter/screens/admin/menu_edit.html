@@ -1,113 +1,14 @@
 <!-- Management Dashboard -->
 <!DOCTYPE html>
 <html>
-    <script>
-
-        var oldRowIndex;
-        function logout() {
-            window.location.href='login.html'
-        }
-
-        function getItemData(itemName) {
-   
-            oldRowIndex = itemName.rowIndex;
-            //console.log("itemName.cells[2]"+ itemName.cells[2].innerHTML);
-            
-            var name = itemName.cells[0].innerHTML;
-            var desc = itemName.cells[1].innerHTML;
-            var price = itemName.cells[2].innerHTML;
-            var itemCategory = itemName.parentNode.parentNode.id;
-            var categories = document.getElementById("itemCategory");
-
-            document.getElementById("itemName").value = name;
-            document.getElementById("itemDesc").value = desc;
-            document.getElementById("itemPrice").value = price;
-
-            for (i = 0; i < categories.length; i++) {
-    		    if(categories[i].value == itemCategory) {
-                    categories[i].selected = true;
-                }
-		    }
-
-            return;
-        }
-
-        function editItem() {
-            var formDetails = document.querySelector(".itemInfo");
-            
-            var table = document.getElementById("Category 1");
-            var itemRow = document.createElement('tr');
-            var newName = document.createElement('td');
-            newName.width = '20%'
-            newName.appendChild(document.createTextNode(formDetails[0].value));
-            var newDesc = document.createElement('td');
-            newDesc.width = '45%'
-            newDesc.appendChild(document.createTextNode(formDetails[1].value));
-            var newPrice = document.createElement('td');
-            newPrice.width = '10%'
-            newPrice.appendChild(document.createTextNode(formDetails[2].value));
-            
-            var sort = document.createElement('td');
-            var edit = document.createElement('td');
-            var remove = document.createElement('td');
-
-            itemRow.appendChild(newName);
-            itemRow.appendChild(newDesc);
-            itemRow.appendChild(newPrice);
-
-            table.appendChild(itemRow);
-            table.deleteRow(oldRowIndex);
-            oldRowIndex = '';
-
-
-        }
-
-
-        function removefromMenu() {
-            // confirm the choice to remove item
-        }
-
-        function moveUpTable(thisRow) {
-            var table = document.getElementById("Category 1");
-            
-            var thisIndex = thisRow.rowIndex;
-            if(thisIndex == 1) {
-                return;
-            }
-            
-            var previousRow = table.rows[thisIndex-1];
-            previousRow.parentNode.insertBefore(thisRow,previousRow);
-        }
-        
-        function moveDownTable(thisRow) {
-            var table = document.getElementById("Category 1");
-            var thisIndex = thisRow.rowIndex;
-            if(thisIndex == table.rows.length-1) {
-                return;
-            }
-
-            var nextRow = table.rows[thisIndex+1];
-            nextRow.parentNode.insertBefore(nextRow,thisRow);
-
-        }
-
-        function categoryUp() {
-
-        }
-
-        function categoryDown() {
-
-        }
-    </script>
-<head>
-    <meta name="viewport" content="width=device-width">
-			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-            <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-    <title>Management - Menu Edit</title>
-</head>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+        <title>Management - Menu Edit</title>
+    </head>
 <body>
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
         <img src="../../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
@@ -131,187 +32,404 @@
                     <a class="nav-link" href="old_items.html">Old Menu Items</a>
                 </li>
             </ul>
-            <button class="btn btn-outline-success my-2 my-sm-0" onclick="logout()">Logout</button>
+            <button class="btn btn-outline-light my-2 my-sm-0" onclick="logout()">Logout
+                <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+            </button>
         </div>
     </nav>
 
     <div class="title">Edit Menu</div>
 
     <div class="container" style="background-color: transparent; text-align: center;">
-        <button id="addCategory" type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#itemModal">Add Category</button>
-        <button id="addItem" type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#itemModal">Add Menu Item</button>
+        <button id="addCategory" type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#catModal">Add Category</button>
+        <button id="addItem" v-on:click="isNew = true" type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#newModal">Add Menu Item</button>
+        <button id="saveButton" type="button" class="btn btn-lg btn-success" data-toggle="modal" data-target="#confirmModal">Save Changes</button>
     </div>
 
     <!-- Table per category -->
-    <div class="container" style="overflow-x:auto;">   
-        <div class="categoryTitle" style="text-align: center; background-color: transparent;">Category 1
-            <span class="table-up"><a href="#!" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
-                aria-hidden="true" style='font-size:24px; color: white;'></i></a></span>
-            <span class="table-down"><a href="#!" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
-                aria-hidden="true" style='font-size:24px; color: white;'></i></a></span>
-            </div><br>     
-        <table id="Category 1" class="table table-sm table-borderless table-striped table-hover display nowrap" style="text-align: center;">
-            <thead>
-            <tr>
-                <th style="width: 20%">Item Name</th>
-                <th style="width: 45%">Description</th>
-                <th style="width: 10%">Price</th>
-                <th class="width: 5%">Sort</th>
-                <th class="text-center" style="width: 5%">Edit?</th>
-                <th class="text-center" style="width: 5%">Remove?</th>
-            </tr>
-            </thead>
-            <!-- Start of table, dynamic space-->
-            <tbody>
-                <tr id="item1">
-                    <td class="align-middle">Item1</td>
-                    <td class="align-middle">--------</td>
-                    <td class="align-middle">$XXX.XX</td>
-                    <td class="align-middle">
-                        <span class="table-up"><a href="#!" onclick="moveUpTable(this.parentNode.parentNode.parentNode)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
-                            aria-hidden="true" style='font-size:24px'></i></a></span>
-                        <span class="table-down"><a href="#!" onclick="moveDownTable(this.parentNode.parentNode.parentNode)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
-                            aria-hidden="true" style='font-size:24px'></i></a></span>
-                    </td>
-                    <td nowrap class="text-center align-middle">
-                        <button id="item1" type="button" class="btn btn-lg btn-link" onclick="getItemData(this.parentNode.parentNode)" data-toggle="modal" data-target="#itemModal">
-                            <span><i class="fas fa-edit" aria-hidden="true" style='font-size:24px'></i></span>
-                        </button>
-                    </td>
-                    <td nowrap class="text-center align-middle">
-                        <button id="item1" type="button" class="btn btn-lg btn-link" data-toggle="modal" data-target="#confirmModal">
-                            <span><i class="fas fa-times" aria-hidden="true" style='font-size:24px'></i></span>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-middle">Item2</td>
-                    <td class="align-middle">--------</td>
-                    <td class="align-middle">$XXX.XX</td>
-                    <td class="align-middle">
-                        <span class="table-up"><a href="#!" onclick="moveUpTable(this.parentNode.parentNode.parentNode)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
-                            aria-hidden="true" style='font-size:24px'></i></a></span>
-                        <span class="table-down"><a href="#!" onclick="moveDownTable(this.parentNode.parentNode.parentNode)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
-                            aria-hidden="true" style='font-size:24px'></i></a></span>
-                    </td>
-                    <td nowrap class="text-center align-middle">
-                        <button id="item1" type="button" class="btn btn-lg btn-link" data-toggle="modal" data-target="#itemModal">
-                            <span><i class="fas fa-edit" aria-hidden="true" style='font-size:24px'></i></span>
-                        </button>
-                    </td>
-                    <td nowrap class="text-center align-middle">
-                        <button id="item1" type="button" class="btn btn-lg btn-link" data-toggle="modal" data-target="#confirmModal">
-                            <span><i class="fas fa-times" aria-hidden="true" style='font-size:24px'></i></span>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="align-middle">Item3</td>
-                    <td class="align-middle">--------</td>
-                    <td class="align-middle">$XXX.XX</td>
-                    <td class="align-middle">
-                        <span class="table-up"><a href="#!" onclick="moveUpTable(this.parentNode.parentNode.parentNode)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
-                            aria-hidden="true" style='font-size:24px'></i></a></span>
-                        <span class="table-down"><a href="#!" onclick="moveDownTable(this.parentNode.parentNode.parentNode)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
-                            aria-hidden="true" style='font-size:24px'></i></a></span>
-                    </td>
-                    <td nowrap class="text-center align-middle">
-                        <button id="item1" type="button" class="btn btn-lg btn-link" data-toggle="modal" data-target="#itemModal">
-                            <span><i class="fas fa-edit" aria-hidden="true" style='font-size:24px'></i></span>
-                        </button>
-                    </td>
-                    <td nowrap class="text-center align-middle">
-                        <button id="item1" type="button" class="btn btn-lg btn-link" data-toggle="modal" data-target="#confirmModal">
-                            <span><i class="fas fa-times" aria-hidden="true" style='font-size:24px'></i></span>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-
-
+    <div id="app" class="container" style="overflow-x:auto;">   
+        <template v-for="type in types">
+            <div class="categoryTitle" style="text-align: center; background-color: transparent;">{{ type.name }}
+                <span class="table-up"><a href="#!" v-on:click="moveCategoryUp(type.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
+                    aria-hidden="true" style='font-size:24px; color: white;'></i></a></span>
+                <span class="table-down"><a href="#!" v-on:click="moveCategoryDown(type.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
+                    aria-hidden="true" style='font-size:24px; color: white;'></i></a></span>
+                </div><br>  
+                <table v-bind:id="type.name" class="table table-sm table-borderless table-striped table-hover display nowrap" style="text-align: center;">
+                    <thead>
+                    <tr>
+                        <th style="width: 20%">Item Name</th>
+                        <th style="width: 45%">Description</th>
+                        <th style="width: 10%">Price</th>
+                        <th class="width: 5%">Sort</th>
+                        <th class="text-center" style="width: 5%">Edit?</th>
+                        <th class="text-center" style="width: 5%">Remove?</th>
+                    </tr>
+                    </thead>
+                    <!-- Start of table, dynamic space-->
+                    <tbody>
+                        <template v-for="(item,index) in itemsOfType(type.name)">  
+                            <tr id="item.itemName">
+                                <td class="align-middle">{{ item.name }}</td>
+                                <td class="align-middle">{{ item.description }}</td>
+                                <td class="align-middle">${{ item.price }}</td>
+                                <td class="align-middle">
+                                    <!-- Up Icon -->
+                                    <span class="table-up"><a href="#!" v-on:click="moveItemUp(type.name, item.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
+                                        aria-hidden="true" style='font-size:24px'></i></a></span>
+                                    <!-- Down Icon -->
+                                    <span class="table-down"><a href="#!" v-on:click="moveItemDown(type.name, item.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
+                                        aria-hidden="true" style='font-size:24px'></i></a></span>
+                                </td>
+                                <td nowrap class="text-center align-middle"> <!-- Edit Icon -->
+                                    <button v-bind:id="item.name" type="button" class="btn btn-lg btn-link" v-on:click="seteditingItem(item.name)" data-toggle="modal" data-target="#itemModal">
+                                        <span><i class="fas fa-edit" aria-hidden="true" style='font-size:24px'></i></span>
+                                    </button>
+                                </td>
+                                <td nowrap class="text-center align-middle"> <!-- Remove Icon -->
+                                    <button v-bind:id="item.name" type="button" class="btn btn-lg btn-link" v-on:click="setRemoveItem(item.name)" data-toggle="modal" data-target="#confirmModal">
+                                        <span><i class="fas fa-times" aria-hidden="true" style='font-size:24px'></i></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+        </template>
     
 
-    <!-- Item Info Modal -->
-    <div class="modal" id="itemModal">
-        <div class="modal-dialog">
-        <div class="modal-content">
-    
-            <!-- Modal Header -->
-            <div class="modal-header">
-            <h4 class="modal-title">Edit Item</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-    
-            <!-- Modal body -->
-            <div class="modal-body">
-                <form class="itemInfo">
-                <label for="itemName">Item Name: </label>
-                <input type='text' id='itemName' name='itemName' required='' style="width:75%"><br><br>
-                <div class="_quantity">Item Desc: </div>
-                <textarea type='text' id='itemDesc' name='itemDesc' style='min-width: 100%; border: solid 1px black;' placeholder='' required=''></textarea><br><br>
-                <label for="itemPrice">Price: </label>
-                <input type="text" name="itemPrice" id="itemPrice" style="width:25%" pattern="\d+(\.\d{2})?" value="" data-type="currency"  required=''>
-                <small>Format: x.xx</small><br><br>
-                <label for="itemCategory">Category: </label>
-                <select id="itemCategory" class="itemCategory"style="width:50%" required="">
-                    <option value="Category 1">Category 1</option>
-                    <option value="Category 2">Category 2</option>
-                    <option value="Category 3">Category 3</option>
-                    <option value="Category 4">Category 4</option>
-                </select>
-                <div class="picture">Picture?
-                <button id="uploadPic" type="button" class="btn btn-lg btn-link">
-                    <span><i class="fas fa-file-upload" aria-hidden="true" style='font-size:24px'></i></span>
-                </button>
+
+        <!-- Item Info Modal -->
+        <div class="modal" id="newModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+        
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">Add Item</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                </form>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <template>
+                        <form class="itemInfo" @submit.prevent="addNewItem">
+                        <label for="itemName">Item Name: </label>
+                        <input type='text' id='itemName' name='itemName' required='' v-model="newItem.name" style="width:75%"><br><br>
+                        <div class="_quantity">Item Desc: </div>
+                        <textarea type='text' id='itemDesc' name='itemDesc' style='min-width: 100%; border: solid 1px black;' v-model="newItem.description" required=''></textarea><br><br>
+                        <label for="itemPrice">Price: </label>
+                        <input type="text" name="itemPrice" id="itemPrice" style="width:25%" pattern="\d+(\.\d{2})?" v-model="newItem.price" data-type="currency"  required=''>
+                        <small>Format: x.xx</small><br><br>
+                        <label for="itemCategory">Category: </label>
+                        <select id="itemCategory" v-model="newItem.category" class="itemCategory" style="width:50%" required="">
+                            <template v-for="t in types">
+                                <option >{{ t.name }}</option>
+                            </template>
+                        </select>
+                        <div class="picture">Picture?
+                        <button id="uploadPic" type="button" class="btn btn-lg btn-link">
+                            <span><i class="fas fa-file-upload" aria-hidden="true" style='font-size:24px'></i></span>
+                        </button>
+                        </div>
+                        </form>
+                    </template>
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Discard</button>
+                    <button v-on:click="addNewItem" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal"S>Add Item</button>
+                </div>
             </div>
-    
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Discard Changes</button>
-                <button type="submit" class="btn btn-lg btn-primary" data-dismiss="modal" onclick="editItem(this)">Save Changes</button>
             </div>
         </div>
-        </div>
-    </div>
 
-    <!-- Remove Item Modal -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-dialog">
-        <div class="modal-content">
-    
-            <!-- Modal Header -->
-            <div class="modal-header">
-            <h4 class="modal-title">Remove Item?</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        <div class="modal" id="itemModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+        
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">Edit Item</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <template>
+                        <form class="itemInfo" @submit.prevent="saveChanges">
+                        <label for="itemName">Item Name: </label>
+                        <input type='text' id='itemName' name='itemName' required='' v-model="editing.name" style="width:75%"><br><br>
+                        <div class="_quantity">Item Desc: </div>
+                        <textarea type='text' id='itemDesc' name='itemDesc' style='min-width: 100%; border: solid 1px black;' v-bind:value="editing.description" required=''></textarea><br><br>
+                        <label for="itemPrice">Price: </label>
+                        <input type="text" name="itemPrice" id="itemPrice" style="width:25%" pattern="\d+(\.\d{2})?" v-model="editing.price" data-type="currency"  required=''>
+                        <small>Format: x.xx</small><br><br>
+                        <label for="itemCategory">Category: </label>
+                        <select id="itemCategory" v-model="editing.category" class="itemCategory"style="width:50%" required="">
+                            <template v-for="t in types">
+                                <template v-if="t.name == editing.category">
+                                    <option  selected>{{ t.name }}</option>
+                                </template>
+                                <template v-else>
+                                    <option >{{ t.name }}</option>
+                                </template>
+                                
+                            </template>
+                        </select>
+                        <div class="picture">Picture?
+                        <button id="uploadPic" type="button" class="btn btn-lg btn-link">
+                            <span><i class="fas fa-file-upload" aria-hidden="true" style='font-size:24px'></i></span>
+                        </button>
+                        </div>
+                        </form>
+                    </template>
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Discard Changes</button>
+                    <button v-on:click="saveChanges" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal">Save Changes</button>
+                </div>
             </div>
-    
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div>Are you sure you want to remove this item from the current menu?</div><br>
-            </div>
-    
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" onclick="removefromMenu()">Yes</button>
-                <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">No</button>
             </div>
         </div>
-        </div>
+
+    
+        <template v-if="isRemove">
+            <template v-for="item in removeItemData">
+            <!-- Remove Item Modal -->
+            <div class="modal" id="confirmModal">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Remove Item?</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+            
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div>Are you sure you want to remove this item from the current menu?</div><br>
+                        
+                            <div><b>Item Name: </b>{{ item.name }}</div>
+                            <div><b>Description: </b>{{ item.description }}</div>
+                            <div><b>Price: </b>{{ item.price }}</div>
+                            <div><b>Category: </b>{{ item.category }}</div>
+                        
+                        
+                    </div>
+            
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button v-on:click="removeItem(item.name)" type="submit" class="btn btn-lg btn-danger" data-dismiss="modal"  data-backdrop="false">Yes</button>
+                        <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">No</button>
+                    </div>
+                
+                </div>
+                </div>
+            </div>
+            </template>
+        </template>
+        
+        <template v-else>
+            <div class="modal" id="confirmModal">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Save Changes?</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+            
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div>Are you sure you want to save the changes made to the menu?</div><br>
+                    </div>
+            
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button v-on:click="saveMenu" type="submit" class="btn btn-lg btn-danger" data-dismiss="modal"  data-backdrop="false">Save</button>
+                        <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">Back to Edit</button>
+                    </div>
+                
+                </div>
+                </div>
+            </div>
+            </template>
+        </template>
     </div>
+    
 
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+
+    var app = new Vue ({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            isRemove: false,
+            isNew: false,
+            editing: {itemName: '', description: '', price: '', category: ''},
+            newItem: {itemName: '', description: '', price: '', category: ''},
+            oldItemName: '',
+            removingItemName: '',
+            newCategoryName: '',
+            items: [
+                // get set of items here 
+                { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
+                { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
+                { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
+                { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
+                { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
+                { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
+		    ],
+		    types: [
+                // get set of categories here
+                {name: 'Breakfast'},
+                {name: 'Lunch'},
+                {name: 'Dinner'}
+            ]
+        },
+        computed: {
+            removeItemData: function() {
+                name = this.removingItemName
+                return this.items.filter(function(item) {
+                    if(item.name == name) {
+                        return item;
+                    }
+                })
+            },
+        },
+        methods: {
+            
+			itemsOfType: function(type) {
+				return this.items.filter(function(item) {
+					if(item.category == type) {
+						return item;
+					};
+				})
+            },
+            getItemData: function(itemName) {
+                return this.items.filter(function(item) {
+					if(item.name == itemName) {
+						return item;
+					};
+				})
+            },
+            seteditingItem: function(itemName) {
+                item = this.getItemData(itemName)
+                isNew = false;
+                this.oldItemName = item[0].name
+                this.editing.name = item[0].name;
+                this.editing.description = item[0].description;
+                this.editing.price = item[0].price;
+                this.editing.category = item[0].category
+            },
+            saveChanges: function() {
+                item = this.getItemData(this.oldItemName);
+                item[0].name = this.editing.name;
+                item[0].description = this.editing.description;
+                item[0].price = this.editing.price;
+                item[0].category = this.editing.category;
+            },
+            removeItem: function(itemName) {
+                var idx = this.items.findIndex(x => x.name == itemName)
+                this.items.splice(idx, 1)
+                this.isRemove = false
+                return;
+            },
+            moveCategoryUp: function(name, type) {
+                rows = this.types;
+                var idx = rows.findIndex(x => x.name == name)
+                rows.splice(idx - 1, 0, rows.splice(idx, 1)[0]);
+
+            },
+            moveCategoryDown: function(name, type) {
+                rows = this.types;
+                var idx = rows.findIndex(x => x.name == name)
+                rows.splice(idx + 1, 0, rows.splice(idx, 1)[0]);
+            },
+            moveItemUp: function(type, itemName) {
+                itemList = this.itemsOfType(type);
+                var idx = itemList.findIndex(x => x.name == itemName)                
+                if(idx == 0) {
+                    return;
+                }
+                
+                prevItem = itemList[idx-1].name 
+                var previdx = this.items.findIndex(x => x.name == prevItem)
+                var curridx = this.items.findIndex(x => x.name == itemName)
+                this.items[previdx] = this.items.splice(curridx, 1, this.items[previdx])[0]
+            },
+            moveItemDown: function(type, itemName) {
+                itemList = this.itemsOfType(type);
+                var idx = itemList.findIndex(x => x.name == itemName)                
+                if(idx == itemList.length-1) {
+                    return;
+                }
+                
+                nextItem = itemList[idx+1].name 
+                var nextidx = this.items.findIndex(x => x.name == nextItem)
+                var curridx = this.items.findIndex(x => x.name == itemName)
+                this.items[curridx] = this.items.splice(nextidx, 1, this.items[curridx])[0]
+            },
+            setRemoveItem: function(name) {
+                this.removingItemName = name
+                this.isRemove = true
+            } ,
+            saveMenu: function() {
+
+            },
+            addNewItem: function() {
+                newItem = {
+                        name: this.newItem.name,
+                        description: this.newItem.description,
+                        price: this.newItem.price,
+                        category: this.newItem.category
+                }
+                this.items.push(newItem)
+                console.log(this.items)
+                this.resetNew()
+                
+                isNew = false
+            },
+            addNewCategory: function() {
+                categoryName = this.newCategoryName
+                this.types.push({name: categoryName})
+                console.log(this.types)
+                this.newCategoryName = ''
+            },
+            resetNew: function() {
+                this.newItem.name = ''
+                this.newItem.description = ''
+                this.newItem.price = ''
+                this.newItem.category = ''
+            }
+        }
+    })
+
+    function logout() {
+        window.location.href='login.html'
+    }
+
+</script>
+
+
 <style>
 body {
     background-color: #6f42c1;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
-    font-family: 'Courgette', cursive; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 50px;
@@ -340,7 +458,7 @@ body {
 }
 
 .categoryTitle {
-    font-family: 'Courgette', cursive; 
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 	font-style: normal; 
 	font-variant: normal;
     font-size: 25px;

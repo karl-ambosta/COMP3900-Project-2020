@@ -25,7 +25,7 @@ SECRET_KEY = 'lv+9g+v42g7#z*8^ih!+7y7%2xh&lq89r92zawz+i26!of8qnw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -46,14 +46,26 @@ INSTALLED_APPS = [
     'allauth.account', 
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
     'customer',
+    'corsheaders'
 ]
 
 SITE_ID = 1
 
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1',
+)
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -83,6 +95,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'waiter.wsgi.application'
+
 
 
 # Database

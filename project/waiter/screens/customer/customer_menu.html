@@ -6,7 +6,6 @@
 		<head>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-			<link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 			<title>Waiter - Order from Menu</title>
@@ -32,11 +31,6 @@
 							<a class="nav-link" onclick="filterType(this)" v-bind:value="t.name" style="text-align: center;">{{ t.name }}</a>
 						</li>
 					</template>
-<!--
-					<li class="nav-item active">
-						<a class="nav-link disabled" href="#" >Menu <span class="sr-only">(current)</span> </a>
-					</li>
--->
 				</ul>
 			</div>
 		</nav>
@@ -47,15 +41,15 @@
 			<template v-for="t in types">
 				<div v-bind:id="t.name" class="items">
 					<div class="category_title">{{ t.name }}</div>
-					<template v-for="(item,index) in itemsOfType(t.name)">
+					<template v-for="item in itemsOfType(t.id)">
 						<div class="row">
 							<div class="col">
 								<div class="border">
-									<img id="myImg" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
+									<img v-bind:id="item.name" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100" v-on:click="viewModal(item.name)">
 									<div class="item_text">
-										<h5>{{ item.name }}</h5>
+										<h5><b>{{ item.name }}</b></h5>
 										<p>{{ item.description }}</p>
-										<h6>${{ item.price }}</h6>
+										<h5 class="price_text"><b>${{ item.price }}</b></h5>
 									</div>
 									<div class="addButton">
 										<button v-bind:id="item.name" type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" @click="updateItemDetails(item.name)" onclick="openModal(this)" data-toggle="modal" data-target="#customiseModal" data-backdrop="false" >Add to Order</button>
@@ -69,26 +63,7 @@
 				
 			</template>
 		</div>
-<!--
-			<div class="items" id="breakfast">
-				<div class="row">
-					<div class="col">
-						<div class="border">
-							<img class="thumbnail zoom" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100">
-							<div class="item_text">
-								<h4>Breakfast 1</h4>
-								<p>Description of item</p>
-							</div>
-							<div class="price_text">
-								<h4>$Price</h4>
-							</div>
-							<div class="addButton">
-								<button type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" onclick="openModal('Breakfast 1')" data-toggle="modal" data-target="#customiseModal" >Add to Order</button>
-							</div>
-						</div>
-					</div>
-					
-	-->
+
 		<!-- The Modal -->
 		<div class="modal" id="customiseModal">
 			<form @submit.prevent="processForm">
@@ -114,7 +89,7 @@
 					<!-- Modal footer -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
-						<button v-on:click="processForm" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal" @click="processForm">Add to Order</button>
+						<button v-on:click="processForm" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal">Add to Order</button>
 					</div>
 				</div>
 			</div>
@@ -141,6 +116,7 @@
 	</body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 
 	function hideTypes() {
@@ -177,29 +153,38 @@
         el: '#app',
         delimiters: ['{{', '}}'],
         data: {
-		  itemName: '',
-		  quantity: 0,
-		  notes: '',
-		  items: [
-			  // get set of items here 
-			  { name: 'test1', description: 'Description of test1', price: '2.50', category: 'Breakfast'},
-			  { name: 'test2', description: 'Description of test2', price: '5.00', category: 'Lunch'},
-			  { name: 'test3', description: 'Description of test3', price: '3.75', category: 'Dinner'},
-			  { name: 'test4', description: 'Description of test4', price: '10.00', category: 'Breakfast'},
-			  { name: 'test5', description: 'Description of test5', price: '11.00', category: 'Lunch'},
-			  { name: 'test6', description: 'Description of test6', price: '4.75', category: 'Dinner'},
-		  ],
-		  types: [
-			  // get set of categories here
-			  {name: 'Breakfast'},
-			  {name: 'Lunch'},
-			  {name: 'Dinner'}
-		  ]
+			itemName: '',
+			quantity: 0,
+			notes: '',
+			items: [
+				// List of Menu Items
+				// item = { name, description, price, menu_category }
+			],
+			types: [
+				// List of Menu Categories
+				// type = { id, name, menu_item[] }
+			],
+		},
+		created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://127.0.0.1:8000/menuItems/')
+                .then((response) => {
+					this.items = response.data
+				}).catch( error => {console.log(error); });
+				
+			axios
+				.get('http://127.0.0.1:8000/menuCategories/')
+				.then((response) => {
+					this.types = response.data
+				}).catch( error => {console.log(error); });
+			return;
         },
 		methods: {
-			itemsOfType: function(type) {
+			itemsOfType: function(typeID) {
 				return this.items.filter(function(item) {
-					if(item.category == type) {
+					if(item.menu_category == typeID) {
 						return item;
 					};
 				})
@@ -226,41 +211,41 @@
 				// send input to database
       			console.log("processed: " + this.itemName + " " + this.quantity + " " + this.notes);
 				  window.location.href = "new_order.html"
-    		},
+			},
+			viewModal: function(itemName) {
+				// Get the modal
+				var modal = document.getElementById("myModal");
+
+				// Get the image and insert it inside the modal - use its "alt" text as a caption
+				var img = document.getElementById(itemName);
+				var modalImg = document.getElementById("img01");
+				var captionText = document.getElementById("caption");
+				img.onclick = function(){
+					modal.style.display = "block";
+					modalImg.src = this.src;
+					captionText.innerHTML = this.alt;
+				}
+
+				// Get the <span> element that closes the modal
+				var span = document.getElementsByClassName("close")[0];
+
+				// When the user clicks on <span> (x), close the modal
+				span.onclick = function() {
+					modal.style.display = "none";
+				}
+			}
 			
 		}
       })
-
-// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the image and insert it inside the modal - use its "alt" text as a caption
-var img = document.getElementById("myImg");
-var modalImg = document.getElementById("img01");
-var captionText = document.getElementById("caption");
-img.onclick = function(){
-	modal.style.display = "block";
-	modalImg.src = this.src;
-	captionText.innerHTML = this.alt;
-}
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[1];
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-	modal.style.display = "none";
-}
-
 </script>
 
 <style type="text/css">
 body {
 	background-color: #6f42c1;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
 }
 
 .title {
-	font-family: 'Courgette', cursive;
 	font-size: 75px;
 	color: white;
 	position: relative;
@@ -274,7 +259,6 @@ body {
 	left: 50%;
 	transform: translate(-50%, 0%);
 	z-index: 2;
-	
 }
 
 .container {
@@ -292,7 +276,6 @@ body {
 }
 
 .category_title {
-	font-family: 'Courgette', cursive;
 	font-size: 30px;
 	color: white;
 	text-align: center;
@@ -306,11 +289,7 @@ body {
 	margin-left: 7em;
 }
 
-.price_text {
-	position: relative;
-	margin-top: -20%;
-	margin-left: 80%;
-}
+
 
 .addButton {
 	position: absolute;
@@ -432,7 +411,6 @@ ul.gallery {
 	width: 100%;
 	left: 0%;
 	transform: translate(0%,0%);
-	
 }
 
 .container {
@@ -441,6 +419,13 @@ ul.gallery {
 
 .modal-content {
     width: 100%;
+}
+
+.price_text {
+	position: relative;
+	margin-top: -35%;
+	margin-left: 65%;
+	text-align: right;
 }
 
 /**TIP: Easy escape for touch screens,

@@ -28,12 +28,11 @@ Week 6
 - This week, Joel and I continued to work through the rest of the different user pages. Joel had started on the cashier, kitchen stafd and waiter pages, while I went back through the landing pages and customer pages to make the layouts more responsive. After that I worked on the management pages, which includes the dashboard, menu editing, history and old items pages. Also, Ali gave some ideas on extending the customer pages. Some included: allowing app to track user's position to determine the closest restaurant near them, autofill customer name, customise item from the menu ordering screen. Some extra feature idea he gave us were: dividing bills and use of qr codes. These will be worked on in future weeks.
 
 Week 7
-
-*notes here*
+This week, I continue to work on the admin/menu_edit and dashboards to correct some errors and to implement a few more functionalities. As well as this, I have started working on connecting the front-end with GET, POST, etc. requests to our django api.
 
 Week 8
 
-*notes here*
+= This week, I continued work on connecting the front and back ends of the project through request to the django api, from the front end. I am to complete the GET and POST to /menuItems/ and /menuCategories/. There is still a few things to correct on the admin/menu_edit.html as well. 
 
 Week 9
 
