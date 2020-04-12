@@ -9,31 +9,31 @@ Formed group and selected project topic. Established teams for communication, gi
 
 Week 2
 
-*notes here*
+set up jira, added in some initial tasks relating to delegating work for the proprosal
 
 Week 3
 
-*notes here*
+worked on proposal, did the systems architecture section 
 
 Week 4
 
-*notes here*
+worked on setting up the base for the backend with basic users, to be able to build on top 
 
 Week 5
 
-*notes here*
+worked on cleaning up the authentication, added facebook authentication 
 
 Week 6
 
-*notes here*
+worked on backend menu item, categories 
 
 Week 7
 
-*notes here*
+worked on backend creating orders 
 
 Week 8
 
-*notes here*
+worked on backend changing model to include restaurants, changing behaviour of previous models to include for this
 
 Week 9
 
