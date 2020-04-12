@@ -4,3 +4,4 @@ django-rest-framework-social-oauth2==1.1.0
 pylint-django==2.0.14
 django-allauth==0.41.0
 django-rest-auth[with_social]==0.9.5
+django-cors-headers==3.2.1
