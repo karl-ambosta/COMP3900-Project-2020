@@ -101,7 +101,6 @@
                 .get('http://127.0.0.1:8000/orderList/')
                 .then((response) => {
                     this.orderList = response.data
-                    console.log(this.orderList)
                 }).catch( error => {console.log(error); return});
 
             axios
@@ -112,7 +111,6 @@
                             this.restaurant = response.data[i]
                         }
                     }
-                   console.log(this.restaurant)
                 }).catch( error => {console.log(error); return });
         },
         methods: {
@@ -127,7 +125,7 @@
             newOrder: function() {
 
                 axios
-                .post('http://127.0.0.1:8000/orderList/', '')
+                .post('http://127.0.0.1:8000/orderList/', null)
                 .then((response) => {
                     newOrder = response.data
                     sessionStorage.orderID = newOrder.id

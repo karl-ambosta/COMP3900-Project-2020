@@ -30,11 +30,7 @@
 						<a class="nav-link disabled" href="#">Contact Us <span class="sr-only">(current)</span> </a>
 					</li>
 				</ul>
-				<button class="btn btn-outline-light my-2 my-sm-0" onclick="">Register
-					<span><i class="fas fa-plus-square" aria-hidden="true"></i></span>
-				</button>
-				&nbsp;&nbsp;
-				<button class="btn btn-outline-light my-2 my-sm-0" onclick="toLogin()">Login
+				<button class="btn btn-outline-light my-2 my-sm-0" data-dismiss="modal" data-toggle="modal" data-target="#loginModal"  data-backdrop="false">Login
 					<span><i class="fas fa-sign-in-alt" aria-hidden="true"></i></span>
 				</button>
 			</div>
@@ -98,9 +94,90 @@
 			</div>
 		</div>
 
+		<div class="modal" id="loginModal" style="text-align: center;" style="">
+			<div class="modal-dialog">
+				<div class="modal-content" style="background-color: rgba(128, 128, 128, 0.5);">
+					<button type="button" class="close" data-dismiss="modal">&times;</button><br>
+			
+				<div class="container2" style="overflow-x:auto;">
+					<!-- Navbar -->
+					<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+						<li class="nav-item pill-1">
+							<a class="nav-link active" id="login-tab" data-toggle="pill" href="#login" role="tab" aria-controls=login aria-selected="true">Login</a>
+						</li>
+						<li class="nav-item pill-1">
+							<a class="nav-link" id="register-tab" data-toggle="pill" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+						</li>
+					</ul>
+					<hr>
+	
+					<!-- Content Section -->
+					<div class="tab-content" id="pills-tabContent">
+			
+						<!-- Login Tab -->
+						<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+							<div id="loginApp">
+								<div style="text-align: center;">
+									<form id="loginForm" class="form-signin" @submit.prevent="login">
+										<img class="mb-4" src="../../pictures/logo_transp.png" alt="" width="72" height="72">
+										<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+										<label for="inputEmail" class="sr-only">Username</label>
+										<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
+	
+										<label for="inputPassword" class="sr-only">Password</label>
+										<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+										<div class="checkbox mb-3">
+										<label>
+											<input type="checkbox" value="remember-me"> Remember me
+										</label>
+										</div>
+										<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
+										<p id="errorMessage" style="color:red"></p>
+										<p class="mt-5 mb-3 text-info">© 2019-2020</p>
+									</form>
+								</div>
+							</div>
+						</div>
+				
+						<!-- Register Tab -->
+						<div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+							<div id="registerApp">
+								<div style="text-align: center;">
+									<form id="registerForm" class="form-signin" @submit.prevent="register">
+										<img class="mb-4" src="../../pictures/logo_transp.png" alt="" width="72" height="72">
+										<h1 class="h3 mb-3 font-weight-normal">Register form</h1>
+										<label for="inputEmail" class="sr-only">Username</label>
+										<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
+	
+										<label for="email" class="sr-only">Email Address</label>
+										<input class="form-control" v-model="email" type="email" id="inputEmail" name="emailAddress" placeholder="Email Address..."><br>
+										
+										<label for="inputPassword" class="sr-only">Password</label>
+										<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required=""><br>
+	
+										<label for="inputPassword" class="sr-only">Confirm Password</label>
+										<input type="password" v-model="confirmPassword" id="inputConfirmPassword" class="form-control" placeholder="Confirm Password" required="">
+										<div class="checkbox mb-3">
+										<label>
+											<input type="checkbox" value="remember-me"> Remember me
+										</label>
+										</div>
+										<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
+										<p id="errorMessage2" style="color:red"></p>
+										<p class="mt-5 mb-3 text-info">© 2019-2020</p>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="login.js"></script>
 <script>
 
 	var app = new Vue ({
@@ -120,9 +197,6 @@
 		}
 	})
 
-	function toLogin() {
-		window.location.href='login.html'
-	}
 </script>
 
 
@@ -184,8 +258,136 @@ input[type=submit]:hover {
 }
 
 .text2 {
-	
 	font-size: 50px;
+}
+
+.form-signin {
+    color: white;
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+	margin: 0 auto;
+	border-radius: 10px;
+}
+.form-signin .checkbox {
+    font-weight: 400;
+}
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 3; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+
+}
+
+.nav-pills .pill-1 .nav-link:not(.active) {
+    background-color: rgb(255, 255, 255);
+    color: #6f42c1;
+}
+
+.nav-pills .pill-1 .nav-link {
+    background-color: #6f42c1;
+    color: white;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: relative;
+
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/**THE SAME CSS IS USED IN ALL 3 DEMOS**/    
+/**gallery margins**/  
+ul.gallery{    
+margin-left: 3vw;     
+margin-right:3vw;  
+}    
+
+.zoom {      
+-webkit-transition: all 0.35s ease-in-out;    
+-moz-transition: all 0.35s ease-in-out;    
+transition: all 0.35s ease-in-out;     
+cursor: -webkit-zoom-in;      
+cursor: -moz-zoom-in;      
+cursor: zoom-in;  
+}     
+
+.zoom:hover,  
+.zoom:active,   
+.zoom:focus {
+/**adjust scale to desired size, 
+add browser prefixes**/
+-ms-transform: scale(2.5);    
+-moz-transform: scale(2.5);  
+-webkit-transform: scale(2.5);  
+-o-transform: scale(2.5);  
+transform: scale(2.5);    
+position:relative;      
+z-index:100;  
 }
 
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
