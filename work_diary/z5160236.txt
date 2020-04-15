@@ -32,11 +32,11 @@ This week, I continue to work on the admin/menu_edit and dashboards to correct s
 
 Week 8
 
-= This week, I continued work on connecting the front and back ends of the project through request to the django api, from the front end. I am to complete the GET and POST to /menuItems/ and /menuCategories/. There is still a few things to correct on the admin/menu_edit.html as well. 
+- This week, I continued work on connecting the front and back ends of the project through request to the django api, from the front end. I am to complete the GET and POST to /menuItems/ and /menuCategories/. There is still a few things to correct on the admin/menu_edit.html as well. 
 
 Week 9
 
-*notes here*
+- This week I worked on further implementations on the frontend. Decided to combine the customer's main pages, ordering and menu pages, to reduce the amount of screen changes for the customer. Waiting for the back-end to finish the ordering/kitchen/waiter apis to finish off the remainder of the front-end. Other than that, a few more design changes are going to be done, before our final demo
 
 Week 10
 
