@@ -37,7 +37,7 @@ Reviewed feedback from Ali. Combined kitchen into a single page, combined cashie
 
 Week 8
 
-*notes here*
+Setup chatbot and tested during meeting with team. Planning API integration for fully functional chat bot. Setup dockerfile and build for easy AWS elastic beanstalk deployment.
 
 Week 9
 
