@@ -109,10 +109,15 @@
         methods: {
 			processForm: function() {
                 // send input to database
+
+                rIdx = this.restaurants.findIndex(x => x.name == this.chosen_restaurant)
+                rID = this.restaurants[rIdx].id
                 
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 userName = sessionStorage.getItem('user')
-                sessionStorage.restaurant = this.chosen_restaurant
+                sessionStorage.setItem('restaurant', JSON.stringify(
+                    { id: rID, name: this.chosen_restaurant}
+                ));
                 axios.defaults.headers.common['Authorization'] = basicAuth
 
                 axios
