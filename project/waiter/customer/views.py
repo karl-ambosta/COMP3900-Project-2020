@@ -37,6 +37,16 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
+    def get_queryset(self):
+        qs = MenuItem.objects.all()
+        restaurant = self.request.query_params.get('restaurant', None)
+        category = self.request.query_params.get('category', None)
+        if restaurant is not None:
+            qs = qs.filter(menu_category__restaurant__id=restaurant)
+        if category is not None:
+            qs = qs.filter(menu_category=category)
+        return qs
+    
     @action(detail=True, methods=['post'])
     def order(self, request, id=None):
         try:
