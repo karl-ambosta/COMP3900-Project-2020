@@ -14,7 +14,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
-from django.db.models import Sum, F, DecimalField, ExpressionWrapper
+from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -23,7 +23,7 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class MenuItemViewSet(viewsets.ModelViewSet):
-    queryset = MenuItem.objects.all()
+    queryset = MenuItem.objects.all().order_by('order')
     serializer_class = MenuItemSerializer
     lookup_field = 'id'
     lookup_value_regex = '[0-9]+'
@@ -31,14 +31,31 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'price', 'menu_category__name']
 
+    @action(methods=['post'], detail=True)
+    def move(self, request, id=None):
+        obj = self.get_object()
+        new_order = request.data.get('order', None)
+        if new_order is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST,)
+        if int(new_order) < 1:
+            return Response(status=status.HTTP_400_BAD_REQUEST,)
+
+        MenuItem.objects.move(obj, new_order)
+        return Response({'success': True, 'order': new_order})
+    
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
 
+    def list(self, request):
+        qs = self.get_queryset().filter(active=True)
+        serializer = MenuItemSerializer(qs, many=True)
+        return Response(serializer.data)
+
     def get_queryset(self):
-        qs = MenuItem.objects.all()
+        qs = MenuItem.objects.order_by('order')
         restaurant = self.request.query_params.get('restaurant', None)
         category = self.request.query_params.get('category', None)
         if restaurant is not None:
@@ -76,10 +93,18 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    @action(detail=False)
+    def get_inactive_items(self, request, id=None):
+        qs = self.get_queryset().filter(active=False)
+        serializer = MenuItemSerializer(qs, many=True)
+        return Response(serializer.data)
+
 
 class MenuCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = MenuCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'id'
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
@@ -89,11 +114,28 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
     
     def get_queryset(self):
-        qs = MenuCategory.objects.all()
+        qs = MenuCategory.objects.order_by('order')
         restaurant = self.request.query_params.get('restaurant', None)
         if restaurant is not None:
             qs = qs.filter(restaurant__id=restaurant)
-        return qs
+        return qs.distinct()
+
+    @action(methods=['post'], detail=True)
+    def move(self, request, id=None):
+        obj = self.get_object()
+        new_order = request.data.get('order', None)
+        if new_order is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST,)
+        if int(new_order) < 1:
+            return Response(status=status.HTTP_400_BAD_REQUEST,)
+
+        MenuCategory.objects.move(obj, new_order)
+        return Response({'success': True, 'order': new_order})
+
+    def list(self, request):
+        qs = self.get_queryset().filter(menu_item__active=True).prefetch_related(Prefetch('menu_item', queryset=MenuItem.objects.filter(active=True)))
+        serializer = MenuCategorySerializer(qs, many=True)
+        return Response(serializer.data)
 
 
 class FacebookLogin(SocialLoginView):

@@ -58,13 +58,13 @@ class MenuCategorySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MenuCategory
-        fields = ['id', 'name', 'menu_item', 'restaurant']
+        fields = ['id', 'name', 'menu_item', 'restaurant', 'order']
 
 class MenuItemSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MenuItem
-        fields = ['id', 'name', 'price', 'description', 'menu_category', 'picture']
+        fields = ['id', 'name', 'price', 'description', 'menu_category', 'picture', 'order', 'active']
 
 class OrderListSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
