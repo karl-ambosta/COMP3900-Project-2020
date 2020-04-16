@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework import permissions
+from rest_framework import permissions, filters
 from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer
 from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
@@ -14,6 +14,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
+from django.db.models import Sum, F, DecimalField, ExpressionWrapper
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -27,6 +28,8 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     lookup_value_regex = '[0-9]+'
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'description', 'price', 'menu_category__name']
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -34,6 +37,16 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
+    def get_queryset(self):
+        qs = MenuItem.objects.all()
+        restaurant = self.request.query_params.get('restaurant', None)
+        category = self.request.query_params.get('category', None)
+        if restaurant is not None:
+            qs = qs.filter(menu_category__restaurant__id=restaurant)
+        if category is not None:
+            qs = qs.filter(menu_category=category)
+        return qs
+    
     @action(detail=True, methods=['post'])
     def order(self, request, id=None):
         try:
@@ -65,7 +78,6 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 class MenuCategoryViewSet(viewsets.ModelViewSet):
-    queryset = MenuCategory.objects.all()
     serializer_class = MenuCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -75,6 +87,14 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+    
+    def get_queryset(self):
+        qs = MenuCategory.objects.all()
+        restaurant = self.request.query_params.get('restaurant', None)
+        if restaurant is not None:
+            qs = qs.filter(restaurant__id=restaurant)
+        return qs
+
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
@@ -90,6 +110,10 @@ class OrderListViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data)
+        else:
+            print(serializer.errors)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class OrderRequestViewSet(viewsets.ModelViewSet):
     queryset = OrderRequest.objects.all()

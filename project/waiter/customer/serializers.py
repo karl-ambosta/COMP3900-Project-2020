@@ -64,21 +64,23 @@ class MenuItemSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MenuItem
-        fields = ['id', 'name', 'price', 'description', 'menu_category']
+        fields = ['id', 'name', 'price', 'description', 'menu_category', 'picture']
 
 class OrderListSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    order_total = serializers.DecimalField(decimal_places=2, max_digits=9)
 
     class Meta:
         model = OrderList
-        fields = ['id', 'owner', 'order_request', 'restaurant']
+        fields = ['id', 'owner', 'order_request', 'restaurant', 'order_total']
 
 class OrderRequestSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    total = serializers.DecimalField(decimal_places=2, max_digits=9)
 
     class Meta:
         model = OrderRequest
-        fields = ['id', 'order_list', 'owner', 'menu_item', 'comments', 'quantity']
+        fields = ['id', 'order_list', 'owner', 'menu_item', 'comments', 'quantity', 'total']
 
 class OpeningHoursSerializer(serializers.ModelSerializer):
 
