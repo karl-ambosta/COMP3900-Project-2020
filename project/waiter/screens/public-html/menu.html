@@ -1,0 +1,567 @@
+<!-- Menu Page for Waiter App/Site-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+		<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+		<title>Waiter - Menu</title>
+	</head>
+	<body>
+		<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background-color:#6f42c1; width: 100%;">
+			<img src="pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white">Waiter</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Home</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link disabled" href="#" >Menu <span class="sr-only">(current)</span> </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="contact.html">Contact Us</a>
+					</li>
+				</ul>
+				<button class="btn btn-outline-light my-2 my-sm-0" data-dismiss="modal" data-toggle="modal" data-target="#loginModal"  data-backdrop="false">Login
+					<span><i class="fas fa-sign-in-alt" aria-hidden="true"></i></span>
+				</button>
+			</div>
+		</nav>
+		
+		<div class="title" style="text-align: center;">Menu</div>
+
+		<div id="app">
+
+			<div class="container" style="width: 25%; text-align: center;">
+					<div>
+						<label class="restaurant" for="restaurant" style="color: white; font-size: 25px">View menu for Restaurant:</label><br>
+						<select id="restaurant" v-model="chosen_restaurant" class="restaurant_name" required="">
+							<template v-for="r in restaurants">
+								<option v-bind:value="r.name">{{ r.name }}</option>
+							</template>
+						</select>
+					</div>
+			</div>
+
+			<hr>
+
+		<nav id="filters" class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+			<img src="pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white; text-align: center;">Filter by:</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent2">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" onclick="filterType(this)" value="all" style="text-align: center;">Show All</a>
+					</li>
+					<template v-for="t in types">
+						<template v-if="t.restaurant == getRestaurantID(chosen_restaurant)[0].id">
+							<li class="nav-item">
+								<a class="nav-link" onclick="filterType(this)" v-bind:value="t.name" style="text-align: center;">{{ t.name }}</a>
+							</li>
+						</template>
+					</template>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="container">
+			<template v-for="t in types">
+				<template v-if="t.restaurant == getRestaurantID(chosen_restaurant)[0].id">
+					<div v-bind:id="t.name" class="items">
+						<div class="category_title">{{ t.name }}</div>
+						<template v-for="(item,index) in itemsOfType(t.id)">
+							<div class="row">
+								<div class="col">
+									<div class="border">
+										<img v-bind:id="item.name" src="pictures/main_pic1.jpeg" align="left" width="100" height="100" v-on:click="viewModal(item.name)">
+										<div class="item_text">
+											<h5><b>{{ item.name }}</b></h5>
+											<p>{{ item.description }}</p>
+											<h6><b>${{ item.price }}</b></h6>
+										</div>
+									</div>
+								</div>
+							</div>
+						</template>
+						<br>
+					</div>
+				</template>
+			</template>
+		</div>
+	</div>
+
+	<!-- The Modal -->
+	<div id="myModal" class="modal">
+
+		<!-- The Close Button -->
+		<span class="close">&times;</span>
+
+		<!-- Modal Content (The Image) -->
+		<img class="modal-content" id="img01">
+
+		<!-- Modal Caption (Image Text) -->
+		<div id="caption"></div>
+	</div>
+		  
+	<div class="modal" id="loginModal" style="text-align: center;" style="">
+		<div class="modal-dialog">
+			<div class="modal-content" style="background-color: rgba(128, 128, 128, 0.5);">
+				<button type="button" class="close" data-dismiss="modal">&times;</button><br>
+		
+			<div class="container2" style="overflow-x:auto;">
+				<!-- Navbar -->
+				<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+					<li class="nav-item pill-1">
+						<a class="nav-link active" id="login-tab" data-toggle="pill" href="#login" role="tab" aria-controls=login aria-selected="true">Login</a>
+					</li>
+					<li class="nav-item pill-1">
+						<a class="nav-link" id="register-tab" data-toggle="pill" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+					</li>
+				</ul>
+				<hr>
+
+				<!-- Content Section -->
+				<div class="tab-content" id="pills-tabContent">
+		
+					<!-- Login Tab -->
+					<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+						<div id="loginApp">
+							<div style="text-align: center;">
+								<form id="loginForm" class="form-signin" @submit.prevent="login">
+									<img class="mb-4" src="pictures/logo_transp.png" alt="" width="72" height="72">
+									<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+									<label for="inputEmail" class="sr-only">Username</label>
+									<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
+
+									<label for="inputPassword" class="sr-only">Password</label>
+									<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+									<div class="checkbox mb-3">
+									<label>
+										<input type="checkbox" value="remember-me"> Remember me
+									</label>
+									</div>
+									<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
+									<p id="errorMessage" style="color:red"></p>
+									<p class="mt-5 mb-3 text-info">© 2019-2020</p>
+								</form>
+							</div>
+						</div>
+					</div>
+			
+					<!-- Register Tab -->
+					<div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+						<div id="registerApp">
+							<div style="text-align: center;">
+								<form id="registerForm" class="form-signin" @submit.prevent="register">
+									<img class="mb-4" src="pictures/logo_transp.png" alt="" width="72" height="72">
+									<h1 class="h3 mb-3 font-weight-normal">Register form</h1>
+									<label for="inputEmail" class="sr-only">Username</label>
+									<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
+
+									<label for="email" class="sr-only">Email Address</label>
+									<input class="form-control" v-model="email" type="email" id="inputEmail" name="emailAddress" placeholder="Email Address..."><br>
+									
+									<label for="inputPassword" class="sr-only">Password</label>
+									<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required=""><br>
+
+									<label for="inputPassword" class="sr-only">Confirm Password</label>
+									<input type="password" v-model="confirmPassword" id="inputConfirmPassword" class="form-control" placeholder="Confirm Password" required="">
+									<div class="checkbox mb-3">
+									<label>
+										<input type="checkbox" value="remember-me"> Remember me
+									</label>
+									</div>
+									<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
+									<p id="errorMessage2" style="color:red"></p>
+									<p class="mt-5 mb-3 text-info">© 2019-2020</p>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+
+
+	</body>
+	
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="login.js"></script>
+<script>
+
+	function hideTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "none";
+		}
+	}
+
+	function filterType(attribute) {
+		var c = attribute.getAttribute('value');
+		if(c == "all") {
+			showTypes();
+			return;
+		}
+		hideTypes();
+		document.getElementById(c).style.display = "block"
+	}
+
+	function showTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "block";
+		}
+	}
+
+	var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+		  items: [
+			  // List of Menu Items
+			  // item = { name, description, price, menu_category }
+		  ],
+		  types: [ 
+			// List of Menu Categories
+			// type = { id, name, menu_item[] }
+		  ],
+		  restaurants: [
+
+		  ],
+		  chosen_restaurant: 'Restaurant #1'
+		},
+		created() {
+			var basicAuth = 'Basic ' + btoa('admin' + ':' + 'admin')
+			axios.defaults.headers.common['Authorization'] = basicAuth
+			
+			axios
+				.get('http://api.unswcafe.tuesdaywaiter.tk/restaurant/')
+				.then((response) => {
+					this.restaurants = response.data
+				}).catch( error => {console.log(error); })
+
+			axios
+				.get('http://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+				.then((response) => {
+					this.types = response.data
+				}).catch( error => {console.log(error); });
+
+            axios
+                .get('http://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .then((response) => {
+					this.items = response.data
+				}).catch( error => {console.log(error); });
+
+			return;
+		},
+		methods: {
+			itemsOfType: function(typeID) {
+				return this.items.filter(function(item) {
+					if(item.menu_category == typeID) {
+						return item;
+					};
+				})
+			},
+			viewModal: function(itemName) {
+				// Get the modal
+				var modal = document.getElementById("myModal");
+
+				// Get the image and insert it inside the modal - use its "alt" text as a caption
+				var img = document.getElementById(itemName);
+				var modalImg = document.getElementById("img01");
+				var captionText = document.getElementById("caption");
+				img.onclick = function(){
+					modal.style.display = "block";
+					modalImg.src = this.src;
+					captionText.innerHTML = this.alt;
+				}
+
+				// Get the <span> element that closes the modal
+				var span = document.getElementsByClassName("close")[0];
+
+				// When the user clicks on <span> (x), close the modal
+				span.onclick = function() {
+					modal.style.display = "none";
+				}
+			},
+			getRestaurantID: function(name) {
+				c = this.chosen_restaurant
+				return this.restaurants.filter(function(r) {
+					if(r.name == c) {
+						return r;
+					};
+				}) 
+			}
+		},
+		watch: {
+    		chosen_restaurant: function() {
+				showTypes();
+			}
+    }
+      })
+
+</script>
+
+<style type="text/css">
+body {
+	background-image: url("pictures/menu-bg.jpg");
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
+}
+
+.title {
+	font-size: 75px;
+	color: white;
+	position: relative;
+	margin-top: 5%;
+	text-shadow: 2px 2px grey;
+}
+
+.container {
+	position: relative;
+	padding: 10px;
+	width: 50%;
+}
+
+.row {
+	width: 100%;
+	margin: auto;
+}
+
+.border {
+	border-radius: 5px;
+	background-color: white;
+	padding: 5px;
+	height: 113px;
+}
+
+.category {
+	font-size: 30px;
+	color: white;
+}
+
+.category_title {
+	font-size: 30px;
+	color: white;
+	text-decoration: underline;
+	text-align: center;
+}
+
+.category:hover {
+	color:red;
+}
+
+.item_text {
+	margin-left: 7em;
+}
+
+.price_text {
+	position: absolute;
+
+}
+
+.form-signin {
+    color: white;
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+	margin: 0 auto;
+	border-radius: 10px;
+}
+.form-signin .checkbox {
+    font-weight: 400;
+}
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 3; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+
+}
+
+.nav-pills .pill-1 .nav-link:not(.active) {
+    background-color: rgb(255, 255, 255);
+    color: #6f42c1;
+}
+
+.nav-pills .pill-1 .nav-link {
+    background-color: #6f42c1;
+    color: white;
+}
+
+#filters {
+	width: 50%;	
+	left: 50%;
+	transform: translate(-50%, 0%);
+	z-index: 2;
+}
+
+/* Style the Image Used to Trigger the Modal */
+#myImg {
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 3; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: relative;
+
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/**THE SAME CSS IS USED IN ALL 3 DEMOS**/    
+/**gallery margins**/  
+ul.gallery{    
+margin-left: 3vw;     
+margin-right:3vw;  
+}    
+
+.zoom {      
+-webkit-transition: all 0.35s ease-in-out;    
+-moz-transition: all 0.35s ease-in-out;    
+transition: all 0.35s ease-in-out;     
+cursor: -webkit-zoom-in;      
+cursor: -moz-zoom-in;      
+cursor: zoom-in;  
+}     
+
+.zoom:hover,  
+.zoom:active,   
+.zoom:focus {
+/**adjust scale to desired size, 
+add browser prefixes**/
+-ms-transform: scale(2.5);    
+-moz-transform: scale(2.5);  
+-webkit-transform: scale(2.5);  
+-o-transform: scale(2.5);  
+transform: scale(2.5);    
+position:relative;      
+z-index:100;  
+}
+
+/**To keep upscaled images visible on mobile, 
+increase left & right margins a bit**/  
+@media only screen and (max-width: 700px) {   
+.container {
+	width: 100%
+}
+.modal-content {
+    width: 100%;
+}
+
+#filters {
+	width: 100%;
+	left: 0%;
+	transform: translate(0%,0%);
+}
+
+/**TIP: Easy escape for touch screens,
+give gallery's parent container a cursor: pointer.**/
+.DivName {cursor: pointer}
+}
+
+</style>
+</html>

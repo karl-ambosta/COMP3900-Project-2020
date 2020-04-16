@@ -1,0 +1,598 @@
+<!-- Management Dashboard -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+                <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+        <title>Management - Menu Edit - UNSW Cafe</title>
+    </head>
+<body>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+    intent="WELCOME"
+    chat-title="UNSW Cafe"
+    agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
+    language-code="en"
+    ></df-messenger>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+        <img src="pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+        <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">Dashboard</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link disabled" href="menu_edit.html" >Edit Menu<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="history.html">Restauraunt History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="old_items.html">Old Menu Items</a>
+                </li>
+            </ul>
+            <button class="btn btn-outline-light my-2 my-sm-0" onclick="logout()">Logout
+                <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="title">Edit Menu</div>
+
+    <div class="container" style="background-color: transparent; text-align: center;">
+        <button id="addCategory" type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#catModal">Add Category</button>
+        <button id="addItem" v-on:click="isNew = true" type="button" class="btn btn-lg btn-warning" data-toggle="modal" data-target="#newModal">Add Menu Item</button>
+        <button id="saveButton" type="button" class="btn btn-lg btn-success" data-toggle="modal" data-target="#confirmModal">Save Changes</button>
+    </div>
+
+    <br>
+    <h4 id="errorMessage" style="color: red; text-align: center;"></h4>
+
+    <!-- Table per category -->
+    <div id="app" class="container" style="overflow-x:auto;">   
+        <template v-for="type in types">
+            <div class="categoryTitle" style="text-align: center; background-color: transparent;">{{ type.name }}
+                <span class="table-up"><a href="#!" v-on:click="moveCategoryUp(type.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
+                    aria-hidden="true" style='font-size:24px; color: red;'></i></a></span>
+                <span class="table-down"><a href="#!" v-on:click="moveCategoryDown(type.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
+                    aria-hidden="true" style='font-size:24px; color: red;'></i></a></span>
+                <!-- IMPLEMENT REMOVE AND EDIT MENU CATEGORIES
+                <button v-bind:id="type.name" type="button" class="btn btn-lg btn-link" v-on:click="seteditingItem(type.name)" data-toggle="modal" data-target="#itemModal">
+                    <span><i class="fas fa-edit" aria-hidden="true" style='font-size:24px; color: red;'></i></span>
+                </button>
+                <button v-bind:id="type.name" type="button" class="btn btn-lg btn-link" v-on:click="setRemoveItem(type.name)" data-toggle="modal" data-target="#confirmModal">
+                    <span><i class="fas fa-times" aria-hidden="true" style='font-size:24px; color: red;'></i></span>
+                </button>
+                -->
+            </div><br>  
+                <table v-bind:id="type.name" class="table table-sm table-borderless table-striped table-hover display nowrap" style="text-align: center;">
+                    <thead>
+                    <tr>
+                        <th style="width: 20%">Item Name</th>
+                        <th style="width: 45%">Description</th>
+                        <th style="width: 10%">Price</th>
+                        <th class="width: 5%">Sort</th>
+                        <th class="text-center" style="width: 5%">Edit?</th>
+                        <th class="text-center" style="width: 5%">Remove?</th>
+                    </tr>
+                    </thead>
+                    <!-- Start of table, dynamic space-->
+                    <tbody>
+                        <template v-for="(item,index) in itemsOfType(type.id)"> 
+                            <tr id="item.itemName">
+                                <td class="align-middle">{{ item.name }}</td>
+                                <td class="align-middle">{{ item.description }}</td>
+                                <td class="align-middle">${{ item.price }}</td>
+                                <td class="align-middle">
+                                    <!-- Up Icon -->
+                                    <span class="table-up"><a href="#!" v-on:click="moveItemUp(type.id, item.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-up"
+                                        aria-hidden="true" style='font-size:24px'></i></a></span>
+                                    <!-- Down Icon -->
+                                    <span class="table-down"><a href="#!" v-on:click="moveItemDown(type.id, item.name)" class="indigo-text"><i class="fas fa-long-arrow-alt-down"
+                                        aria-hidden="true" style='font-size:24px'></i></a></span>
+                                </td>
+                                <td nowrap class="text-center align-middle"> <!-- Edit Icon -->
+                                    <button v-bind:id="item.name" type="button" class="btn btn-lg btn-link" v-on:click="seteditingItem(item.name)" data-toggle="modal" data-target="#itemModal">
+                                        <span><i class="fas fa-edit" aria-hidden="true" style='font-size:24px'></i></span>
+                                    </button>
+                                </td>
+                                <td nowrap class="text-center align-middle"> <!-- Remove Icon -->
+                                    <button v-bind:id="item.name" type="button" class="btn btn-lg btn-link" v-on:click="setRemoveItem(item.name)" data-toggle="modal" data-target="#confirmModal">
+                                        <span><i class="fas fa-times" aria-hidden="true" style='font-size:24px'></i></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+        </template>
+
+        <!-- Item Info Modal -->
+        <div class="modal" id="newModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+        
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">Add Item</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <template>
+                        <form class="itemInfo" @submit.prevent="addNewItem">
+                        <label for="itemName">Item Name: </label>
+                        <input type='text' id='itemName' name='itemName' required='' v-model="newItem.name" style="width:75%"><br><br>
+                        <div class="_quantity">Item Desc: </div>
+                        <textarea type='text' id='itemDesc' name='itemDesc' style='min-width: 100%; border: solid 1px black;' v-model="newItem.description" required=''></textarea><br><br>
+                        <label for="itemPrice">Price: </label>
+                        <input type="text" name="itemPrice" id="itemPrice" style="width:25%" pattern="\d+(\.\d{2})?" v-model="newItem.price" data-type="currency"  required=''>
+                        <small>Format: x.xx</small><br><br>
+                        <label for="itemCategory">Category: </label>
+                        <select id="itemCategory" v-model="newItem.menu_category" class="itemCategory" style="width:50%" required="">
+                            <template v-for="t in types">
+                                <option >{{ t.name }}</option>
+                            </template>
+                        </select>
+                        <div class="picture">Picture?
+                        <button id="uploadPic" type="button" class="btn btn-lg btn-link">
+                            <span><i class="fas fa-file-upload" aria-hidden="true" style='font-size:24px'></i></span>
+                        </button>
+                        </div>
+                        </form>
+                    </template>
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Discard</button>
+                    <button v-on:click="addNewItem" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal"S>Add Item</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        <div class="modal" id="itemModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+        
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">Edit Item</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <template>
+                        <form class="itemInfo" @submit.prevent="saveChanges">
+                        <label for="itemName">Item Name: </label>
+                        <input type='text' id='itemName' name='itemName' required='' v-model="editing.name" style="width:75%"><br><br>
+                        <div class="_quantity">Item Desc: </div>
+                        <textarea type='text' id='itemDesc' name='itemDesc' v-model="editing.description" style='min-width: 100%; border: solid 1px black;' required=''></textarea><br><br>
+                        <label for="itemPrice">Price: </label>
+                        <input type="text" name="itemPrice" v-model="editing.price" id="itemPrice" style="width:25%" pattern="\d+(\.\d{2})?" data-type="currency"  required=''>
+                        <small>Format: x.xx</small><br><br>
+                        <label for="itemCategory">Category: </label>
+                        <select id="itemCategory" v-model="editing.menu_category" class="itemCategory"style="width:50%" required="">
+                            <template v-for="t in types">
+                                <template v-if="t.id == editing.menu_category">
+                                    <option selected>{{ t.name }}</option>
+                                </template>
+                                <template v-else>
+                                    <option >{{ t.name }}</option>
+                                </template>
+                                
+                            </template>
+                        </select>
+                        <div class="picture">Picture?
+                        <button id="uploadPic" type="button" class="btn btn-lg btn-link">
+                            <span><i class="fas fa-file-upload" aria-hidden="true" style='font-size:24px'></i></span>
+                        </button>
+                        </div>
+                        </form>
+                    </template>
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Discard Changes</button>
+                    <button v-on:click="saveChanges" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal">Save Changes</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    
+        <template v-if="isRemove">
+            <template v-for="item in removeItemData">
+            <!-- Remove Item Modal -->
+            <div class="modal" id="confirmModal">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Remove Item?</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+            
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div>Are you sure you want to remove this item from the current menu?</div><br>
+                            <div><b>Item Name: </b>{{ item.name }}</div>
+                            <div><b>Description: </b>{{ item.description }}</div>
+                            <div><b>Price: </b>{{ item.price }}</div>
+                            <div><b>Category: </b>{{ item.menu_category }}</div>                        
+                    </div>
+            
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button v-on:click="removeItem(item.name)" type="submit" class="btn btn-lg btn-danger" data-dismiss="modal"  data-backdrop="false">Yes</button>
+                        <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">No</button>
+                    </div>
+                
+                </div>
+                </div>
+            </div>
+            </template>
+        </template>
+        
+        <template v-else>
+            <div class="modal" id="confirmModal">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Save Changes?</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+            
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div>Are you sure you want to save the changes made to the menu?</div><br>
+                    </div>
+            
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button v-on:click="saveMenu" type="submit" class="btn btn-lg btn-danger" data-dismiss="modal"  data-backdrop="false">Save</button>
+                        <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">Back to Edit</button>
+                    </div>
+                
+                </div>
+                </div>
+            </div>
+            </template>
+        </template>
+
+        <div class="modal" id="catModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">New Category</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form class="itemInfo" @submit.prevent="addNewCategory">
+                        <label for="newCategory">New Category Name: </label>
+                        <input type="text" name="newCategory" id="newCategory" style="width:25%" v-model="newCategoryName"  required=''>
+                    
+
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">Back to Edit</button>
+                    <button v-on:click="addNewCategory" type="submit" class="btn btn-lg btn-danger" data-dismiss="modal"  data-backdrop="false">Save</button>
+                </div>
+            </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script>
+
+    var app = new Vue ({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            isRemove: false,
+            isNew: false,
+            editing: {itemName: '', description: '', price: '', menu_category: ''},
+            newItem: {itemName: '', description: '', price: '', menu_category: ''},
+            oldItemName: '',
+            removingItemName: '',
+            newCategoryName: '',
+            items: [
+                // List of Menu Items
+			    // item = { name, description, price, menu_category }
+		    ],
+		    types: [
+                // List of Menu Categories
+			    // type = { id, name, menu_item[] }
+            ],
+            newItems: [
+                // List of New Menu Items to POST to server
+                // item = { name, description, price, menu_category }
+            ],
+            newTypes: [
+                // List of New Types to POST to server
+                // type = { id, name, menu_item[] }
+            ],
+            itemsToRemove: [
+                // List of Menu Items to DELETE from server
+                // item = { name, description, price, menu_category }
+            ],
+            typesToRemove: [
+                // List of New Types to POST to server
+                // type = { id, name, menu_item[] }
+            ]
+        },
+        created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .then((response) => {
+					this.items = response.data
+				}).catch( error => {console.log(error); });
+				
+			axios
+				.get('http://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+				.then((response) => {
+					this.types = response.data
+				}).catch( error => {console.log(error); });
+			return;
+        },
+        computed: {
+            removeItemData: function() {
+                name = this.removingItemName
+                return this.items.filter(function(item) {
+                    if(item.name == name) {
+                        return item;
+                    }
+                })
+            },
+            getEditingCategory: function() {
+                return this.editing.menu_category
+            }
+        },
+        methods: { 
+			itemsOfType: function(typeID) {
+				return this.items.filter(function(item) {
+					if(item.menu_category == typeID) {
+						return item;
+					};
+				})
+            },
+            getItemData: function(itemName) {
+                return this.items.filter(function(item) {
+					if(item.name == itemName) {
+						return item;
+					};
+				})
+            },
+            seteditingItem: function(itemName) {
+                item = this.getItemData(itemName)
+                isNew = false;
+                this.oldItemName = item[0].name
+                this.editing = { name: item[0].name, description: item[0].description, price: item[0].price, menu_category: item[0].menu_category }
+            },
+            saveChanges: function() {
+                item = this.getItemData(this.oldItemName);
+                var idx = this.items.findIndex(x => x.name == this.oldItemName)
+                typeIdx = this.types.findIndex(x => x.name == this.editing.menu_category)
+                console.log(this.types)
+                typeID = this.types[typeIdx].id
+                editedItem = { name: this.editing.name, description: this.editing.description, price: this.editing.price, menu_category: typeID }
+                this.items.splice(idx, 1, editedItem);
+            },
+            removeItem: function(itemName) {
+                var idx = this.items.findIndex(x => x.name == itemName)
+                item = this.items[idx]
+                this.itemsToRemove.push(item)
+                this.items.splice(idx, 1)
+                console.log(this.itemsToRemove)
+                this.isRemove = false
+                return;
+            },
+            removeCategory: function() {
+
+            },
+            moveCategoryUp: function(name, type) {
+                rows = this.types;
+                var idx = rows.findIndex(x => x.name == name)
+                rows.splice(idx - 1, 0, rows.splice(idx, 1)[0]);
+
+            },
+            moveCategoryDown: function(name, type) {
+                rows = this.types;
+                var idx = rows.findIndex(x => x.name == name)
+                rows.splice(idx + 1, 0, rows.splice(idx, 1)[0]);
+            },
+            moveItemUp: function(type, itemName) {
+                itemList = this.itemsOfType(type);
+                var idx = itemList.findIndex(x => x.name == itemName)                
+                if(idx == 0) {
+                    return;
+                }
+                
+                prevItem = itemList[idx-1].name 
+                var previdx = this.items.findIndex(x => x.name == prevItem)
+                var curridx = this.items.findIndex(x => x.name == itemName)
+                this.items[previdx] = this.items.splice(curridx, 1, this.items[previdx])[0]
+            },
+            moveItemDown: function(type, itemName) {
+                itemList = this.itemsOfType(type);
+                var idx = itemList.findIndex(x => x.name == itemName)                
+                if(idx == itemList.length-1) {
+                    return;
+                }
+                
+                nextItem = itemList[idx+1].name 
+                var nextidx = this.items.findIndex(x => x.name == nextItem)
+                var curridx = this.items.findIndex(x => x.name == itemName)
+                this.items[curridx] = this.items.splice(nextidx, 1, this.items[curridx])[0]
+            },
+            setRemoveItem: function(name) {
+                this.removingItemName = name
+                this.isRemove = true
+            } ,
+            saveMenu: function() {
+                // post items to server
+                for(i = 0; i < this.newItems.length; i++) {
+                    axios
+                        .post('http://api.unswcafe.tuesdaywaiter.tk/menuItems/', this.newItems[i])
+                        .then((response) => {
+                            console.log(response.data)
+                        }).catch( error => {console.log(error); })
+                }
+
+                this.newItems = ''
+
+                for(j = 0; j < this.newTypes.length; j++) {
+                     // post types to server
+                    axios
+                        .post('http://api.unswcafe.tuesdaywaiter.tk/menuCategories/', this.newTypes[j])
+                        .then((response) => {
+                            console.log(response.data)
+                        }).catch( error => {console.log(error); });
+                }
+
+                this.newTypes = ''
+
+                for(k = 0; k < this.itemsToRemove.length; k++) {
+                    // delete menu items from server
+                    axios  
+                        .delete('http://api.unswcafe.tuesdaywaiter.tk/menuItems/' + this.itemsToRemove[k].id)
+                        .then((response) => {
+                            console.log("deleted item: " + response.data)
+                        }).catch( error => {console.log(error); })
+                }
+
+                this.itemsToRemove = ''
+
+                for(m = 0; m < this.typesToRemove.length; m++) {
+                    // delete types from server
+                    axios
+                        .delete('http://api.unswcafe.tuesdaywaiter.tk/menuCategory/' + this.typesToRemove[m].id)
+                        .then((response) => {
+                            console.log("deleted type: " + response.data)
+                        }).catch( error => {console.log(error); })
+                }
+
+                this.typesToRemove = ''
+            },
+            addNewItem: function() {
+                typeIdx = this.types.findIndex(x => x.name == this.newItem.menu_category)
+                newItem = {
+                        id: this.items.length+1,
+                        name: this.newItem.name,
+                        description: this.newItem.description,
+                        price: this.newItem.price,
+                        menu_category: this.types[typeIdx].id
+                }
+                itemIdx = this.items.findIndex(x => x.name == newItem.name)
+                if(itemIdx == -1) { // item with same name is not in item list
+                    this.items.push(newItem)
+                    this.newItems.push( {name: this.newItem.name, description: this.newItem.description, price: this.newItem.price, menu_category: this.types[typeIdx].id })
+                    this.newItem = { name: '', description: '', price: '', menu_category: '' }                
+                    isNew = false
+                    return
+                } else {
+                    type = this.types.findIndex(x => x.id == this)
+                    document.getElementById('errorMessage').textContent = "Item with name '" + this.items[itemIdx].name + "' already exists in Category: '" + this.types[typeIdx].name + "'"
+                    this.newItem = { name: '', description: '', price: '', menu_category: '' }              
+                    isNew = false
+                }      
+            },
+            addNewCategory: function() {
+                categoryName = this.newCategoryName
+                var type = this.types.findIndex(x => x.name == categoryName)
+                if(type == -1) { // name is not in type list
+                    this.types.push({id: this.types.length+1, name: categoryName})
+                    this.newCategoryName = ''
+                } else {
+                    document.getElementById('errorMessage').textContent = "Menu Category: '" + categoryName + "' already exists"
+                    return;
+                }  
+            },
+        },
+    })
+
+    function logout() {
+        window.location.href='login.html'
+    }
+
+    window.onbeforeunload = function(){
+            return "Are you sure you want to close the window?";
+}
+
+</script>
+
+
+<style>
+body {
+    background-image: url("pictures/background-texture.jpg");
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
+}
+
+.title {
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 2%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.container {
+    position: relative;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.table {
+    background-color: white;
+    border-radius: 20px;
+}
+
+.modal-backdrop {
+    opacity:75% !important;
+	height: 100%;
+	width: 100%;
+}
+
+.categoryTitle {
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 25px;
+    position: relative;
+    color: white;
+    margin-top: 2%;
+    text-align: center;
+}
+</style>
+</html>

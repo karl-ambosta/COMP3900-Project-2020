@@ -1,0 +1,402 @@
+<!-- Contact Page for Waiter App/Site-->
+<!DOCTYPE html>
+<html>
+	<body>
+		<head>
+			<meta name="viewport" content="width=device-width">
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+			<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+			<title>Waiter - Home</title>
+		</head>
+
+		<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background-color:#6f42c1;">
+			<img src="pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white">Waiter</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="menu.html" >Menu</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link disabled" href="#">Contact Us <span class="sr-only">(current)</span> </a>
+					</li>
+				</ul>
+				<button class="btn btn-outline-light my-2 my-sm-0" data-dismiss="modal" data-toggle="modal" data-target="#loginModal"  data-backdrop="false">Login
+					<span><i class="fas fa-sign-in-alt" aria-hidden="true"></i></span>
+				</button>
+			</div>
+		</nav>
+		
+		<div class="title">Our Information</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="column">
+					<div style="text-align:center">
+						<h2 class="text" >Trading Hours:</h2>
+						<p> Monday: 9.00am to 9pm <br>
+							Tuesday: 9.00am to 9pm <br>
+							Wednesday: 9.00am to 9pm<br>
+							Thursday: 9.00am to 9pm<br>
+							Friday: 9.00am to 9pm<br>
+							Saturday: 9.00am to 10pm<br>
+							Sunday: 10.00am to 7pm<br>
+						</p>
+						<hr>
+						<h2 class="text" >Address:</h2>
+						<p> Ainsworth Building J17, Kensington NSW 2052, Australia </p>
+						<hr>
+						<h3 class="text" >Phone:</h3>
+						<h3> 00 0000 0000</h3>
+
+					</div>
+				</div>
+				<div class="column">
+					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1002.7068777292815!2d151.23089982172576!3d-33.91855170511995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12b18a5a7c78e9%3A0x103dea913b7565cf!2sAinsworth%20Building%20J17!5e0!3m2!1sen!2sau!4v1584263497164!5m2!1sen!2sau" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+				</div>
+			</div>	
+		</div>
+
+		<br>
+
+		<div class="container"> <!-- CONTACT SUBMIT FORM -->
+			<div class="text" style="text-align:center">
+				<br>
+				<h1>Contact Us</h1>
+				<h4>Leave us a message:</h4>
+			</div>
+			<div class="row">
+				<div class="column">
+					<img src="pictures/restaurant.jpeg" style="width:100%">
+				</div>
+				<div id="app" class="column">
+					<form @submit.prevent="processForm"> <!-- TRY AND MAKE IT WRITE TO FILE UNTIL DATABASE HAS BEEN ESTABLISHED -->
+						<label class="text" for="fname">First Name</label>
+						<input class="text" v-model="firstName" type="text" id="fname" name="firstname" placeholder="Your name..">
+						<label class="text" for="lname">Last Name</label>
+						<input class="text" v-model="lastName" type="text" id="lname" name="lastname" placeholder="Your last name..">
+						<label class="text" for="email">Email</label>
+						<input class="text" v-model="email" type="text" id="email" name="email" placeholder="Your email address..">
+						<label class="text" for="subject">Subject</label>
+						<textarea class="text" v-model="subject" id="subject" name="subject" placeholder="Write something.." style="height:170px"></textarea>
+						<input class="text" type="submit" value="Submit">
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" id="loginModal" style="text-align: center;" style="">
+			<div class="modal-dialog">
+				<div class="modal-content" style="background-color: rgba(128, 128, 128, 0.5);">
+					<button type="button" class="close" data-dismiss="modal">&times;</button><br>
+			
+				<div class="container2" style="overflow-x:auto;">
+					<!-- Navbar -->
+					<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+						<li class="nav-item pill-1">
+							<a class="nav-link active" id="login-tab" data-toggle="pill" href="#login" role="tab" aria-controls=login aria-selected="true">Login</a>
+						</li>
+						<li class="nav-item pill-1">
+							<a class="nav-link" id="register-tab" data-toggle="pill" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+						</li>
+					</ul>
+					<hr>
+	
+					<!-- Content Section -->
+					<div class="tab-content" id="pills-tabContent">
+			
+						<!-- Login Tab -->
+						<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+							<div id="loginApp">
+								<div style="text-align: center;">
+									<form id="loginForm" class="form-signin" @submit.prevent="login">
+										<img class="mb-4" src="pictures/logo_transp.png" alt="" width="72" height="72">
+										<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+										<label for="inputEmail" class="sr-only">Username</label>
+										<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
+	
+										<label for="inputPassword" class="sr-only">Password</label>
+										<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+										<div class="checkbox mb-3">
+										<label>
+											<input type="checkbox" value="remember-me"> Remember me
+										</label>
+										</div>
+										<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
+										<p id="errorMessage" style="color:red"></p>
+										<p class="mt-5 mb-3 text-info">© 2019-2020</p>
+									</form>
+								</div>
+							</div>
+						</div>
+				
+						<!-- Register Tab -->
+						<div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+							<div id="registerApp">
+								<div style="text-align: center;">
+									<form id="registerForm" class="form-signin" @submit.prevent="register">
+										<img class="mb-4" src="pictures/logo_transp.png" alt="" width="72" height="72">
+										<h1 class="h3 mb-3 font-weight-normal">Register form</h1>
+										<label for="inputEmail" class="sr-only">Username</label>
+										<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
+	
+										<label for="email" class="sr-only">Email Address</label>
+										<input class="form-control" v-model="email" type="email" id="inputEmail" name="emailAddress" placeholder="Email Address..."><br>
+										
+										<label for="inputPassword" class="sr-only">Password</label>
+										<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required=""><br>
+	
+										<label for="inputPassword" class="sr-only">Confirm Password</label>
+										<input type="password" v-model="confirmPassword" id="inputConfirmPassword" class="form-control" placeholder="Confirm Password" required="">
+										<div class="checkbox mb-3">
+										<label>
+											<input type="checkbox" value="remember-me"> Remember me
+										</label>
+										</div>
+										<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
+										<p id="errorMessage2" style="color:red"></p>
+										<p class="mt-5 mb-3 text-info">© 2019-2020</p>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="login.js"></script>
+<script>
+
+	var app = new Vue ({
+		el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+			firstName: '',
+			lastName: '',
+			email: '',
+			subject: ''
+		},
+		methods: {
+			processForm: function() {
+				// send input to database
+      			console.log({ name: this.firstName + " " + this.lastName, email: this.email, subject: this.subject });
+    }
+		}
+	})
+
+</script>
+
+
+<style type="text/css">
+body {
+	background-image: url(pictures/restaurant.jpeg);
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
+
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  width: 90%;
+  margin: auto;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  margin-top: 6px;
+  padding: 20px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.title {
+	font-size: 40px;
+	color: white;
+	position: relative;
+	margin-top: 5%;
+	text-align: center;
+	text-shadow: 2px 2px grey;
+}
+
+.text2 {
+	font-size: 50px;
+}
+
+.form-signin {
+    color: white;
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+	margin: 0 auto;
+	border-radius: 10px;
+}
+.form-signin .checkbox {
+    font-weight: 400;
+}
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 3; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+
+}
+
+.nav-pills .pill-1 .nav-link:not(.active) {
+    background-color: rgb(255, 255, 255);
+    color: #6f42c1;
+}
+
+.nav-pills .pill-1 .nav-link {
+    background-color: #6f42c1;
+    color: white;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: relative;
+
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/**THE SAME CSS IS USED IN ALL 3 DEMOS**/    
+/**gallery margins**/  
+ul.gallery{    
+margin-left: 3vw;     
+margin-right:3vw;  
+}    
+
+.zoom {      
+-webkit-transition: all 0.35s ease-in-out;    
+-moz-transition: all 0.35s ease-in-out;    
+transition: all 0.35s ease-in-out;     
+cursor: -webkit-zoom-in;      
+cursor: -moz-zoom-in;      
+cursor: zoom-in;  
+}     
+
+.zoom:hover,  
+.zoom:active,   
+.zoom:focus {
+/**adjust scale to desired size, 
+add browser prefixes**/
+-ms-transform: scale(2.5);    
+-moz-transform: scale(2.5);  
+-webkit-transform: scale(2.5);  
+-o-transform: scale(2.5);  
+transform: scale(2.5);    
+position:relative;      
+z-index:100;  
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+</style>
+</html>
