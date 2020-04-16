@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 #import uuid 
 from django.db.models.signals import post_save, pre_delete
+from django.db.models import Sum, F, ExpressionWrapper
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True, related_name='profile',on_delete=models.CASCADE )
@@ -52,7 +53,19 @@ class MenuItem(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
     description = models.CharField(max_length=300)
     menu_category = models.ForeignKey(MenuCategory, related_name='menu_item', on_delete=models.CASCADE)
+    picture = models.ImageField(upload_to='media/menu/', default='/media/menu/defaultmenuitem.png')
 
+
+class OrderListAnnotatedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().annotate(
+            order_total = ExpressionWrapper(
+                Sum(
+                    F('order_request__quantity') * F('order_request__menu_item__price'), 
+                ), 
+                output_field = models.DecimalField(decimal_places=2, max_digits=9)
+            )
+        )
 
 class OrderList(models.Model):
     """
@@ -60,7 +73,16 @@ class OrderList(models.Model):
     """
     owner = models.OneToOneField(User, related_name='order_list', on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, related_name='order_lists', on_delete=models.CASCADE)
+    objects = OrderListAnnotatedManager()
 
+
+class OrderRequestAnnotatedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().annotate(
+            total=ExpressionWrapper(
+                F('quantity') * F('menu_item__price'),
+                output_field = models.DecimalField(decimal_places=2, max_digits=9)
+            ))
 
 class OrderRequest(models.Model):
     """
@@ -72,6 +94,7 @@ class OrderRequest(models.Model):
     menu_item = models.ForeignKey(MenuItem, related_name='order_request', on_delete=models.CASCADE)
     comments = models.CharField(max_length=300)
     quantity = models.PositiveIntegerField()
+    objects = OrderRequestAnnotatedManager()
 
 
 class OpeningHours(models.Model):
