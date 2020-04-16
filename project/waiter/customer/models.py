@@ -1,9 +1,9 @@
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 #import uuid 
 from django.db.models.signals import post_save, pre_delete
-from django.db.models import Sum, F, ExpressionWrapper
+from django.db.models import Sum, F, ExpressionWrapper, Max
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True, related_name='profile',on_delete=models.CASCADE )
@@ -37,12 +37,72 @@ class Restaurant(models.Model):
     description = models.CharField(max_length=500)
 
 
+class MenuCategoryOrderManager(models.Manager):
+    def move(self, object, new_order):
+        qs = self.get_queryset()
+
+        with transaction.atomic():
+            if object.order > int(new_order):
+                qs.filter(restaurant=object.restaurant, order__lt=object.order, order__gte=new_order,).exclude(id=object.id).update(order=F('order') + 1,)
+            else:
+                qs.filter(restaurant=object.restaurant, order__lte=new_order, order__gt=object.order,).exclude(id=object.id,).update(order=F('order') - 1,)
+            object.order = new_order
+            object.save()
+    
+    def create(self, **kwargs):
+        instance = self.model(**kwargs)
+
+        with transaction.atomic():
+            results = self.filter(restaurant=instance.restaurant).aggregate(Max('order'))
+            
+            current_order = results['order__max']
+            if current_order is None:
+                current_order = 0
+
+            value = current_order + 1
+            instance.order = value
+            instance.save()
+
+            return instance
+
+
 class MenuCategory(models.Model):
     """ 
     Menu categories
     """
     name = models.CharField(max_length=50)
     restaurant = models.ForeignKey(Restaurant, related_name='menu_categories', on_delete=models.CASCADE)
+    order = models.IntegerField(default=1)
+    objects = MenuCategoryOrderManager()
+
+
+class MenuItemOrderManager(models.Manager):
+    def move(self, object, new_order):
+        qs = self.get_queryset()
+
+        with transaction.atomic():
+            if object.order > int(new_order):
+                qs.filter(menu_category=object.menu_category, order__lt=object.order, order__gte=new_order,).exclude(id=object.id).update(order=F('order') + 1,)
+            else:
+                qs.filter(menu_category=object.menu_category, order__lte=new_order, order__gt=object.order,).exclude(id=object.id,).update(order=F('order') - 1,)
+            object.order = new_order
+            object.save()
+    
+    def create(self, **kwargs):
+        instance = self.model(**kwargs)
+
+        with transaction.atomic():
+            results = self.filter(menu_category=instance.menu_category).aggregate(Max('order'))
+            
+            current_order = results['order__max']
+            if current_order is None:
+                current_order = 0
+
+            value = current_order + 1
+            instance.order = value
+            instance.save()
+
+            return instance
 
 
 class MenuItem(models.Model):
@@ -54,6 +114,9 @@ class MenuItem(models.Model):
     description = models.CharField(max_length=300)
     menu_category = models.ForeignKey(MenuCategory, related_name='menu_item', on_delete=models.CASCADE)
     picture = models.ImageField(upload_to='media/menu/', default='/media/menu/defaultmenuitem.png')
+    order = models.IntegerField(default=1)
+    active = models.BooleanField(default=True)
+    objects = MenuItemOrderManager()
 
 
 class OrderListAnnotatedManager(models.Manager):
