@@ -51,8 +51,10 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         qs = self.get_queryset().filter(active=True)
+        qs = self.filter_queryset(qs)
         serializer = MenuItemSerializer(qs, many=True)
         return Response(serializer.data)
+
 
     def get_queryset(self):
         qs = MenuItem.objects.order_by('order')
