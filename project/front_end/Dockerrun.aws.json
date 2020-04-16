@@ -1,0 +1,13 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+      "Name": "joel295/tues14_frontend",
+      "Update": "true"
+    },
+    "Ports": [
+      {
+        "ContainerPort": 8000,
+        "HostPort": 8000
+      }
+    ]
+  }
