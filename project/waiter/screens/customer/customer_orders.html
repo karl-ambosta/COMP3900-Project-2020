@@ -57,7 +57,7 @@
                                     <tr>
                                         <td nowrap> Order #{{ item.id }} - Placed at {{  }}</td>
                                         <td>{{ item.status }}</td>
-                                        <td nowrap><a class="Order 1" href="#" data-toggle="modal" data-target="#infoModal" data-backdrop="false" v-on:click="updateOrderNo(item.id)">View Order Info</a></td>
+                                        <td nowrap><a class="Order 1" href="#" data-toggle="modal" data-target="#infoModal" data-backdrop="false" v-on:click="updateOrderInfo(item.id)">View Order Info</a></td>
                                     </tr>
                                 </template>
                             </tbody>
@@ -74,41 +74,40 @@
 
                         <hr>
                             
-                            <table class="table table-borderless table-hover display nowrap">
-                                <thead>
+                        <table class="table table-borderless table-hover display nowrap">
+                            <thead>
+                                <tr>
+                                    <th nowrap>Item Name:</th>
+                                    <th nowrap>Quantity</th>
+                                    <th nowrap>Notes for Chef</th>
+                                    <th nowrap>Price per Item</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template v-for="item in currentOrder">
                                     <tr>
-                                        <th nowrap>Item Name:</th>
-                                        <th nowrap>Quantity</th>
-                                        <th nowrap>Notes for Chef</th>
-                                        <th nowrap>Price per Item</th>
+                                        <td nowrap>{{ item.itemName }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td nowrap>{{ item.comment }}</td>
+                                        <td nowrap>$ {{ item.price }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <template v-for="item in currentOrder">
-                                        <tr>
-                                            <td nowrap>{{ item.itemName }}</td>
-                                            <td>{{ item.quantity }}</td>
-                                            <td nowrap>{{ item.comment }}</td>
-                                            <td nowrap>$ {{ item.price }}</td>
-                                        </tr>
-                                    </template>
-                                    <tr>
-                                        <td colspan="4"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"></td>
-                                        <td><b>Order Total</b></td>
-                                        <td>$ {{ orderTotals() }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                </template>
+                                <tr>
+                                    <td colspan="4"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td><b>Order Total</b></td>
+                                    <td>$ {{ orderTotals() }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Menu Modal-->
-
         <div id="menuApp">
             <!-- Menu Modal -->
             <div class="modal" id="menuModal" >
@@ -204,35 +203,35 @@
                                 <div class="card">
                                     <div class="row d-flex justify-content-between px-3 top">
                                         <div class="d-flex">
-                                            <h5>ORDER <span class="text-primary font-weight-bold">#{{ order[0].id }}</span></h5>
+                                            <h5>ORDER <span class="text-primary font-weight-bold">#{{ order.id }}</span></h5>
                                         </div>
                                         <div class="d-flex flex-column text-sm-right">
-                                            <p class="mb-0">Expected Arrival: <span class="font-weight-bold">{{ getTimes[0] }}</span></p>
-                                            <p>Order Placed at: <span class="font-weight-bold">{{ getTimes[1] }}</span></p>
+                                            <p class="mb-0">Expected Arrival: <span class="font-weight-bold">{{ }}</span></p>
+                                            <p>Order Placed at: <span class="font-weight-bold">{{  }}</span></p>
                                         </div>
                                     </div> <!-- Add class 'active' to progress -->
                                     <div class="row d-flex justify-content-center">
                                         <div class="col-12">
                                             <ul id="progressbar" class="text-center">
-                                                <template v-if="order[0].status == 'Processed'">
+                                                <template v-if="order.status == 'Processed'">
                                                     <li class="active step0"></li>
                                                     <li class="step0"></li>
                                                     <li class="step0"></li>
                                                     <li class="step0"></li>
                                                 </template>
-                                                <template v-if="order[0].status == 'Cooking'">
+                                                <template v-if="order.status == 'Cooking'">
                                                     <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="step0"></li>
                                                     <li class="step0"></li>
                                                 </template>
-                                                <template v-if="order[0].status == 'Serving'">
+                                                <template v-if="order.status == 'Serving'">
                                                     <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="step0"></li>
                                                 </template>
-                                                <template v-if="order[0].status == 'Completed'">
+                                                <template v-if="order.status == 'Completed'">
                                                     <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="active step0"></li>
@@ -275,12 +274,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <template v-for="items in order[0].itemList">
+                                        <template v-for="items in order.order_request">
                                             <tr>
-                                                <td nowrap>{{ items.itemName }}</td>
-                                                <td>{{ items.quantity }}</td>
-                                                <td>{{ items.notes }}</td>
-                                                <td nowrap>${{ items.price.toFixed(2) }}</td>
+                                                <td nowrap>{{  }}</td>
+                                                <td>{{  }}</td>
+                                                <td>{{  }}</td>
+                                                <td nowrap>${{ }}</td>
                                             </tr>
                                         </template>
                                     <tr>
@@ -289,7 +288,7 @@
                                     <tr>
                                         <td colspan="2"></td>
                                         <td nowrap colspan="1"><b>Order Total</b></td>
-                                        <td>${{ orderTotals.toFixed(2) }}</td>
+                                        <td>${{ order.order_total }}</td>
                                     </tr>
                                 </tbody>
                                 </table>
@@ -390,8 +389,7 @@ a {
 }
 
 #myModal {
-    max-width: 50%;
-    
+    max-width: 50%;   
 }
 
 /* The Modal (background) */

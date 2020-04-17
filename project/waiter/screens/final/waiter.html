@@ -29,99 +29,217 @@
             <li class="nav-item pill-1">
                 <a class="nav-link" id="menu-tab" data-toggle="pill" href="#menu" role="tab" aria-controls="menu" aria-selected="false">Menu</a>
             </li>
+            <li class="nav-item pill-1">
+                <a class="nav-link" id="menu-tab" data-toggle="pill" href="#newOrder" role="tab" aria-controls="newOrder" aria-selected="false">New Order</a>
+            </li>
         </ul>
         <hr>
 
         <!-- Content Section -->
         <div class="tab-content" id="pills-tabContent">
 
-        <!-- Waiter Tab -->
-        <div class="tab-pane fade show active" id="waiter" role="tabpanel" aria-labelledby="waiter-tab">
-            <h5><i>Call Outs</i></h5>
-            <table id="calloutsapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
-                <thead>
-                  <tr>
-                    <th style="width: 25%">Table Number</th>
-                    <th style="width: 25%">Caller</th>
-                    <th style="width: 25%">Status</th>
-                    <th class="text-center" style="width: 25%">Change Status</th>
-                  </tr>
-                </thead>
-                <!-- Start of table, dynamic space-->
-                <tbody>
-                    <template v-for="(item,index) in items">
+            <!-- Waiter Tab -->
+            <div class="tab-pane fade show active" id="waiter" role="tabpanel" aria-labelledby="waiter-tab">
+                <h5><i>Call Outs</i></h5>
+                <table id="calloutsapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
+                    <thead>
+                    <tr>
+                        <th style="width: 25%">Table Number</th>
+                        <th style="width: 25%">Caller</th>
+                        <th style="width: 25%">Status</th>
+                        <th class="text-center" style="width: 25%">Change Status</th>
+                    </tr>
+                    </thead>
+                    <!-- Start of table, dynamic space-->
+                    <tbody>
+                        <template v-for="(item,index) in items">
+                            <tr>
+                                <td class="align-middle">
+                                    {{ item.tablenumber }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ item.caller }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ item.status }}
+                                </td>
+                                <td class="text-center align-middle" nowrap>
+                                    <button v-on:click.prevent="rowRemove(index)" type="button" class="btn btn-success">Completed</button>
+                                </td>
+                            </tr>
+                            </template>
+                    </tbody>
+                </table>
+                <hr>
+                <h5><i>Active Orders</i></h5>
+                <table id="activeordersapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
+                    <thead>
+                    <tr>
+                        <th style="width: 25%">Table Number</th>
+                        <th style="width: 25%">Status</th>
+                        <th style="width: 50%">Order Details</th>
+                    </tr>
+                    </thead>
+                    <!-- Start of table, dynamic space-->
+                    <tbody>
+                        <template v-for="item in items">
+                            <tr>
+                                <td class="align-middle">
+                                    {{ item.tablenumber }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ item.status }}
+                                </td>
+                                <td class="align-middle">
+                                    Ordered at: {{ item.ordertime }}
+                                    <li v-for="dish in item.orderdetails">
+                                        {{ dish }}
+                                    </li>
+                                </td>
+                            </tr>
+                            </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- New Order Tab -->
+            <div class="tab-pane fade" id="newOrder" role="tabpanel" aria-labelledby="newOrder-tab">
+                <div style="text-align: center;">
+                    <button type="button" class="btn btn-lg btn-outline-primary my-2 my-sm-0" data-toggle="modal" data-target="#menuModal"  data-backdrop="false">Add To Order</button>
+                    <button type="button" class="btn btn-lg btn-outline-primary my-2 my-sm-0" v-on:click="sendOrder">Send Order</button><br>
+                    <h4 id="orderMessage"><h4>
+                </div>
+
+                <hr>
+                    
+                <table class="table table-borderless table-hover display nowrap">
+                    <thead>
                         <tr>
-                            <td class="align-middle">
-                                {{ item.tablenumber }}
-                            </td>
-                            <td class="align-middle">
-                                {{ item.caller }}
-                            </td>
-                            <td class="align-middle">
-                                {{ item.status }}
-                            </td>
-                            <td class="text-center align-middle" nowrap>
-                                <button v-on:click.prevent="rowRemove(index)" type="button" class="btn btn-success">Completed</button>
-                            </td>
+                            <th nowrap>Item Name:</th>
+                            <th nowrap>Quantity</th>
+                            <th nowrap>Notes for Chef</th>
+                            <th nowrap>Price per Item</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        <template v-for="item in currentOrder">
+                            <tr>
+                                <td nowrap>{{ item.itemName }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td nowrap>{{ item.comment }}</td>
+                                <td nowrap>$ {{ item.price }}</td>
+                            </tr>
                         </template>
-                </tbody>
-              </table>
-            <hr>
-            <h5><i>Active Orders</i></h5>
-            <table id="activeordersapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
-                <thead>
-                <tr>
-                    <th style="width: 25%">Table Number</th>
-                    <th style="width: 25%">Status</th>
-                    <th style="width: 50%">Order Details</th>
-                </tr>
-                </thead>
-                <!-- Start of table, dynamic space-->
-                <tbody>
-                    <template v-for="item in items">
                         <tr>
-                            <td class="align-middle">
-                                {{ item.tablenumber }}
-                            </td>
-                            <td class="align-middle">
-                                {{ item.status }}
-                            </td>
-                            <td class="align-middle">
-                                Ordered at: {{ item.ordertime }}
-                                <li v-for="dish in item.orderdetails">
-                                    {{ dish }}
-                                </li>
-                            </td>
+                            <td colspan="4"></td>
                         </tr>
-                        </template>
-                </tbody>
-            </table>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td><b>Order Total</b></td>
+                            <td>$ {{ orderTotals() }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Menu Tab -->
+            <div class="tab-pane fade" id="menu" role="tabpanel" aria-labelledby="menu-tab">
+                <table id="menuapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
+                    <thead>
+                        <tr>
+                        <th style="width: 15%">Item</th>
+                        <th style="width: 75%">Description</th>
+                        <th style="width: 10%">Price</th>
+                        </tr>
+                    </thead>
+                    <!-- Start of table, dynamic space-->
+                    <tbody>
+                        <template v-for="item in items">
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.description }}</td>
+                                <td>${{ item.price }}</td>
+                            </tr>
+                            </template>
+                    </tbody>
+                    </table>
+            </div>
         </div>
 
-        <!-- Menu Tab -->
-        <div class="tab-pane fade" id="menu" role="tabpanel" aria-labelledby="menu-tab">
-            <table id="menuapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
-                <thead>
-                    <tr>
-                    <th style="width: 15%">Item</th>
-                    <th style="width: 75%">Description</th>
-                    <th style="width: 10%">Price</th>
-                    </tr>
-                </thead>
-                <!-- Start of table, dynamic space-->
-                <tbody>
-                    <template v-for="item in items">
-                        <tr>
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.description }}</td>
-                            <td>${{ item.price }}</td>
-                        </tr>
-                        </template>
-                </tbody>
-                </table>
-        </div>
-        
+        <!-- Menu Modal-->
+        <div id="orderApp">
+            <!-- Menu Modal -->
+            <div class="modal" id="menuModal" >
+                <div class="modal-dialog">
+                    <div class="modal-content" style=" background-color: transparent;">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 style="text-align: center; color: white;">Menu</h4>
+                            <button type="button" class="close"  data-dismiss="modal">&times;</button>
+                        </div>
+                
+                        <!-- Modal body -->
+                        <div class="modal-body" style="background-color: transparent;">
+                            
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-lg btn-secondary" value="all" onclick="filterType(this)">Show All</button>
+                                <template v-for="t in types">
+                                    <template v-if="t.restaurant == getRestaurantID">
+                                        <button type="button" class="btn btn-lg btn-secondary" v-bind:value="t.name" onclick="filterType(this)">{{ t.name }}</button>
+                                    </template>
+                                </template>
+                            </div>
+                            <hr>
+                        
+                            <br>
+                                    
+                            <div class="container2"> 
+                                <template v-for="t in types">
+                                    <template v-if="t.restaurant == getRestaurantID">
+                                        <div v-bind:id="t.name" class="items">
+                                            <div class="category_title">{{ t.name }}</div>
+                                            <template v-for="item in itemsOfType(t.id)">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="border">
+                                                            <img v-bind:id="item.name" class="imgZoom" src="../../pictures/main_pic1.jpeg" align="left">
+                                                            <div class="item_text">
+                                                                <h5><b>{{ item.name }}</b></h5>
+                                                                <p>{{ item.description }}</p>
+                                                                <h5 class="price_text"><b>${{ item.price }}</b></h5>
+                                                                
+                                                            </div>
+                                                            <div class="addButton">
+                                                                <div class="btn-group dropright">
+                                                                    <button v-bind:id="item.name" type="button" class="btn btn-lg btn-outline-danger dropdown-toggle" @click="updateItemDetails(item.name)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Customise</button>
+                                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                                    </button>
+                                                                    <form class="dropdown-menu p-4"  @submit.prevent="processForm">
+                                                                        <div class="form-group">
+                                                                            <label class="text" for="lname"><b>Quantity: </b></label>
+                                                                            <input type='number' v-model="quantity" id='itemQuantity' name='itemQuantity' value='1' min='1' max='10' step='1' required=''>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="text" for="email"><b>Comments for Chef: </b></label>
+                                                                            <textarea type='text' v-model="comment" id='chefNotes' name='chefNotes' style='width: 300px; border: solid 1px black;' placeholder='Add any notes for the chef. e.g. Add more, less of something'></textarea>					
+                                                                        </div>
+                                                                        <button type="submit" class="btn btn-lg btn-primary" v-on:click="processForm" data-dismiss="modal">Add to Order</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <br>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>       
         </div>
 </body>
 
@@ -181,24 +299,138 @@
                 // List of Menu Items
 			    // item = { name, description, price, menu_category }
             ],
+            restaurant: { id: '', name: '' }
         },
         created() {
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
+            this.restaurant = JSON.parse(sessionStorage.restaurant);
+            
             axios
-                .get('http://127.0.0.1:8000/menuItems/')
-                .then((response) => {
-					this.items = response.data
-                }).catch( error => {console.log(error); });
-                
+            .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: this.restaurant.id }})
+            .then((response) => {
+                this.items = response.data
+            }).catch( error => {console.log(error); });
+            
             axios
-                .get('http://127.0.0.1:8000/menuCategories/')
-                .then((response) => {
-					this.types = response.data
-                }).catch( error => {console.log(error); });
+            .get('http://127.0.0.1:8000/menuCategories/', { params: {restaurant: this.restaurant.id }})
+            .then((response) => {
+                this.types = response.data
+            }).catch(error => {console.log(error);})
         },
 
     })
+
+    var orderApp = new Vue({
+    el: '#orderApp',
+    delimiters: ['{{', '}}'],
+    data: {
+        itemName: '',
+        quantity: 0,
+        comment: '',
+        items: [
+            // List of Menu Items
+            // id, name, description, price, category, restaurant
+        ],
+        types: [
+            // List of Menu Categories
+            // type = { id, name, menu_item[] }
+        ],
+        restaurant: [
+
+        ]
+    },
+    created() {
+        var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+        axios.defaults.headers.common['Authorization'] = basicAuth
+        this.restaurant = JSON.parse(sessionStorage.restaurant);
+        console.log(this.restaurant)
+        axios
+            .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: this.restaurant.id }})
+            .then((response) => {
+                this.items = response.data
+                console.log(response.data)
+            }).catch( error => {console.log(error); });
+            
+        axios
+            .get('http://127.0.0.1:8000/menuCategories/', { params: {restaurant: this.restaurant.id }})
+            .then((response) => {
+                this.types = response.data
+                console.log(response.data)
+            }).catch(error => {console.log(error);})
+    },
+    computed: {
+        getRestaurantID: function() {
+            console.log("restaurant id = " + this.restaurant.id)
+            return this.restaurant.id
+        },
+        resetFields: function() {
+            this.quantity = ''
+            this.comment = ''
+            this.itemName = ''
+        }
+    },
+    methods: {
+        itemsOfType: function(typeID) {
+            return this.items.filter(function(item) {
+                if(item.menu_category == typeID) {
+                    return item;
+                };
+            })
+        },
+        getItem: function(name) {
+            for(i=0; i< this.items.length; i++) {
+                if(this.items[i] == name) {
+                    return this.items[i]
+                }
+            }
+        },
+        updateItemDetails: function(itemName) {
+            if(itemName != null) {
+                this.itemName = itemName
+            }
+        },
+        processForm: function() {
+            // send input to database
+            // POST { orderList object, menuItem object, comments, quantity}
+
+            idx = this.items.findIndex(x => x.name == this.itemName)
+            item = this.items[idx]
+            
+            orderApp.currentOrder.push({ id: item.id, itemName: this.itemName, quantity: this.quantity, comment: this.comment, price: item.price });
+
+            console.log(orderApp.currentOrder)
+
+            this.resetFields            
+        }			
+    }
+  });
+
+  function hideTypes() {
+    var x = document.getElementsByClassName("items");
+    var i;
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+}
+
+function filterType(attribute) {
+    var c = attribute.getAttribute('value');
+    if(c == "all") {
+        showTypes();
+        return;
+    }
+    hideTypes();
+    document.getElementById(c).style.display = "block"
+}
+
+function showTypes() {
+    var x = document.getElementsByClassName("items");
+    var i;
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "block";
+    }
+}
 
 </script>
 
@@ -208,6 +440,28 @@
 body {
     background-image: url("../../pictures/background-texture.jpg");
     font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
+}
+
+.border {
+	border-radius: 5px;
+	background-color: whitesmoke;
+	padding: 5px;
+	margin: auto;
+}
+
+.category_title {
+	font-size: 30px;
+	color: red;
+	text-align: center;
+    text-decoration: underline;
+}
+
+.card {
+    width: 700px;
+    z-index: 0;
+    background-color: #ECEFF1;
+    padding-bottom: 10px;
+    border-radius: 10px;
 }
 
 .title {
@@ -258,6 +512,103 @@ a {
 .nav-pills .pill-1 .nav-link {
     background-color: red;
     color: white;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 3; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+.myModal-backdrop {
+    opacity:75% !important;
+	height: 100%;
+	width: 100%;
+}
+
+/* The Close Button */
+.close {
+  position: relative;
+
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.zoom {      
+-webkit-transition: all 0.35s ease-in-out;    
+-moz-transition: all 0.35s ease-in-out;    
+transition: all 0.35s ease-in-out;     
+cursor: -webkit-zoom-in;      
+cursor: -moz-zoom-in;      
+cursor: zoom-in;  
+}
+
+.imgZoom {
+  transition: transform .2s;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+}
+
+.imgZoom:hover {
+  -ms-transform: scale(2.0); /* IE 9 */
+  -webkit-transform: scale(2.0); /* Safari 3-8 */
+  transform: scale(2.0); 
+}
+
+.zoom:hover,  
+.zoom:active,   
+.zoom:focus {
+/**adjust scale to desired size, 
+add browser prefixes**/
+-ms-transform: scale(2.5);    
+-moz-transform: scale(2.5);  
+-webkit-transform: scale(2.5);  
+-o-transform: scale(2.5);  
+transform: scale(2.5);    
+position:relative;      
+z-index:100;  
+}
+
+.item_text {
+	margin-left: 10em;
+}
+
+.addButton {
+	margin-left: 10em;
+}
+
+.card {
+    width: 700px;
+    z-index: 0;
+    background-color: #ECEFF1;
+    padding-bottom: 10px;
+    border-radius: 10px;
+}
+
+.top {
+    padding-top: 10px;
+    padding-left: 13% !important;
+    padding-right: 13% !important
 }
 
 </style>

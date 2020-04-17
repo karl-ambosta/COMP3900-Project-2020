@@ -1,11 +1,3 @@
-function viewOrderInfo() {
-    window.open("order_info.html", "_self");
-}
-
-function finishOrdering() {
-    window.open("billing.html", "_self");
-}
-
 function callWaiter() {
     // To call waiter
 }
@@ -30,22 +22,9 @@ var orderApp = new Vue({
     delimiters: ['{{', '}}'],
     data: {
         // get list of orders here
-        user: '',
         orderList: [
             // List of customer orders
             // { id, owner, order_request: [] }
-            {id: '00001', items: [ 
-                                    { name: 'Item 1', description: 'Description for Item1', price: '2.50'}, 
-                                    { name: 'Item 3', description: 'Description for Item3', price: '5.50'}  
-                                ],
-                time: '13:40', status: 'Completed'
-            },
-            {id: '00002', items: [ 
-                                    { name: 'Item 2', description: 'Description for Item2', price: '10.00'}, 
-                                    { name: 'Item 4', description: 'Description for Item4', price: '3.00'}  
-                                ],
-                time: '14:00', status: 'Cooking'
-            },
         ],
         currentOrder: [
             // List of Menu Items
@@ -60,7 +39,8 @@ var orderApp = new Vue({
         axios
             .get('http://127.0.0.1:8000/orderList/')
             .then((response) => {
-                this.orderList = response.data
+                
+                this.orderList = response.data.filter(item => item.owner == titleApp.user)
             }).catch( error => {console.log(error); return});
 
         axios
@@ -85,8 +65,8 @@ var orderApp = new Vue({
         viewOrderInfo: function(orderID) {
             sessionStorage.orderID = orderID
         },
-        updateOrderNo: function(orderID) {
-            infoApp.order.id = orderID
+        updateOrderInfo: function(orderID) {
+            infoApp.order = this.orderList.filter(item => item.id == orderID)[0]
         },
         sendOrder: function() {
 
@@ -180,13 +160,13 @@ var menuApp = new Vue({
         var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
         axios.defaults.headers.common['Authorization'] = basicAuth
         axios
-            .get('http://127.0.0.1:8000/menuItems/')
+            .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: titleApp.restaurant.id }})
             .then((response) => {
                 this.items = response.data
             }).catch( error => {console.log(error); });
             
         axios
-            .get('http://127.0.0.1:8000/menuCategories/')
+            .get('http://127.0.0.1:8000/menuCategories/', { params: {restaurant: titleApp.restaurant.id }})
             .then((response) => {
                 this.types = response.data
             }).catch(error => {console.log(error);})
@@ -220,7 +200,6 @@ var menuApp = new Vue({
             if(itemName != null) {
                 this.itemName = itemName
             }
-            // console.log({ itemName: this.itemName, quantity: this.quantity, comment: this.comment })
         },
         processForm: function() {
             // send input to database
@@ -244,39 +223,9 @@ var infoApp = new Vue({
     data: {
         order: [
             // id, status, order_request
-            {id: '00003', orderTime: "13:40", status: "Serving", itemList: [
-                                                        {itemName: "item1", description: "Description for item1", quantity: 1, notes: "Please make fresh", price: 2.50},
-                                                        {itemName: "item2", description: "Description for item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
-                                                        {itemName: "item3", description: "Description for item3", quantity: 2, notes: "No peanuts", price: 7.00},
-                                                        {itemName: "item4", description: "Description for item4", quantity: 6, notes: "Extra chilli", price: 3.50},
-                                                        ]}
+            
         ]
-        
-        /*
-        orderNumber: "00003",
-        orderTime: "13:40",
-        status: "Cooking",
-        itemList: [
-            {itemName: "item1", description: "Description for item1", quantity: 1, notes: "Please make fresh", price: 2.50},
-            {itemName: "item2", description: "Description for item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
-            {itemName: "item3", description: "Description for item3", quantity: 2, notes: "No peanuts", price: 7.00},
-            {itemName: "item4", description: "Description for item4", quantity: 6, notes: "Extra chilli", price: 3.50},
-        ]
-        */
     },
-    /*
-    created() {
-        var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
-        axios.defaults.headers.common['Authorization'] = basicAuth
-        
-        axios
-            .get('http://127.0.0.1:8000/orderList/' + sessionStorage.getItem('orderID'))
-            .then((response) => {
-                this.order = response.data
-            }).catch( error => {console.log(error); })
-        
-    },
-    */
     computed: {
         getTimes: function() {
             var time = moment(this.order[0].orderTime, "HH:mm")
@@ -297,6 +246,13 @@ var infoApp = new Vue({
         processForm: function() {
             // send input to database
               console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
+        }
+    },
+    watch: {
+        order: function() {
+            console.log("order changed to ")
+            console.log(this.order)
+            this.order.status = "Cooking"
         }
     }
 

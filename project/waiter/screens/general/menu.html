@@ -39,7 +39,7 @@
 
 		<div id="app">
 
-			<div class="container" style="width: 25%; text-align: center;">
+			<div class="container" style=" text-align: center;">
 					<div>
 						<label class="restaurant" for="restaurant" style="color: white; font-size: 25px">View menu for Restaurant:</label><br>
 						<select id="restaurant" v-model="chosen_restaurant" class="restaurant_name" required="">
@@ -48,6 +48,14 @@
 							</template>
 						</select>
 					</div>
+					<br>
+
+					<div class="flex" >
+						  <div class="input-group" style="width: 50%; left: 26%;">
+							 <input id="searchInput" type="text" class="form-control" v-model="searchInput" placeholder="Search..." />
+							 <button class="btn btn-primary btn-block" type="submit" style="width: 25%;" v-on:click="searchItem">Search</button>
+						  </div>
+					 </div>
 			</div>
 
 			<hr>
@@ -84,7 +92,7 @@
 							<div class="row">
 								<div class="col">
 									<div class="border">
-										<img v-bind:id="item.name" src="../../pictures/main_pic1.jpeg" align="left" width="100" height="100" v-on:click="viewModal(item.name)">
+										<img v-bind:id="item.name" v-bind:src="'../../' + item.picture" align="left" width="100" height="100" v-on:click="viewModal(item.name)">
 										<div class="item_text">
 											<h5><b>{{ item.name }}</b></h5>
 											<p>{{ item.description }}</p>
@@ -243,7 +251,8 @@
 		  restaurants: [
 
 		  ],
-		  chosen_restaurant: 'Restaurant #1'
+		  chosen_restaurant: 'Restaurant #1',
+		  searchInput: ''
 		},
 		created() {
 			var basicAuth = 'Basic ' + btoa('admin' + ':' + 'admin')
@@ -306,6 +315,15 @@
 						return r;
 					};
 				}) 
+			},
+			searchItem: function() {
+				axios
+					.get('http://127.0.0.1:8000/menuItems/?search=' + this.searchInput)
+					.then((response) => {
+						console.log(response.data)
+					}).catch( error => {console.log(error); return; })
+
+				document.getElementById("searchInput").value = ''
 			}
 		},
 		watch: {
@@ -363,6 +381,11 @@ body {
 
 .category:hover {
 	color:red;
+}
+
+.flex {
+	display: flex;
+	flex-direction: row;
 }
 
 .item_text {
