@@ -1,0 +1,394 @@
+<!-- Order Information Page for Waiter/App/Site -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="text/javascript" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+        <link rel="application/javascript" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <title>Waiter - Order # Information</title>
+    </head>
+
+    <body>
+        <div class="title">Order Information</div>
+
+    <!-- Order Progress Bar -->
+    <div id="app" style="width: 100%;">
+        <div class="container px-1 py-5 mx-auto">
+                        
+            <div class="card">
+                <div class="row d-flex justify-content-between px-3 top">
+                    <div class="d-flex">
+                        <h5>ORDER <span class="text-primary font-weight-bold">#{{ orderNumber }}</span></h5>
+                    </div>
+                    <div class="d-flex flex-column text-sm-right">
+                        <p class="mb-0">Expected Arrival: <span class="font-weight-bold">{{ getTimes[1] }}</span></p>
+                        <p>Order Placed at: <span class="font-weight-bold">{{ getTimes[0] }}</span></p>
+                    </div>
+                </div> <!-- Add class 'active' to progress -->
+                <div class="row d-flex justify-content-center">
+                    <div class="col-12">
+                        <ul id="progressbar" class="text-center">
+                            <template v-if="status == 'Processed'">
+                                <li class="active step0"></li>
+                                <li class="step0"></li>
+                                <li class="step0"></li>
+                                <li class="step0"></li>
+                            </template>
+                            <template v-if="status == 'Cooking'">
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="step0"></li>
+                                <li class="step0"></li>
+                            </template>
+                            <template v-if="status == 'Serving'">
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="step0"></li>
+                            </template>
+                            <template v-if="status == 'Completed'">
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                                <li class="active step0"></li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row justify-content-between top">
+                    <div class="row d-flex icon-content"> <img class="icon" src="../pictures/order_processed.png">
+                        <div class="d-flex flex-column">
+                            <p class="font-weight-bold">1. Order<br>Processed</p>
+                        </div>
+                    </div>
+                    <div class="row d-flex icon-content"> <img class="icon" src="../pictures/cooking_icon.png">
+                        <div class="d-flex flex-column">
+                            <p class="font-weight-bold">2. Order<br>Cooking</p>
+                        </div>
+                    </div>
+                    <div class="row d-flex icon-content"> <img class="icon" src="../pictures/served_icon.png">
+                        <div class="d-flex flex-column">
+                            <p class="font-weight-bold">3. Serving<br>Order</p>
+                        </div>
+                    </div>
+                    <div class="row d-flex icon-content"> <img class="icon" src="../pictures/order_finish.png">
+                        <div class="d-flex flex-column">
+                            <p class="font-weight-bold">4. Order<br>Served</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            
+            <div class="buttons" style="text-align: center;">
+                <button class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="history.back()">Back to Orders</button>
+                <button class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="callWaiter()">Call Waiter</button>
+            </div>
+        </div>
+            
+        <hr>
+
+        <div class="container" style="overflow-x: auto;">
+            <table class="table table-borderless table-hover " style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th style="width: 30%" >Item Name</th>
+                        <th style="width: 5%">Quantity</th>
+                        <th style="width: 50%" >Notes for Chef</th>
+                        <th style="width: 15%" >Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="items in itemList">
+                        <tr>
+                            <td nowrap>{{ items.itemName }}</td>
+                            <td>{{ items.quantity }}</td>
+                            <td>{{ items.notes }}</td>
+                            <td nowrap>${{ items.price.toFixed(2) }} * {{ items.quantity }} = {{ (items.price*items.quantity).toFixed(2) }} </td>
+                        </tr>
+                    </template>
+                <tr>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td nowrap colspan="1"><b>Order SubTotal</b></td>
+                    <td>${{ orderTotals.toFixed(2) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td nowrap colspan="1"><b>GST/Tax</b></td>
+                    <td nowrap>${{ GSTcalc.toFixed(2) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td nowrap colspan="1"><b>Discounts</b></td>
+                    <td nowrap>${{ getDiscounts.toFixed(2) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td nowrap colspan="1"><b>Total</b></td>
+                    <td nowrap>${{ finalTotal.toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+     
+    </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+   var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            order = [
+                // id, status, order_request
+            ]
+            /*
+            orderNumber: "00003",
+            orderTime: "13:40",
+            status: "Cooking",
+            itemList: [
+                {itemName: "item1", description: "Description for item1", quantity: 1, notes: "Please make fresh", price: 2.50},
+                {itemName: "item2", description: "Description for item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
+                {itemName: "item3", description: "Description for item3", quantity: 2, notes: "No peanuts", price: 7.00},
+                {itemName: "item4", description: "Description for item4", quantity: 6, notes: "Extra chilli", price: 3.50},
+            ]
+            */
+        },
+        created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+
+            axios
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/' + sessionStorage.getItem('orderID'))
+                .then((response) => {
+                    this.order = response.data
+                }).catch( error => {console.log(error); })
+        },
+        computed: {
+            getTimes: function() {
+                var time = moment(this.orderTime, "HH:mm")
+                var timeFormat = time.format('hh:mm A')
+                var expectedTime = time.add(10, 'minutes').format('hh:mm A')
+                return [timeFormat, expectedTime];
+            },
+            orderTotals: function() {
+                var total = 0
+                for(i = 0; i < this.itemList.length; i++) {
+                    total = total + (this.itemList[i].price * this.itemList[i].quantity)
+                }
+
+                console.log(total)
+                return total
+            },
+            GSTcalc: function() {
+                return 0.10 * this.orderTotals
+            },
+            getDiscounts: function() {
+                return 0.50 * 1
+            },
+            finalTotal: function() {
+                var total = this.orderTotals + this.GSTcalc - this.getDiscounts
+                return total
+            }
+
+        },
+        methods: {
+			processForm: function() {
+				// send input to database
+      			console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
+    		}
+		}
+    
+    })
+
+</script>
+
+
+<style>
+body {
+    color: #000;
+    overflow-x: hidden;
+    height: 100%;
+    background-color: #6f42c1;
+    background-repeat: no-repeat
+}
+
+.title {
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    margin-top: 5%;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px black;
+}
+
+.table {
+    background-color: #ECEFF1;
+    border-radius: 10px;
+}
+
+.buttons {
+    width: 100%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.button {
+    top: 2%;
+    left: 9%;
+    position: absolute;
+    margin-top: 80px;
+    margin-left: 80px;
+}
+
+.button2 {
+    top: 2%;
+    right: 9%;
+    position: absolute;
+    margin-top: 80px;
+    margin-right: 80px;
+}
+
+
+.card {
+    z-index: 0;
+    background-color: #ECEFF1;
+    padding-bottom: 10px;
+    margin-top: 90px;
+    border-radius: 10px;
+}
+
+.top {
+    padding-top: 10px;
+    padding-left: 13% !important;
+    padding-right: 13% !important
+}
+
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    color: #455A64;
+    padding-left: 0px;
+    margin-top: 30px;
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 13px;
+    width: 25%;
+    float: left;
+    position: relative;
+    font-weight: 400
+}
+
+#progressbar .step0:before {
+    font-family: FontAwesome;
+    content: "\f10c";
+    color: #fff
+}
+
+#progressbar li:before {
+    width: 40px;
+    height: 40px;
+    line-height: 45px;
+    display: block;
+    font-size: 20px;
+    background: #C5CAE9;
+    border-radius: 50%;
+    margin: auto;
+    padding: 0px
+}
+
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 12px;
+    background: #C5CAE9;
+    position: absolute;
+    left: 0;
+    top: 16px;
+    z-index: -1
+}
+
+#progressbar li:last-child:after {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: absolute;
+    left: -50%
+}
+
+#progressbar li:nth-child(2):after,
+#progressbar li:nth-child(3):after {
+    left: -50%
+}
+
+#progressbar li:first-child:after {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    position: absolute;
+    left: 50%
+}
+
+#progressbar li:last-child:after {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px
+}
+
+#progressbar li:first-child:after {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+    background: #651FFF
+}
+
+#progressbar li.active:before {
+    font-family: FontAwesome;
+    content: "\f00c"
+}
+
+.icon {
+    width: 60px;
+    height: 60px;
+}
+
+.icon-content {
+    padding-bottom: 10px;
+    width: 90px;
+}
+
+.flex-column {
+    margin-left: 5px;
+}
+
+@media screen and (max-width: 992px) {
+    .icon-content {
+        width: 50%
+    }
+    .card {
+        width: auto;
+    }
+    .table {
+        width: 100%;
+    }
+}
+
+</style>
+
+</html>

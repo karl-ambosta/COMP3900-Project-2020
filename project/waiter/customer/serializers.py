@@ -68,7 +68,7 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
 class OrderListSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    order_total = serializers.DecimalField(decimal_places=2, max_digits=9)
+    order_total = serializers.DecimalField(decimal_places=2, max_digits=9, read_only=True)
 
     class Meta:
         model = OrderList
@@ -76,7 +76,7 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 class OrderRequestSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    total = serializers.DecimalField(decimal_places=2, max_digits=9)
+    total = serializers.DecimalField(decimal_places=2, max_digits=9, read_only=True)
 
     class Meta:
         model = OrderRequest
