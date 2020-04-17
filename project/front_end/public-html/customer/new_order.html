@@ -110,13 +110,13 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('http://api.unswcafe.tuesdaywaiter.tk/orderList/' + orderID)
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/' + orderID)
                 .then((response) => {
                     this.order = response.data
                 }).catch( error => {console.log(error); return});
 
             axios
-                .get('http://api.unswcafe.tuesdaywaiter.tk/orderRequest/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderRequest/')
                 .then((response) => {
                     for(i = 0; i < response.data.length; i++) {
                         if(response.data[i].owner == userName) {
@@ -126,7 +126,7 @@
                 }).catch( error => {console.log(error); return});
 
             axios
-                .get('http://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
                 .then((response) => {
                     this.menu_items = response.data
                 }).catch( error => {console.log(error); return});
@@ -163,7 +163,7 @@
             finishOrder: function() {
                 
                 axios  
-                    .get('http://api.unswcafe.tuesdaywaiter.tk/orderList/' + sessionStorage.getItem('orderID') + '/sendOrder/')
+                    .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/' + sessionStorage.getItem('orderID') + '/sendOrder/')
                     .then((response) => {
                         console.log("done")
                         console.log(response.data)

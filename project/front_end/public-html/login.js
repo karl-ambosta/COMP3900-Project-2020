@@ -20,7 +20,7 @@ var loginApp = new Vue({
             };
 
             await axios
-                .post('http://api.unswcafe.tuesdaywaiter.tk/rest-auth/login/', payload)
+                .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/login/', payload)
                 .then((response) => {
                     this.results = response.data.key;
                     sessionStorage.user = this.username
@@ -93,7 +93,7 @@ var registerApp = new Vue ({
             }
 
             await axios
-                .post('http://api.unswcafe.tuesdaywaiter.tk/rest-auth/register/', details)
+                .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/register/', details)
                 .then((response) => {
 
                     console.log(response.data)

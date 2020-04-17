@@ -169,13 +169,13 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('http://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
                 .then((response) => {
 					this.items = response.data
 				}).catch( error => {console.log(error); });
 				
 			axios
-				.get('http://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+				.get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
 				.then((response) => {
 					this.types = response.data
 				}).catch( error => {console.log(error); });
@@ -216,7 +216,7 @@
 
 				
 				axios
-					.post('http://api.unswcafe.tuesdaywaiter.tk/menuItems/' + item.id + '/order/', {comments: this.notes, quantity: Number(this.quantity)})
+					.post('https://api.unswcafe.tuesdaywaiter.tk/menuItems/' + item.id + '/order/', {comments: this.notes, quantity: Number(this.quantity)})
 					.then((response) => {
 						console.log(response.data)
 					}).catch( error => {console.log(error); return});

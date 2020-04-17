@@ -352,13 +352,13 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('http://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
                 .then((response) => {
 					this.items = response.data
 				}).catch( error => {console.log(error); });
 				
 			axios
-				.get('http://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+				.get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
 				.then((response) => {
 					this.types = response.data
 				}).catch( error => {console.log(error); });
@@ -462,7 +462,7 @@
                 // post items to server
                 for(i = 0; i < this.newItems.length; i++) {
                     axios
-                        .post('http://api.unswcafe.tuesdaywaiter.tk/menuItems/', this.newItems[i])
+                        .post('https://api.unswcafe.tuesdaywaiter.tk/menuItems/', this.newItems[i])
                         .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); })
@@ -473,7 +473,7 @@
                 for(j = 0; j < this.newTypes.length; j++) {
                      // post types to server
                     axios
-                        .post('http://api.unswcafe.tuesdaywaiter.tk/menuCategories/', this.newTypes[j])
+                        .post('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/', this.newTypes[j])
                         .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
@@ -484,7 +484,7 @@
                 for(k = 0; k < this.itemsToRemove.length; k++) {
                     // delete menu items from server
                     axios  
-                        .delete('http://api.unswcafe.tuesdaywaiter.tk/menuItems/' + this.itemsToRemove[k].id)
+                        .delete('https://api.unswcafe.tuesdaywaiter.tk/menuItems/' + this.itemsToRemove[k].id)
                         .then((response) => {
                             console.log("deleted item: " + response.data)
                         }).catch( error => {console.log(error); })
@@ -495,7 +495,7 @@
                 for(m = 0; m < this.typesToRemove.length; m++) {
                     // delete types from server
                     axios
-                        .delete('http://api.unswcafe.tuesdaywaiter.tk/menuCategory/' + this.typesToRemove[m].id)
+                        .delete('https://api.unswcafe.tuesdaywaiter.tk/menuCategory/' + this.typesToRemove[m].id)
                         .then((response) => {
                             console.log("deleted type: " + response.data)
                         }).catch( error => {console.log(error); })

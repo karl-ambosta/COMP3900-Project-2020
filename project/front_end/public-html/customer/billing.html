@@ -126,7 +126,7 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('http://api.unswcafe.tuesdaywaiter.tk/orderList')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList')
                 .then((response) => {
 
                     for(i = 0; i < response.data.length; i++) {

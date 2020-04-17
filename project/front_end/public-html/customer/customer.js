@@ -58,13 +58,13 @@ var orderApp = new Vue({
         axios.defaults.headers.common['Authorization'] = basicAuth
 
         axios
-            .get('http://api.unswcafe.tuesdaywaiter.tk/orderList/')
+            .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/')
             .then((response) => {
                 this.orderList = response.data
             }).catch( error => {console.log(error); return});
 
         axios
-            .get('http://api.unswcafe.tuesdaywaiter.tk/restaurant/')
+            .get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/')
             .then((response) => {
                 for(i = 0; i < response.data.length; i++) {
                     if(response.data[i].name == sessionStorage.getItem('restaurant')) {
@@ -98,7 +98,7 @@ var orderApp = new Vue({
 
             /*
             axios
-            .post('http://api.unswcafe.tuesdaywaiter.tk/orderList/', null)
+            .post('https://api.unswcafe.tuesdaywaiter.tk/orderList/', null)
             .then((response) => {
                 newOrder = response.data
                 sessionStorage.orderID = newOrder.id
@@ -109,7 +109,7 @@ var orderApp = new Vue({
                 order = this.currentOrder[i]
                 
                 axios
-                .post('http://api.unswcafe.tuesdaywaiter.tk/menuItems/' + order.id + '/order/', {comment: order.comment, quantity: Number(order.quantity)})
+                .post('https://api.unswcafe.tuesdaywaiter.tk/menuItems/' + order.id + '/order/', {comment: order.comment, quantity: Number(order.quantity)})
                 .then((response) => {
                     console.log(response.data)
                 }).catch( error => {console.log(error); return});
@@ -180,13 +180,13 @@ var menuApp = new Vue({
         var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
         axios.defaults.headers.common['Authorization'] = basicAuth
         axios
-            .get('http://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+            .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
             .then((response) => {
                 this.items = response.data
             }).catch( error => {console.log(error); });
             
         axios
-            .get('http://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+            .get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
             .then((response) => {
                 this.types = response.data
             }).catch(error => {console.log(error);})
@@ -270,7 +270,7 @@ var infoApp = new Vue({
         axios.defaults.headers.common['Authorization'] = basicAuth
         
         axios
-            .get('http://api.unswcafe.tuesdaywaiter.tk/orderList/' + sessionStorage.getItem('orderID'))
+            .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/' + sessionStorage.getItem('orderID'))
             .then((response) => {
                 this.order = response.data
             }).catch( error => {console.log(error); })

@@ -168,7 +168,7 @@
             axios.defaults.headers.common['Authorization'] = basicAuth
 
             axios
-                .get('http://api.unswcafe.tuesdaywaiter.tk/orderList/' + sessionStorage.getItem('orderID'))
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/' + sessionStorage.getItem('orderID'))
                 .then((response) => {
                     this.order = response.data
                 }).catch( error => {console.log(error); })
