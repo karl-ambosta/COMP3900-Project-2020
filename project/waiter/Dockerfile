@@ -2,10 +2,7 @@
 FROM python:3
 
 # updates
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update
 
 # Set the working directory.
 WORKDIR /usr/src/app
@@ -23,4 +20,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the command
-CMD [ "python", "./waiter/manage.py", "runserver", "0.0.0.0:8000" ]
+CMD [ "python", "./manage.py", "runserver", "0.0.0.0:8000" ]
