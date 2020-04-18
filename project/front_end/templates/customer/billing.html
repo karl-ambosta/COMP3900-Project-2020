@@ -1,0 +1,170 @@
+<!-- Order Billing Page for Waiter/App/Site -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <title>Waiter - Billing</title>
+    </head>
+
+    <body>
+        <div class="title">Order Billing</div>
+
+        <br>
+        <div id="app">
+            <div class="container">          
+                <table class="table table-borderless table-hover" style="text-align: center;">
+                <thead>
+                    <tr>
+                    <th colspan="3" style="text-align: center;"><h4>Orders</h4></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Order #------</b></td>
+                        <td><b>Total</b></td>
+                    </tr>
+                    <template v-for="order in orderList">
+                        <tr>
+                            <td>Order #{{ order.id }}</td>
+                            <td>${{ order.order_total }}</td>
+                        </tr>     
+                    </template>
+                </tbody>
+                </table>
+            </div>
+
+            <br>
+
+            <div class="container">          
+                <table class="table table-borderless table-hover" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th colspan="3" style="text-align: center;"><h4>Billing</h4></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b><i>SubTotal</i></b></td>
+                            <td><b>${{ orderTotals.toFixed(2) }}</b></td  >
+                        </tr>
+                        <tr>
+                        <td><b><i>GST/Tax</i></b></td>
+                        <td><b>${{ GSTcalc.toFixed(2) }}</b></td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Discounts</i></b></td>
+                            <td><b>${{ getDiscounts }}</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Billing Total</i></b></td>
+                            <td><b>${{ finalTotal.toFixed(2) }}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <hr>
+
+            <div class="container" style="text-align: center; background-color: transparent;">
+                <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="payBill()">Pay Bill</button>
+            </div>
+        </div>
+
+    </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function payBill() {
+        // Pay Bill
+        window.open("feedback.html", "_self");
+    }
+
+    var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            // get list of orders here
+            orderList: [
+                // { id, owner, order_request []}
+                
+            ]
+        },
+        computed: {
+            orderTotals: function() {
+                var total = 0
+                for(i = 0; i < this.orderList.length; i++) {
+                    total = total + Number(this.orderList[i].order_total)
+                }
+                return total
+            },
+            GSTcalc: function() {
+                return 0.10 * this.orderTotals
+            },
+            getDiscounts: function() {
+                return '0.50'
+            },
+            finalTotal: function() {
+                var total = this.orderTotals + this.GSTcalc - this.getDiscounts
+                return total
+            }
+        },
+        created() {
+            this.orderList = ''
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('http://127.0.0.1:8000/orderList/')
+                .then((response) => {
+
+                    for(i = 0; i < response.data.length; i++) {
+                        if(response.data[i].owner == sessionStorage.getItem('user')) {
+                            this.orderList.push(response.data[i])
+                        }
+                    }
+
+                }).catch( error => {console.log(error); })
+        },
+        methods: {
+			processForm: function() {
+				// send input to database
+      			console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
+    		},
+            
+		}
+    
+    })
+    
+</script>
+
+<style>
+body {
+    background-image: url("../../pictures/background-texture.jpg");
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
+}
+
+.title {
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow:  2px 2px black;
+}
+
+.container {
+    background-color: #ECEFF1;
+    position: relative;
+    border-radius: 20px;  
+    width: 350px;
+}
+
+</style>
+
+</html>

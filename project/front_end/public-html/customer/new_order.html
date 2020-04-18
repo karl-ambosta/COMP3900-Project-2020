@@ -1,0 +1,245 @@
+<!-- New Order Page for Waiter/App/Site -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <title>Waiter - New Order</title>
+    </head>
+
+    <body>
+        <div class="title">Create Order</div>
+
+        <div id="app">
+
+            <div class="container">
+                <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" v-on:click="addFromMenu">Add To Order</button>
+                <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" v-on:click="finishOrder">Finish Order</button>
+            </div>
+            
+            
+            <br>
+            
+            <div class="container" style="overflow-x:auto;">          
+                <table class="table table-borderless table-hover display nowrap">
+                    <thead>
+                        <tr>
+                            <th nowrap>Item Name:</th>
+                            <th nowrap>Quantity</th>
+                            <th nowrap>Notes for Chef</th>
+                            <th nowrap>Price per Item</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-for="id in order.order_request">
+                            <tr>
+                                <td nowrap>{{ getItemInfo(getRequest(id)[0].menu_item)[0].name }}</td>
+                                <td>{{ getRequest(id)[0].quantity }}</td>
+                                <td nowrap>{{ getRequest(id)[0].comments }}</td>
+                                <td nowrap>${{ getItemInfo(getRequest(id)[0].menu_item)[0].price }}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container">          
+                <table class="table table-borderless table-hover" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th colspan="3" style="text-align: center;"><h4>Pricing</h4></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b><i>SubTotal</i></b></td>
+                            <td><b>${{ orderTotals }}</b></td  >
+                        </tr>
+                        <tr>
+                        <td><b><i>GST/Tax</i></b></td>
+                        <td><b>${{ GSTcalc }}</b></td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Discounts</i></b></td>
+                            <td><b>${{ getDiscounts }}</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td><b><i>Billing Total</i></b></td>
+                            <td><b>${{ finalTotal }}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </body>
+
+    
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+
+    function callWaiter() {
+        // call waiter
+    }
+
+    var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            order: [
+                // { id, owner, order_request [] }
+            ],
+            requests: [
+                // "id", "order_list", "owner", "menu_item", "comments", "quantity": 1
+            ],
+            menu_items: [
+
+            ]
+        },
+        created() {
+            this.request = ''
+            orderID = sessionStorage.getItem('orderID')
+            userName = sessionStorage.getItem('user')
+
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/' + orderID)
+                .then((response) => {
+                    this.order = response.data
+                }).catch( error => {console.log(error); return});
+
+            axios
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderRequest/')
+                .then((response) => {
+                    for(i = 0; i < response.data.length; i++) {
+                        if(response.data[i].owner == userName) {
+                            this.requests.push(response.data[i])
+                        }
+                    }
+                }).catch( error => {console.log(error); return});
+
+            axios
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .then((response) => {
+                    this.menu_items = response.data
+                }).catch( error => {console.log(error); return});
+            
+        },
+        computed: {
+            orderTotals: function() {
+                var total = 0
+                if(this.order.order_request != null) {
+                    for(i = 0; i < this.order.order_request.length; i++) {
+                        r = this.getRequest(this.order.order_request[i])
+                        total = total + this.getItemInfo(this.order.order_request[i])[0].price * r[0].quantity 
+                    }
+                    return total.toFixed(2)
+                } else {
+                    return '0.00'
+                }
+            },
+            GSTcalc: function() {
+                return (0.10 * Number(this.orderTotals)).toFixed(2)
+            },
+            getDiscounts: function() {
+                return '0.50'
+            },
+            finalTotal: function() {
+                var total = Number(this.orderTotals) + Number(this.GSTcalc) - Number(this.getDiscounts)
+                return total.toFixed(2)
+            }
+        },
+        methods: {
+            addFromMenu: function() {
+                window.open("customer_menu.html", "_self");
+            },
+            finishOrder: function() {
+                
+                axios  
+                    .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/' + sessionStorage.getItem('orderID') + '/sendOrder/')
+                    .then((response) => {
+                        console.log("done")
+                        console.log(response.data)
+                        window.open("customer_orders.html", "_self")
+                    }).catch( error => {console.log(error); return});
+                //
+            },
+            getRequest: function(requestID) {
+                return this.requests.filter(function(item) {
+					if(item.id == requestID) {
+						return item;
+					};
+				})
+            },
+            getItemInfo: function(itemID) {
+                return this.menu_items.filter(function(item) {
+					if(item.id == itemID) {
+						return item;
+					};
+				})
+            }
+        }
+        
+    
+    })
+
+</script>
+
+<style>
+body {
+    background-color: #6f42c1;
+}
+
+.title {
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    margin-top: 5%;
+    text-align: center;
+    text-shadow: 2px 2px black;
+}
+
+.table {
+    background-color: #ECEFF1;
+    border-radius: 10px;
+
+}
+
+.menuButton {
+    position: absolute;
+    margin-left: 5%;
+}
+
+.finishButton {
+    position: absolute;
+    margin-left: 75%;
+}
+
+.container {
+    position: relative;
+    text-align: center;
+}
+
+.container2 {
+    position: relative;
+    text-align: center;
+    width: 75%;
+}
+
+
+
+
+
+</style>
+
+</html>

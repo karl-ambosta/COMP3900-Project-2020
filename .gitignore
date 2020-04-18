@@ -1,6 +1,7 @@
 # Don't track content of these folders
 project/venv/
 project/waiter/__pycache__
+*/__pycache__
 
 # Compiled source #
 ###################

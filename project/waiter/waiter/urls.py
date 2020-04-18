@@ -42,4 +42,5 @@ urlpatterns = [
     path('rest-auth/facebook/', views.FacebookLogin.as_view(), name='facebook_login'),
     path('rest-auth/google/', views.GoogleLogin.as_view(), name='google_login'),
     path('rest-auth/twitter/', views.TwitterLogin.as_view(), name='twitter_login'),
+    path(r'chatBot/', views.chatBotViewSet.as_view())
 ]

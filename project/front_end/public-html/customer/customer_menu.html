@@ -1,0 +1,448 @@
+<!-- Menu Page for Waiter App/Site-->
+<!DOCTYPE html>
+<html>
+
+	<body>
+		<head>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+			<title>Waiter - Order from Menu</title>
+        </head>
+        
+		<div class="title">Menu</div>
+	<div id="app">
+
+		<nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+			<img src="../pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white; text-align: center;">Menu Categories</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" onclick="filterType(this)" value="all" style="text-align: center;">Show All</a>
+					</li>
+					<template v-for="t in types">
+						<li class="nav-item">
+							<a class="nav-link" onclick="filterType(this)" v-bind:value="t.name" style="text-align: center;">{{ t.name }}</a>
+						</li>
+					</template>
+				</ul>
+			</div>
+		</nav>
+
+		<br>
+	
+		<div class="container"> 
+			<template v-for="t in types">
+				<div v-bind:id="t.name" class="items">
+					<div class="category_title">{{ t.name }}</div>
+					<template v-for="item in itemsOfType(t.id)">
+						<div class="row">
+							<div class="col">
+								<div class="border">
+									<img v-bind:id="item.name" src="../pictures/main_pic1.jpeg" align="left" width="100" height="100" v-on:click="viewModal(item.name)">
+									<div class="item_text">
+										<h5><b>{{ item.name }}</b></h5>
+										<p>{{ item.description }}</p>
+										<h5 class="price_text"><b>${{ item.price }}</b></h5>
+									</div>
+									<div class="addButton">
+										<button v-bind:id="item.name" type="button" class="btn btn-lg btn-outline-danger my-2 my-sm-0" @click="updateItemDetails(item.name)" onclick="openModal(this)" data-toggle="modal" data-target="#customiseModal" data-backdrop="false" >Add to Order</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</template>
+					<br>
+				</div>
+				
+			</template>
+		</div>
+
+		<!-- The Modal -->
+		<div class="modal" id="customiseModal">
+			<form @submit.prevent="processForm">
+			<div class="modal-dialog">
+				<div class="modal-content">
+			
+					<!-- Modal Header -->
+					<div class="modal-header">
+					<h4 class="modal-title">Customise Item</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+			
+					<!-- Modal body -->
+					<div class="modal-body">
+							<label class="text" for="itemName">Item Name</label>
+							<input type='text' v-model="itemName" id='itemName' name='itemName' placeholder="" required='' disabled><br><br>
+							<label class="text" for="lname"><b>Quantity: </b></label>
+							<input type='number' v-model="quantity" id='itemQuantity' name='itemQuantity' value='1' min='1' max='10' step='1' required=''><br><br>
+							<label class="text" for="email"><b>Comments for Chef: </b></label>
+							<textarea type='text' v-model="notes" id='chefNotes' name='chefNotes' style='min-width: 100%; border: solid 1px black;' placeholder='Add any notes for the chef. e.g. Add more, less of something'></textarea>					
+					</div>
+			
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
+						<button v-on:click="processForm" type="submit" class="btn btn-lg btn-primary" data-dismiss="modal">Add to Order</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		</div>
+
+
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+
+			<!-- The Close Button -->
+			<span class="close">&times;</span>
+		
+			<!-- Modal Content (The Image) -->
+			<img class="modal-content" id="img01">
+		
+			<!-- Modal Caption (Image Text) -->
+			<div id="caption"></div>
+  		</div>
+
+
+	</div>
+
+	</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+	function hideTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "none";
+		}
+	}
+
+	function filterType(attribute) {
+		var c = attribute.getAttribute('value');
+		if(c == "all") {
+			showTypes();
+			return;
+		}
+		hideTypes();
+		document.getElementById(c).style.display = "block"
+	}
+
+	function showTypes() {
+		var x = document.getElementsByClassName("items");
+		var i;
+		for (i = 0; i < x.length; i++) {
+			x[i].style.display = "block";
+		}
+	}
+
+	function openModal(item) {
+		document.getElementById("itemName").placeholder = item.id; 
+	}
+
+	var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+			itemName: '',
+			quantity: 0,
+			notes: '',
+			items: [
+				// List of Menu Items
+				// item = { name, description, price, menu_category }
+			],
+			types: [
+				// List of Menu Categories
+				// type = { id, name, menu_item[] }
+			],
+		},
+		created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            axios
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .then((response) => {
+					this.items = response.data
+				}).catch( error => {console.log(error); });
+				
+			axios
+				.get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+				.then((response) => {
+					this.types = response.data
+				}).catch( error => {console.log(error); });
+			return;
+        },
+		methods: {
+			itemsOfType: function(typeID) {
+				return this.items.filter(function(item) {
+					if(item.menu_category == typeID) {
+						return item;
+					};
+				})
+			},
+			getItem: function(name) {
+				for(i=0; i< this.items.length; i++) {
+					if(this.items[i] == name) {
+						return this.items[i]
+					}
+				}
+			},
+			updateItemDetails: function(itemName) {
+				if(itemName != null) {
+					this.itemName = itemName
+				}
+				console.log({ itemName: this.itemName, quantity: this.quantity, notes: this.notes })
+			},
+			updateItemQuantity: function(number) {
+				this.itemToAdd.quantity = number
+				console.log(number)
+				console.log(this.itemToAdd)
+			},
+			processForm: function() {
+				// send input to database
+				// POST { orderList object, menuItem object, comments, quantity}
+
+				idx = this.items.findIndex(x => x.name == this.itemName)
+				item = this.items[idx]
+
+				
+				axios
+					.post('https://api.unswcafe.tuesdaywaiter.tk/menuItems/' + item.id + '/order/', {comments: this.notes, quantity: Number(this.quantity)})
+					.then((response) => {
+						console.log(response.data)
+					}).catch( error => {console.log(error); return});
+
+				window.location.href = "new_order.html"
+			},
+			viewModal: function(itemName) {
+				// Get the modal
+				var modal = document.getElementById("myModal");
+
+				// Get the image and insert it inside the modal - use its "alt" text as a caption
+				var img = document.getElementById(itemName);
+				var modalImg = document.getElementById("img01");
+				var captionText = document.getElementById("caption");
+				img.onclick = function(){
+					modal.style.display = "block";
+					modalImg.src = this.src;
+					captionText.innerHTML = this.alt;
+				}
+
+				// Get the <span> element that closes the modal
+				var span = document.getElementsByClassName("close")[0];
+
+				// When the user clicks on <span> (x), close the modal
+				span.onclick = function() {
+					modal.style.display = "none";
+				}
+			}
+			
+		}
+      })
+</script>
+
+<style type="text/css">
+body {
+	background-color: #6f42c1;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif
+}
+
+.title {
+	font-size: 75px;
+	color: white;
+	position: relative;
+	margin-top: 5%;
+	text-shadow: 2px 2px grey;
+	text-align: center;
+}
+
+.navbar {
+	width: 50%;	
+	left: 50%;
+	transform: translate(-50%, 0%);
+	z-index: 2;
+}
+
+.container {
+	position: relative;
+	width: 50%;
+}
+
+
+.border {
+	border-radius: 5px;
+	background-color: white;
+	padding: 5px;
+	height: 125px;
+	margin: auto;
+}
+
+.category_title {
+	font-size: 30px;
+	color: white;
+	text-align: center;
+}
+
+.category:hover {
+	color:red;
+}
+
+.item_text {
+	margin-left: 7em;
+}
+
+
+
+.addButton {
+	position: absolute;
+	bottom: 0;
+	right: 5%;
+}
+
+/* Style the Image Used to Trigger the Modal */
+#myImg {
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 3; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: relative;
+
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/**THE SAME CSS IS USED IN ALL 3 DEMOS**/    
+/**gallery margins**/  
+ul.gallery{    
+margin-left: 3vw;     
+margin-right:3vw;  
+}    
+
+.zoom {      
+-webkit-transition: all 0.35s ease-in-out;    
+-moz-transition: all 0.35s ease-in-out;    
+transition: all 0.35s ease-in-out;     
+cursor: -webkit-zoom-in;      
+cursor: -moz-zoom-in;      
+cursor: zoom-in;  
+}     
+
+.zoom:hover,  
+.zoom:active,   
+.zoom:focus {
+/**adjust scale to desired size, 
+add browser prefixes**/
+-ms-transform: scale(2.5);    
+-moz-transform: scale(2.5);  
+-webkit-transform: scale(2.5);  
+-o-transform: scale(2.5);  
+transform: scale(2.5);    
+position:relative;      
+z-index:100;  
+}
+
+/**To keep upscaled images visible on mobile, 
+increase left & right margins a bit**/  
+@media only screen and (max-width: 768px) {   
+ul.gallery {      
+	margin-left: 15vw;       
+	margin-right: 15vw;
+}
+
+.navbar {
+	width: 100%;
+	left: 0%;
+	transform: translate(0%,0%);
+}
+
+.container {
+	width: 100%
+}
+
+.modal-content {
+    width: 100%;
+}
+
+.price_text {
+	position: relative;
+	margin-top: -35%;
+	margin-left: 65%;
+	text-align: right;
+}
+
+/**TIP: Easy escape for touch screens,
+give gallery's parent container a cursor: pointer.**/
+.DivName {cursor: pointer}
+}
+
+</style>
+</html>
