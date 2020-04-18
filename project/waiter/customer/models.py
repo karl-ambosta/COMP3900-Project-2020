@@ -197,10 +197,3 @@ class WaiterCalls(models.Model):
 
     class Meta:
         ordering = ['created']
-
-    # use cases needed:
-    #   1) list all for waiter view (view)
-    #   2) kitchen hits ready for pickup and creates an entry (create)
-    #   3) customer calls waiter and creates an entry (create)
-    #   4) waiter hits completed and this deletes the entry (delete)
-    #   5) always sorted by oldest using created field

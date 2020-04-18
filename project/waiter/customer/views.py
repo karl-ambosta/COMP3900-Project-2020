@@ -210,16 +210,15 @@ class TwitterLogin(SocialLoginView):
     adapter_class = TwitterOAuthAdapter
 
 class WaiterCallsViewSet(viewsets.ModelViewSet):
+    # use cases needed:
+    #   1) list all for waiter view (view) - done
+    #   2) kitchen hits ready for pickup and creates an entry (create) - need to implement in backend
+    #   3) customer calls waiter and creates an entry (create) - frontend does this bit
+    #   4) waiter hits completed and this deletes the entry (delete) - frontend can do this
+
+    queryset = WaiterCalls.objects.all()
     serializer_class = WaiterCallsSerializer
-    lookup_field = 'id'
-    lookup_value_regex = '[0-9]+'
-    #permission_classes = [permissions.IsAuthenticated]
-    
-    def list(self, request):
-        qs = self.get_queryset()
-        serializer = self.serializer_class(qs, many=True)
-        return Response(serializer.data)
-    
-    def get_queryset(self):
-        qs = WaiterCalls.objects.all()
-        return qs
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
