@@ -192,3 +192,21 @@ class OpeningHours(models.Model):
     day = models.PositiveSmallIntegerField(choices=WEEKDAYS)
     from_hour = models.TimeField()
     to_hour = models.TimeField()
+
+class WaiterCalls(models.Model):
+    """
+    Model to track active waiter calls
+    """
+
+    CALLER_NAME = [
+        (1, 'Kitchen'),
+        (2, 'Customer'),
+    ]
+
+    created = models.TimeField(auto_now_add=True)
+    table_number = models.PositiveSmallIntegerField()
+    caller = models.PositiveSmallIntegerField(choices=CALLER_NAME)
+    status = models.CharField(max_length=30)
+
+    class Meta:
+        ordering = ['created']

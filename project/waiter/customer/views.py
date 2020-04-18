@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
-from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer
-from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
+from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer, WaiterCallsSerializer
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
@@ -329,3 +329,17 @@ class chatBotViewSet(APIView):
             return Response(status=400)
         else:
             return Response(self.chatbot.post(request.data))
+
+class WaiterCallsViewSet(viewsets.ModelViewSet):
+    # use cases needed:
+    #   1) list all for waiter view (view) - done
+    #   2) kitchen hits ready for pickup and creates an entry (create) - need to implement in backend
+    #   3) customer calls waiter and creates an entry (create) - frontend does this bit
+    #   4) waiter hits completed and this deletes the entry (delete) - frontend can do this
+
+    queryset = WaiterCalls.objects.all()
+    serializer_class = WaiterCallsSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
