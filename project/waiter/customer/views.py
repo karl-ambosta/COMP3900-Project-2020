@@ -1,21 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.contrib.auth.models import User
-from rest_framework import viewsets, status
+from django.http import Http404, HttpResponseBadRequest
+from rest_framework import viewsets, status, permissions, filters
 from rest_framework.response import Response
-from rest_framework import permissions, filters
+from rest_framework.decorators import action, api_view
+from rest_framework.parsers import JSONParser
+from rest_framework.views import APIView
 from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer
 from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
-from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
-from rest_framework.decorators import action
-from django.shortcuts import render, get_object_or_404, get_list_or_404
-from django.http import Http404, HttpResponseBadRequest
+from rest_auth.social_serializers import TwitterLoginSerializer
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
-from rest_auth.social_serializers import TwitterLoginSerializer
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch
 
+# Chatbot logic
+from .chatbot import ChatbotAPILogic
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -30,7 +32,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'price', 'menu_category__name']
-
+    
     @action(methods=['post'], detail=True)
     def move(self, request, id=None):
         obj = self.get_object()
@@ -102,7 +104,6 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         serializer = MenuItemSerializer(qs, many=True)
         return Response(serializer.data)
 
-
 class MenuCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = MenuCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -139,7 +140,6 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
         serializer = MenuCategorySerializer(qs, many=True)
         return Response(serializer.data)
 
-
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
@@ -158,12 +158,11 @@ class OrderListViewSet(viewsets.ModelViewSet):
             print(serializer.errors)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class OrderRequestViewSet(viewsets.ModelViewSet):
     queryset = OrderRequest.objects.all()
     serializer_class = OrderRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
-
+    
     def create(self, request): 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -207,3 +206,18 @@ class GoogleLogin(SocialLoginView):
 class TwitterLogin(SocialLoginView):
     serializer_class = TwitterLoginSerializer
     adapter_class = TwitterOAuthAdapter
+
+class chatBotViewSet(APIView):
+    chatbot = ChatbotAPILogic()
+
+    # test function to get onto rest framework, ignore
+    def get(self, request):
+        return Response(self.chatbot.get)
+    
+    # post's are sent to one address by dialogflow, this is all that's needed
+    def post(self, request):
+        # if empty json else
+        if not bool(request.data):
+            return Response(status=400)
+        else:
+            return Response(self.chatbot.post(request.data))
