@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls
 from rest_framework import serializers
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -87,3 +87,8 @@ class OpeningHoursSerializer(serializers.ModelSerializer):
     class Meta:
         model = OpeningHours
         fields = ['id', 'restaurant', 'day', 'from_hour', 'to_hour']
+
+class WaiterCallsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WaiterCalls
+        fields = ['id', 'table_number', 'caller', 'status']
