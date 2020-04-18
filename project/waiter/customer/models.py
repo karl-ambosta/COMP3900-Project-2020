@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 #import uuid 
 from django.db.models.signals import post_save, pre_delete
-from django.db.models import Sum, F, ExpressionWrapper, Max
+from django.db.models import Sum, F, ExpressionWrapper, Max, When, Q
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True, related_name='profile',on_delete=models.CASCADE )
@@ -124,9 +124,9 @@ class OrderListAnnotatedManager(models.Manager):
         return super().get_queryset().annotate(
             order_total = ExpressionWrapper(
                 Sum(
-                    F('order_request__quantity') * F('order_request__menu_item__price'), 
-                ), 
-                output_field = models.DecimalField(decimal_places=2, max_digits=9)
+                    F('order_request__quantity') * F('order_request__menu_item__price')
+                ),
+                output_field=models.DecimalField(decimal_places=2, max_digits=9)
             )
         )
 
@@ -134,8 +134,20 @@ class OrderList(models.Model):
     """
     The current active order list of the user
     """
-    owner = models.OneToOneField(User, related_name='order_list', on_delete=models.CASCADE)
+    ORDER_STATUS = [
+        (1, 'Active'),
+        (2, 'Received'),
+        (3, 'Preparing'),
+        (4, 'Cooking'),
+        (5, 'Pickup ready'),
+        (6, 'Served'),
+        (7, 'Paid')
+    ]
+
+    owner = models.ForeignKey(User, related_name='order_lists', on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, related_name='order_lists', on_delete=models.CASCADE)
+    table_number = models.IntegerField()
+    status = models.PositiveSmallIntegerField(choices=ORDER_STATUS)
     objects = OrderListAnnotatedManager()
 
 
@@ -145,7 +157,8 @@ class OrderRequestAnnotatedManager(models.Manager):
             total=ExpressionWrapper(
                 F('quantity') * F('menu_item__price'),
                 output_field = models.DecimalField(decimal_places=2, max_digits=9)
-            ))
+            )
+        )
 
 class OrderRequest(models.Model):
     """

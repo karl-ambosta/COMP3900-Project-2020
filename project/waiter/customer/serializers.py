@@ -72,7 +72,7 @@ class OrderListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderList
-        fields = ['id', 'owner', 'order_request', 'restaurant', 'order_total']
+        fields = ['id', 'owner', 'order_request', 'restaurant', 'order_total', 'table_number', 'status']
 
 class OrderRequestSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')

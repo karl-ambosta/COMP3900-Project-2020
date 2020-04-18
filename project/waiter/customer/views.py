@@ -14,7 +14,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
-from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch
+from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch, Q
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -72,6 +72,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             item = get_object_or_404(self.queryset, id=id)
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
             order_list = get_object_or_404(OrderList.objects.all(), owner=owner)
+            #check active=True 
             if order_list.restaurant.id != item.menu_category.restaurant.id:
                 return Response(status=status.HTTP_403_FORBIDDEN)
             order_list.order_request.create(order_list=order_list, owner=owner, menu_item=item, comments=request.data["comments"], quantity=request.data["quantity"])
@@ -135,7 +136,7 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
         return Response({'success': True, 'order': new_order})
 
     def list(self, request):
-        qs = self.get_queryset().filter(menu_item__active=True).prefetch_related(Prefetch('menu_item', queryset=MenuItem.objects.filter(active=True)))
+        qs = self.get_queryset().prefetch_related(Prefetch('menu_item', queryset=MenuItem.objects.exclude(active=False)))
         serializer = MenuCategorySerializer(qs, many=True)
         return Response(serializer.data)
 
@@ -147,20 +148,125 @@ class OrderListViewSet(viewsets.ModelViewSet):
     queryset = OrderList.objects.all()
     serializer_class = OrderListSerializer
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'id'
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
-        
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(serializer.data)
-        else:
-            print(serializer.errors)
+        try:
+            existing_list = get_object_or_404(OrderList.objects.filter(status=1), owner=request.user)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        except:
+            if serializer.is_valid():
+                serializer.save(owner=request.user)
+                return Response(serializer.data)
+            else:
+                print(serializer.errors)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post'], detail=True)
+    def send_order(self, request, id=None):
+        try:
+            order_list = get_object_or_404(OrderList.objects.filter(status=1), id=id)
+            order_requests = order_list.order_request.all()
+            if order_requests:
+                order_list.status = 2
+                order_list.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(methods=['post'], detail=True)
+    def set_order_preparing(self, request, id=None):
+        try:
+            order_list = get_object_or_404(OrderList.objects.filter(status=2), id=id)
+            order_requests = order_list.order_request.all()
+            if order_requests:
+                order_list.status = 3
+                order_list.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['post'], detail=True)
+    def set_order_cooking(self, request, id=None):
+        try:
+            order_list = get_object_or_404(OrderList.objects.filter(status=3), id=id)
+            order_requests = order_list.order_request.all()
+            if order_requests:
+                order_list.status = 4
+                order_list.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['post'], detail=True)
+    def set_order_pickup(self, request, id=None):
+        try:
+            order_list = get_object_or_404(OrderList.objects.filter(status=4), id=id)
+            order_requests = order_list.order_request.all()
+            if order_requests:
+                order_list.status = 5
+                order_list.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    @action(methods=['post'], detail=True)
+    def set_order_served(self, request, id=None):
+        try:
+            order_list = get_object_or_404(OrderList.objects.filter(status=5), id=id)
+            order_requests = order_list.order_request.all()
+            if order_requests:
+                order_list.status = 6
+                order_list.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['post'], detail=True)
+    def set_order_paid(self, request, id=None):
+        try:
+            order_list = get_object_or_404(OrderList.objects.filter(status=6), id=id)
+            order_requests = order_list.order_request.all()
+            if order_requests:
+                order_list.status = 7
+                order_list.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False)
+    def get_kitchen_orders(self, request, id=None):
+        qs = self.get_queryset().filter(Q(status=2) | Q(status=3) | Q(status=4) | Q(status=5))
+        serializer = OrderListSerializer(qs, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False)
+    def get_order_history(self, request, id=None):
+        qs = self.get_queryset().filter(Q(status=6) | Q(status=7))
+        serializer = OrderListSerializer(qs, many=True)
+        return Response(serializer.data)
 
 class OrderRequestViewSet(viewsets.ModelViewSet):
-    queryset = OrderRequest.objects.all()
+    queryset = OrderRequest.objects.all().order_by('id')
     serializer_class = OrderRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
 
