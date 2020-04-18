@@ -1,0 +1,184 @@
+<!-- Customer Page (from Login Screen) for Waiter App/Site-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <title>Waiter - Customer Details</title>
+    </head>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <body>
+        
+        <div class="title">Customer Page</div>
+
+        <div id="app" class="container">
+            <h3 style="text-shadow: 1px 1px black;">Customer Information</h3>
+            <form id="customerInfo" @submit.prevent="processForm" class="customer_info" method="POST">
+                <div>
+                    <label class="firstName" for="cname">First Name</label>
+                    <input class="firstName" v-model="custName.firstName" type="text" id="inputName" name="firstName" placeholder="First name.." required=""><br>
+                    <label class="lastName" for="cname">Last Name</label>
+                    <input class="lastName" v-model="custName.lastName" type="text" id="inputName" name="firstName" placeholder="Last name.." required="">
+                </div>
+                
+                <div>
+                    <label class="restaurant" for="restaurant">Which restaurant are you dining at?</label><br>
+                    <select id="restaurant" v-model="chosen_restaurant" class="restaurant_name" required="">
+                        <template v-for="r in restaurants">
+                            <option v-bind:value="r.name">{{ r.name }}</option>
+                        </template>
+                    </select>
+                </div>
+                <br>
+                <div class="form-label-group" >
+                    <label class="table_no" for="table_no">Table Number</label>
+                    <input class="table_no" v-model="table_no" type="text" id="inputTableNumber" name="tableno" placeholder="Table Number..." required="">
+                </div class="form-label-group">
+                <hr>
+                <p class="header">If you would like a digital receipt of your purchase,<br> please fill in one of the below fields:</p>
+                <div>
+                    <label class="email" for="email">Email Address</label>
+                    <input class="email" v-model="email" type="email" id="inputEmail" name="tableno" placeholder="Email Address...">
+                </div>
+                <br>
+                <div>
+                    <label class="mobile" for="mobile_no">Mobile Number</label>
+                    <input class="mobile_no" v-model="mobile" type="tel" id="mobile_no" name="tableno" placeholder="Mobile Number..." pattern="[0-9]{4}-[0-9]{3}-[0-9]{3}">
+                    <small>Format: 04xx-xxx-xxx</small>
+                </div>
+                <hr>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Enter Details</button>
+            </form>
+        </div>
+
+        <h1 id="print" style="font-size: 100px;"></h1>
+
+    </body>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    function goBack() {
+        history.back();
+    }
+
+    function toOrders() {
+        window.open("customer_orders.html", "_self");
+    }
+
+    function confirmDetails() {
+        var name = document.getElementById("inputName").value;
+        var rest = document.getElementById("restaurant").value;
+        var table_no = document.getElementById("inputTableNumber").value;
+        var email = document.getElementById("inputEmail").value;
+        var mobile = document.getElementById("mobile_no").value;
+
+        var message = "Are you sure these are your details?" + "\n\nName: " + name + "\nRestaurant: " + rest + "\nTable Number: " + table_no
+                            + "\nEmail Address: " + email + "\nMobile: " + mobile;
+
+        if(confirm(message)) {
+            document.getElementById('customerInfo').action = "customer_orders.html";
+        } else {
+            document.getElementById('customerInfo').action = "customer.html";
+        }
+    }
+
+    var app = new Vue({
+        el: '#app',
+        delimiters: ['{{', '}}'],
+        data: {
+            custName: {firstName: '', lastName: ''},
+            chosen_restaurant: '',
+            table_no: '',
+            email: '',
+            mobile: '',
+            restaurants: ''
+        },
+        created() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+
+            axios
+                .get('http://https://api.unswcafe.tuesdaywaiter.tkrestaurant/')
+                .then((response) => {
+                    this.restaurants = response.data
+                }).catch( error => {console.log(error); return });
+
+        },
+        methods: {
+			processForm: function() {
+                // send input to database
+
+                rIdx = this.restaurants.findIndex(x => x.name == this.chosen_restaurant)
+                rID = this.restaurants[rIdx].id
+                
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                userName = sessionStorage.getItem('user')
+                sessionStorage.setItem('restaurant', JSON.stringify(
+                    { id: rID, name: this.chosen_restaurant}
+                ));
+                axios.defaults.headers.common['Authorization'] = basicAuth
+
+                axios
+                    .get('http://https://api.unswcafe.tuesdaywaiter.tkusers/')
+                    .then((response) => {
+
+                        window.open("customer_orders.html", "_self")                        
+
+                    }).catch( error => {console.log(error); return});
+               
+                
+                /*
+                axios
+                    .post('http://https://api.unswcafe.tuesdaywaiter.tkprofile/', userInfo)
+                    .then((response) => {
+					    this.items = response.data
+                    }).catch( error => {console.log(error); });
+                */
+
+      			//console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
+    		}
+		}
+    
+    })
+
+</script>
+
+
+<style>
+body {
+    background-image: url("../../pictures/background-texture.jpg");
+    font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
+}
+.title {
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 50px;
+    position: relative;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    background: rgba(111, 66, 194, 0.75);
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 10px;
+}
+
+.customer_info {
+	font-style: normal; 
+	font-variant: normal;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    line-height: 26.4px;
+    text-shadow: 1px 1px black;
+}
+
+</style>
+
+</html>
