@@ -41,7 +41,7 @@ var loginApp = new Vue({
                 });
         },
         customerLogin() {
-            window.open("../customer/customer.html", "_self");
+            window.open("customer_orders.html", "_self");
         },
         kitchenLogin() {
             window.open("../kitchen-staff/kitchen_final.html", "_self")
