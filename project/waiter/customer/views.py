@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework import permissions, filters
-from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer
-from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
+from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer, WaiterCallsSerializer
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_framework.decorators import action
@@ -207,3 +208,18 @@ class GoogleLogin(SocialLoginView):
 class TwitterLogin(SocialLoginView):
     serializer_class = TwitterLoginSerializer
     adapter_class = TwitterOAuthAdapter
+
+class WaiterCallsViewSet(viewsets.ModelViewSet):
+    serializer_class = WaiterCallsSerializer
+    lookup_field = 'id'
+    lookup_value_regex = '[0-9]+'
+    #permission_classes = [permissions.IsAuthenticated]
+    
+    def list(self, request):
+        qs = self.get_queryset()
+        serializer = self.serializer_class(qs, many=True)
+        return Response(serializer.data)
+    
+    def get_queryset(self):
+        qs = WaiterCalls.objects.all()
+        return qs
