@@ -17,6 +17,7 @@ from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch, Q
 import datetime
+from .permissions import MenuItemPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
 
 # Chatbot logic
 from .chatbot import ChatbotAPILogic
@@ -24,7 +25,7 @@ from .chatbot import ChatbotAPILogic
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser | IsUser]
 
 class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all().order_by('order')
