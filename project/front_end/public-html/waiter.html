@@ -185,6 +185,8 @@
                     this.$delete(this.items, index)
                     console.log(response.data)
                 }).catch( error => {console.log(error); });
+                // TODO; implement order status change to served.
+                // this.order_served()
             },
         
             fetchData: function() {

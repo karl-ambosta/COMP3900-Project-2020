@@ -49,22 +49,28 @@
                 </thead>
                 <!-- Start of table, dynamic space-->
                 <tbody>
-                    <template v-for="order in orderList">
+                    <template v-for="order in kitchenOrders">
                         <tr>
-                            <td nowrap><b>Order #{{ order.id }} - Placed at {{ convertTime(order.time) }}</b><br>
+                            <td nowrap><b>Order #{{ order.id }}</b><br>
                                 <ul>
-                                    <template v-for="item in order.itemList">
-                                        <li>{{ item.quantity }} x {{ item.itemName }} - {{ item.notes }}</li>
-                                    </template>
+                                    <div v-for="request in orderRequests">
+                                        <div v-if="request.owner === order.owner">
+                                            <div v-for="food in foodNames">
+                                                <div v-if="request.menu_item === food.id">
+                                                    <li>{{ request.quantity }} x {{ food.name }} - Comments: {{ request.comments }}</li>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </div>
                                 </ul>
                             </td>
                             <td class="text-center align-middle">
                                 {{ order.status }}
                             </td>
                             <td class="text-center align-middle" nowrap>
-                                <button v-bind:id="order.id" type="button" class="btn btn-info" v-on:click="order.status = 'Preparing'">Preparing</button>
-                                <button v-bind:id="order.id" class="btn btn-warning" v-on:click="order.status = 'Cooking'">Cooking</button>
-                                <button v-bind:id="order.id" class="btn btn-success" v-on:click="order.status = 'Pickup Ready'">Pickup Ready</button>
+                                <button v-bind:id="order.id" type="button" class="btn btn-info" v-on:click.prevent="preparing(order.id, order.status)">Preparing</button>
+                                <button v-bind:id="order.id" class="btn btn-warning" v-on:click.prevent="cooking(order.id, order.status)">Cooking</button>
+                                <button v-bind:id="order.id" class="btn btn-success" v-on:click.prevent="pickup_ready(order.id, order.status, order.table_number)">Pickup Ready</button>
                             </td>
                         </tr>
                     </template>
@@ -79,19 +85,27 @@
                 <thead>
                     <tr>
                     <th style="width: 40%">Order</th>
-                    <th style="width: 60%">Items</th>
+                    <th style="width: 60%">Details</th>
                     </tr>
                 </thead>
                 <!-- Start of table, dynamic space-->
                 <tbody>
-                        <template v-for="order in orderList">
+                        <template v-for="order in previousOrders">
                             <tr>
-                                <td nowrap class="align-middle">Order #{{ order.id }} - Placed at {{ convertTime(order.time) }}</td>
+                                <td nowrap class="align-middle">Order #{{ order.id }} - Customer: {{ order.owner }}</td>
                                 <td>
+                                    Status: {{order.status}}<br>
+                                    Order:<br>
                                     <ul>
-                                        <template v-for="item in order.itemList">
-                                            <li>{{ item.quantity }} x {{ item.itemName }} - {{ item.notes }}</li>
-                                        </template>
+                                        <div v-for="item in order.order_request">
+                                            <div v-for="food in foodNames">
+                                                <div v-if="food.id === item">
+                                                    <li>
+                                                        {{ food.name }}
+                                                    </li>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </ul>
                                 </td>
                             </tr>
@@ -143,35 +157,125 @@
         el: '#activeordersapp',
         delimiters: ['{{', '}}'],
         data: {
-            orderList: [
-                        { id: '00001', time:'13:40:00', status: 'Recieved', itemList: [ 
-                                                                                {itemName: "item1", quantity: 1, notes: "Please make fresh", price: 2.50},
-                                                                                {itemName: "item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
-                                                                                {itemName: "item3", quantity: 2, notes: "No peanuts", price: 7.00},
-                                                                                {itemName: "item4", quantity: 6, notes: "Extra chilli", price: 3.50},
-                                                                            ]
-                        },
-                        { id: '00003', time:'15:30:00', status: 'Recieved', itemList: [ {itemName: "item9", quantity: 1, notes: "Item9 note", price: 1.10},
-                                                                                {itemName: "item10", quantity: 2, notes: "Item10 note", price: 4.50},
-                                                                                {itemName: "item11", quantity: 2, notes: "Item11 note", price: 7.50},
-                                                                                {itemName: "item12", quantity: 6, notes: "Item12 note", price: 4.50},
-                                                                            ]
-                        }
-            ]
+            kitchenOrders: [
+                // get set of kitchen orders here 
+            ],
+            orderRequests: [
+                // list of orders
+            ],
+            foodNames: [
+                // hold menu items
+            ],
         },
-        methods: {
-            convertTime: function(timeString) {
-                var s = moment(timeString, "HH:mm A").format('hh:mm A')
-                return s;
+        created() {
+            this.fetchKitchenOrders();
+            this.fetchOrderRequests();
+            this.getFoodNames();
+            //this.interval = setInterval(() => this.fetchData(), 5000);
+        },
+        methods : {
+            fetchKitchenOrders: function() {
+                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                //axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .get("http://localhost:8000/orderList/")
+                    .then((response) => {this.kitchenOrders = response.data})
+                    .then(this.cleanData)
+                    .catch( error => {console.log(error); });
             },
-            getOrder: function(orderID) {
-                return this.orderList.filter(function(order) {
-					if(order.id == orderID) {
-						return order;
+            fetchOrderRequests: function() {
+                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                //axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .get("http://localhost:8000/orderRequest/")
+                    .then((response) => {this.orderRequests = response.data})
+                    .catch( error => {console.log(error); });
+            },
+            preparing: function(food_id, order_status) {
+                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                //axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .post("http://localhost:8000/" + food_id + "/set_order_preparing/")
+                    .then((response) => {
+                            console.log(response.data)
+                        }).catch( error => {console.log(error); });
+                order_status = "Preparing";
+            },
+            cooking: function(food_id, order_status) {
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
+                axios.defaults.headers.common['Authorization'] = basicAuth;
+                axios
+                    .post("http://localhost:8000/" + food_id + "/set_order_cooking/")
+                    .then((response) => {
+                            console.log(response.data)
+                        }).catch( error => {console.log(error); });
+                order_status = "Cooking";
+            },
+            pickup_ready: function(food_id, order_status, table_number) {
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
+                axios.defaults.headers.common['Authorization'] = basicAuth;
+                axios
+                    .post("http://localhost:8000/" + food_id + "/set_order_pickup/")
+                    .then((response) => {
+                            console.log(response.data)
+                        }).catch( error => {console.log(error); });
+                order_status = "Pickup Ready";
+                this.call_waiter(food_id, table_number);
+            },
+            getFoodNames: function(food) {
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
+                axios.defaults.headers.common['Authorization'] = basicAuth;
+                axios
+                    .get("http://localhost:8000/menuItems/")
+                    .then((response) => {this.foodNames = response.data})
+                    .catch( error => {console.log(error); });
+            },
+            call_waiter: function(food_id, table_number){
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
+                var message = "Order: #" + food_id + " ready for pick up"
+                axios.defaults.headers.common['Authorization'] = basicAuth;
+                axios
+                    .post('http://localhost:8000/waiterCalls/', {
+                        "table_number": table_number,
+                        "caller": "Kitchen",
+                        "status": message
+                    })
+                    .then((response) => {
+                            console.log(response.data)
+                    }).catch( error => {console.log(error); });
+            },
+            cleanData: function() {
+                this.kitchenOrders.forEach(element => {
+                    // convert status
+                    switch (element.status) {
+                        case 1:
+                            element.status = "Active";
+                            break;
+                        case 2:
+                            element.status = "Received";
+                            break;
+                        case 3:
+                            element.status = "Preparing";
+                            break;
+                        case 4:
+                            element.status = "Cooking";
+                            break;
+                        case 5:
+                            element.status = "Pickup Ready";
+                            break;
+                        case 6:
+                            element.status = "Served";
+                            break;
+                        case 7:
+                            element.status = "Awaiting Payment";
+                            break;
+                        case 8:
+                            element.status = "Paid";
+                            break;
                     }
-                })
-            },            
-        }
+                });
+            },
+        },
     })
 
     var menuapp = new Vue ({
@@ -218,30 +322,37 @@
         el: '#previousordersapp',
         delimiters: ['{{', '}}'],
         data: {
-            orderList: [
-                        { id: '00004', time:'12:20:00', itemList: [ 
-                                                            {itemName: "item1", quantity: 1, notes: "Please make fresh", price: 2.50},
-                                                            {itemName: "item2", quantity: 2, notes: "Remove tomatoes", price: 5.50},
-                                                            {itemName: "item3", quantity: 2, notes: "No peanuts", price: 7.00},
-                                                            {itemName: "item4", quantity: 6, notes: "Extra chilli", price: 3.50},
-                                                        ]
-                        },
-                        { id: '00002', time:'17:00:00', itemList: [ 
-                                                            {itemName: "item9", quantity: 1, notes: "Item9 note", price: 1.10},
-                                                            {itemName: "item10", quantity: 2, notes: "Item10 note", price: 4.50},
-                                                            {itemName: "item11", quantity: 2, notes: "Item11 note", price: 7.50},
-                                                            {itemName: "item12", quantity: 6, notes: "Item12 note", price: 4.50},
-                                                        ]
-                        }
-            ]
+            previousOrders: [
+                // get set of kitchen orders here 
+            ],
+            foodNames: [
+                // hold menu items
+            ],
         },
-        methods: {
-            convertTime: function(timeString) {
-                var s = moment(timeString, "HH:mm A").format('hh:mm A')
-                return s;
-            },      
-        }
-    })
+        created() {
+            this.getFoodNames();
+            this.fetchPreviousOrders();
+            //this.interval = setInterval(() => this.fetchData(), 5000);
+        },
+        methods : {
+            fetchPreviousOrders: function() {
+                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                //axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .get("http://localhost:8000/orderList/get_order_history/")
+                    .then((response) => {this.previousOrders = response.data})
+                    .catch( error => {console.log(error); });
+            },
+            getFoodNames: function(food) {
+                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                //axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .get("http://localhost:8000/menuItems/")
+                    .then((response) => {this.foodNames = response.data})
+                    .catch( error => {console.log(error); });
+            },
+        },
+      })
 
 </script>
 
