@@ -152,6 +152,8 @@ class OrderList(models.Model):
     restaurant = models.ForeignKey(Restaurant, related_name='order_lists', on_delete=models.CASCADE)
     table_number = models.IntegerField()
     status = models.PositiveSmallIntegerField(choices=ORDER_STATUS)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     objects = OrderListAnnotatedManager()
 
 
@@ -174,6 +176,8 @@ class OrderRequest(models.Model):
     menu_item = models.ForeignKey(MenuItem, related_name='order_request', on_delete=models.CASCADE)
     comments = models.CharField(max_length=300)
     quantity = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     objects = OrderRequestAnnotatedManager()
 
 
