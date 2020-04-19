@@ -4,28 +4,9 @@ from .models import UserProfile
 from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
 from django.contrib.auth.models import User
 
-'''
-class IsOwnerOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # Read permissions are allowed to any request,
-        # so we'll always allow GET, HEAD or OPTIONS requests.
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        # Write permissions are only allowed to the owner of the snippet.
-        return obj.owner == request.user
-'''
-'''
-class IsSuperUser(permissions.BasePermission): 
-    def has_permission(self, request, view):
-        return request.user and request.user.is_superuser
-'''
-
 class IsUser(permissions.BasePermission): 
     def has_object_permission(self, request, view, obj):
         if request.user:
-            #print(request.user.username)
-            #print(obj.username)
             if request.user.is_superuser:
                 return True
             else:
@@ -35,29 +16,60 @@ class IsUser(permissions.BasePermission):
 
 class IsCustomer(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        #print(UserProfile.objects.get(pk=view.kwargs['pk']).role)
-        if UserProfile.objects.get(pk=view.kwargs['pk']).role == '1':
+        if (UserProfile.objects.get(user=request.user).role) == '1':
             return True
+        else: 
+            return False
 
 class IsCashier(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if UserProfile.objects.get(pk=view.kwargs['pk']).role == '2':
+        if (UserProfile.objects.get(user=request.user).role) == '2':
             return True
 
 class IsKitchen(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if UserProfile.objects.get(pk=view.kwargs['pk']).role == '3':
+        print("I am kitchen staff")
+        if (UserProfile.objects.get(user=request.user).role) == '3':
             return True
   
 class IsManager(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if UserProfile.objects.get(pk=view.kwargs['pk']).role == '4':
+        if (UserProfile.objects.get(user=request.user).role) == '4':
             return True
 
 class IsWaiter (permissions.BasePermission): 
     def has_object_permission(self, request, view, obj):
-        if UserProfile.objects.get(pk=view.kwargs['pk']).role == '5':
+        if (UserProfile.objects.get(user=request.user).role) == '5':
             return True
 
 
+class MenuItemPermissions(permissions.BasePermission): 
+    def has_permission(self, request, view):
+        if view.action == 'create': 
+            return ((UserProfile.objects.get(user=request.user).role) == '1') or ((UserProfile.objects.get(user=request.user).role) == '4')
+            #return (UserProfile.objects.get(user=request.user).role) == '3'            
+        elif view.action == 'list':
+            return True
 
+        elif view.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            return True
+        else:
+            return False
+
+    def has_object_permission(self, request, view, obj):
+        # Deny actions on objects if the user is not authenticated
+        #if not request.user.is_authenticated():
+        #    return False
+        if view.action == 'retrieve':
+            return IsCustomer()
+            #return obj == request.user or request.user.is_admin
+        elif view.action in ['update', 'partial_update']:
+            print(IsCustomer())
+            if IsCustomer(): 
+                print ("lol")
+                return True
+            #return obj == request.user or request.user.is_admin
+        elif view.action == 'destroy':
+            return request.user.is_staff
+        else:
+            return False

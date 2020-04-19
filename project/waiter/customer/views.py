@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import permissions, filters
 from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer
 from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
-from .permissions import IsUser, IsCashier, IsCustomer, IsManager, IsWaiter
+from .permissions import MenuItemPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_framework.decorators import action
@@ -16,14 +16,12 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper
-
+from rest_framework.decorators import action, permission_classes
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    #permission_classes = [permissions.IsAuthenticated]
     permission_classes = [permissions.IsAdminUser | IsUser]
-    #permission_classes = [IsCustomer]
 
 class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
@@ -31,6 +29,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     lookup_value_regex = '[0-9]+'
     #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [MenuItemPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'price', 'menu_category__name']
 
@@ -51,7 +50,6 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         return qs
     
     @action(detail=True, methods=['post'])
-    
     def order(self, request, id=None):
         try:
             item = get_object_or_404(self.queryset, id=id)
@@ -83,7 +81,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
 class MenuCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = MenuCategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsKitchen, IsManager]
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
@@ -130,7 +128,7 @@ class OrderRequestViewSet(viewsets.ModelViewSet):
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
