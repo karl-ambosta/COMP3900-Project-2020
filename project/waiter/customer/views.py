@@ -243,12 +243,27 @@ class OrderListViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post'], detail=True)
-    def set_order_paid(self, request, id=None):
+    def set_order_waiting_payment(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=6), id=id)
             order_requests = order_list.order_request.all()
             if order_requests:
                 order_list.status = 7
+                order_list.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['post'], detail=True)
+    def set_order_paid(self, request, id=None):
+        try:
+            order_list = get_object_or_404(OrderList.objects.filter(status=7), id=id)
+            order_requests = order_list.order_request.all()
+            if order_requests:
+                order_list.status = 8
                 order_list.save()
                 return Response(status=status.HTTP_202_ACCEPTED)
             else:
@@ -265,9 +280,21 @@ class OrderListViewSet(viewsets.ModelViewSet):
     
     @action(detail=False)
     def get_order_history(self, request, id=None):
-        qs = self.get_queryset().filter(Q(status=6) | Q(status=7))
+        qs = self.get_queryset().filter(status=8)
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)
+
+    @action(detail=False)
+    def get_waiter_orders(self, request, id=None):
+        qs = self.get_queryset().filter(Q(status=5) | Q(status=6))
+        serializer = OrderListSerializer(qs, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False)
+    def get_cashier_orders(self, request, id=None):
+        qs = self.get_queryset().filter(Q(status=7) | Q(status=8))
+        serializer = OrderListSerializer(qs, many=True)
+        return Response(serializer.data)    
 
     def get_queryset(self):
         qs = OrderList.objects.order_by('id')

@@ -145,7 +145,8 @@ class OrderList(models.Model):
         (4, 'Cooking'),
         (5, 'Pickup ready'),
         (6, 'Served'),
-        (7, 'Paid')
+        (7, 'Awaiting Payment'),
+        (8, 'Paid')
     ]
 
     owner = models.ForeignKey(User, related_name='order_lists', on_delete=models.CASCADE)
