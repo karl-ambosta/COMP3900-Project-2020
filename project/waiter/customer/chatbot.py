@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
-from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer
-from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
+from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer, WaiterCallsSerializer
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch
 
 ## NOTE: Search for TODO to find what is remaining.
@@ -129,14 +129,18 @@ class ChatbotAPILogic:
     def place_order(self, item: str, quantity: int, table_number: int , comments: str):
         # place order in the system using the given
 
+        ## This needs assistance
 
         # OPTIONAL: return new order ID and have this come out in chat bot
         ## return order_id #int
         return True
 
-    # TODO
+    # Need to test
     # Function to call the waiter
-    def call_waiter(self, table_number: int) -> bool:
+    def call_waiter(self, table_num: int) -> bool:
         # call a waiter using the given
-
-        return False
+        response = WaiterCalls.objects.create(table_number=table_num, caller="Customer", status="Customer requires attention")
+        if response:
+            return True
+        else:
+            return False
