@@ -17,7 +17,7 @@ from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch, Q
 import datetime
-from .permissions import MenuItemPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
+from .permissions import MenuItemPermissions, RestaurantPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
 
 # Chatbot logic
 from .chatbot import ChatbotAPILogic
@@ -326,7 +326,8 @@ class OrderRequestViewSet(viewsets.ModelViewSet):
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [RestaurantPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['id', 'order_list']
 

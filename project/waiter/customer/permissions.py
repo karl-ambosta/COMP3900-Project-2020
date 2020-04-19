@@ -43,9 +43,36 @@ class IsWaiter (permissions.BasePermission):
 
 
 class MenuItemPermissions(permissions.BasePermission): 
+    
     def has_permission(self, request, view):
+        user_role = (UserProfile.objects.get(user=request.user).role)
         if view.action == 'create': 
-            return ((UserProfile.objects.get(user=request.user).role) == '3') or ((UserProfile.objects.get(user=request.user).role) == '4')          
+            return ((user_role ==3) or (user_role==4))
+        elif view.action == 'list': #all users have permission to list
+            return True
+        elif view.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            return True
+        else:
+            return False
+
+    def has_object_permission(self, request, view, obj):
+        user_role = (UserProfile.objects.get(user=request.user).role)
+        if view.action == 'retrieve':
+            return True
+        elif view.action in ['update', 'partial_update']:
+            if ((user_role ==3) or (user_role==4)):
+                return True
+        elif view.action == 'destroy':
+            return request.user.is_staff
+        else:
+            return False
+
+
+class RestaurantPermissions(permissions.BasePermission): 
+    def has_permission(self, request, view):
+        user_role = (UserProfile.objects.get(user=request.user).role)
+        if view.action == 'create' and ((user_role ==3) or (user_role==4)): 
+            return True
         elif view.action == 'list':
             return True
         elif view.action in ['retrieve', 'update', 'partial_update', 'destroy']:
@@ -54,10 +81,12 @@ class MenuItemPermissions(permissions.BasePermission):
             return False
 
     def has_object_permission(self, request, view, obj):
+        user_role = (UserProfile.objects.get(user=request.user).role)
         if view.action == 'retrieve':
+            print("working")
             return True
         elif view.action in ['update', 'partial_update']:
-            if ((UserProfile.objects.get(user=request.user).role) == '3') or ((UserProfile.objects.get(user=request.user).role) == '4'):
+            if user_role == 3 or user_role == 4:
                 return True
         elif view.action == 'destroy':
             return request.user.is_staff
