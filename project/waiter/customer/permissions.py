@@ -46,9 +46,9 @@ class MenuItemPermissions(permissions.BasePermission):
     
     def has_permission(self, request, view):
         user_role = (UserProfile.objects.get(user=request.user).role)
-        if view.action == 'create': 
+        if view.action == 'create': #CREATE: Kitchen or Manager
             return ((user_role ==3) or (user_role==4))
-        elif view.action == 'list': #all users have permission to list
+        elif view.action == 'list': #LIST: All Users
             return True
         elif view.action in ['retrieve', 'update', 'partial_update', 'destroy']:
             return True
@@ -57,13 +57,13 @@ class MenuItemPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         user_role = (UserProfile.objects.get(user=request.user).role)
-        if view.action == 'retrieve':
+        if view.action == 'retrieve': #RETRIEVE: All Users
             return True
-        elif view.action in ['update', 'partial_update']:
+        elif view.action in ['update', 'partial_update']: #UPDATE: Kitchen or Manager
             if ((user_role ==3) or (user_role==4)):
                 return True
-        elif view.action == 'destroy':
-            return request.user.is_staff
+        elif view.action == 'destroy': #DESTROY: Admin, Kitchen or Manager
+            return ((request.user.is_staff) or (user_role ==3) or (user_role==4)) 
         else:
             return False
 
