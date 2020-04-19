@@ -52,10 +52,15 @@
                     <template v-for="(item,index) in items">
                         <tr>
                             <td class="align-middle">
-                                {{ item.tablenumber }}
+                                {{ item.table_number }}
                             </td>
                             <td class="align-middle">
-                                {{ item.caller }}
+                                <div v-if="item.caller === 2">
+                                    Kitchen
+                                </div>
+                                <div v-else>
+                                    Customer
+                                </div>   
                             </td>
                             <td class="align-middle">
                                 {{ item.status }}
@@ -141,12 +146,16 @@
         data: {
             items: [
                 // get set of items here 
-                { tablenumber: 'Table 1', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
-                { tablenumber: 'Table 10', caller: 'Customer', status: 'Customer requires attention'},
-                { tablenumber: 'Table 6', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
-                { tablenumber: 'Table 4', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
-                { tablenumber: 'Table 12', caller: 'Customer', status: 'Customer requires attention'},
+                // item = { id, table_number, caller, status}
             ],
+        },
+        created() {
+            //var basicAuth = 'Basic' + sessionStorage.getItem('btoa')
+            axios
+                .get('http://api.unswcafe.tuesdaywaiter.tk/waiterCalls/')
+                .then((response) => {
+                    this.items = response.data
+                }).catch( error => {console.log(error); });
         },
         methods: {
             rowRemove: function (index) {
