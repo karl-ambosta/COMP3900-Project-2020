@@ -274,16 +274,26 @@ class OrderRequestViewSet(viewsets.ModelViewSet):
     def create(self, request): 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def get_queryset(self):
+        qs = OrderRequest.objects.order_by('id')
+        orderList = self.request.query_params.get('order_list', None)
+        if orderList is not None:
+            qs = qs.filter(order_list__id=orderList)
+        return qs
+
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['id', 'order_list']
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+
 
 class OpeningHoursViewSet(viewsets.ModelViewSet):
     queryset = OpeningHours.objects.all()
