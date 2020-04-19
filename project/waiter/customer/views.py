@@ -3,11 +3,9 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import permissions, filters
-#from rest_framework import filters
 from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer
 from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours
-from .permissions import IsOwnerOrReadOnly
-from rest_framework import permissions
+from .permissions import IsUser, IsCashier, IsCustomer, IsManager, IsWaiter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 from rest_framework.decorators import action
@@ -24,22 +22,15 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     #permission_classes = [permissions.IsAuthenticated]
-   def get_permissions(self):
-        # Overrides to tightest security: Only superuser can create, update, partial update, destroy, list
-        self.permission_classes = [IsSuperUser]
-
-        # Allow only by explicit exception
-        if self.action == 'retrieve':
-            self.permission_classes = [IsUser]
-
-        return super(self.__class__, self).get_permissions()    
+    permission_classes = [permissions.IsAdminUser | IsUser]
+    #permission_classes = [IsCustomer]
 
 class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     lookup_field = 'id'
     lookup_value_regex = '[0-9]+'
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'price', 'menu_category__name']
 
@@ -60,6 +51,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         return qs
     
     @action(detail=True, methods=['post'])
+    
     def order(self, request, id=None):
         try:
             item = get_object_or_404(self.queryset, id=id)
@@ -160,8 +152,8 @@ class OpeningHoursViewSet(viewsets.ModelViewSet):
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
-
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser]
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
 

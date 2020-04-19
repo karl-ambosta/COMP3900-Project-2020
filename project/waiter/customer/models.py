@@ -13,6 +13,7 @@ class UserProfile(models.Model):
         ('2', 'Cashier'),
         ('3', 'Kitchen'),
         ('4', 'Manager'),
+        ('5', 'Waiter'),
     )
     user = models.OneToOneField(User, primary_key=True, related_name='profile',on_delete=models.CASCADE )
     first_name = models.CharField(max_length=20, blank=True)
