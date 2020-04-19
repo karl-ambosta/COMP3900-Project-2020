@@ -146,7 +146,7 @@ class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
 class OrderListViewSet(viewsets.ModelViewSet):
-    queryset = OrderList.objects.all()
+    #queryset = OrderList.objects.all()
     serializer_class = OrderListSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'id'
@@ -265,6 +265,13 @@ class OrderListViewSet(viewsets.ModelViewSet):
         qs = self.get_queryset().filter(Q(status=6) | Q(status=7))
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)
+
+    def get_queryset(self):
+        qs = OrderList.objects.all()
+        restaurant = self.request.query_params.get('restaurant', None)
+        if restaurant is not None:
+            qs = qs.filter(restaurant__id=restaurant)
+        return qs   
 
 class OrderRequestViewSet(viewsets.ModelViewSet):
     queryset = OrderRequest.objects.all().order_by('id')
