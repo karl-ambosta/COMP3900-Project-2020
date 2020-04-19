@@ -1,9 +1,9 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.dispatch import receiver
-#import uuid 
 from django.db.models.signals import post_save, pre_delete
 from django.db.models import Sum, F, ExpressionWrapper, Max, When, Q
+from datetime import *
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True, related_name='profile',on_delete=models.CASCADE )
@@ -35,6 +35,10 @@ class Restaurant(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
+
+    def is_open(self):
+        opening = self.opening_hours.get(day=datetime.today().weekday()+1)
+        return opening.from_hour <= datetime.time(datetime.now()) < opening.to_hour
 
 
 class MenuCategoryOrderManager(models.Manager):

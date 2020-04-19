@@ -69,10 +69,11 @@ class MenuItemSerializer(serializers.ModelSerializer):
 class OrderListSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     order_total = serializers.DecimalField(decimal_places=2, max_digits=9, read_only=True)
+    status = serializers.ReadOnlyField()
 
     class Meta:
         model = OrderList
-        fields = ['id', 'owner', 'order_request', 'restaurant', 'order_total', 'table_number', 'status']
+        fields = ['id', 'owner', 'order_request', 'restaurant', 'order_total', 'table_number', 'status', 'owner_id']
 
 class OrderRequestSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
