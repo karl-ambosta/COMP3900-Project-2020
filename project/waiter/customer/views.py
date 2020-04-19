@@ -16,6 +16,7 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch, Q
+import datetime
 
 # Chatbot logic
 from .chatbot import ChatbotAPILogic
@@ -74,13 +75,16 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         try:
             item = get_object_or_404(self.queryset, id=id)
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
-            order_list = get_object_or_404(OrderList.objects.all(), owner=owner)
-            #check active=True 
-            if order_list.restaurant.id != item.menu_category.restaurant.id:
+            order_list = get_object_or_404(OrderList.objects.all(), owner=owner, status=1)
+            
+            if not item.active or not item.menu_category.restaurant.is_open() or order_list.restaurant.id != item.menu_category.restaurant.id:
                 return Response(status=status.HTTP_403_FORBIDDEN)
+
             order_list.order_request.create(order_list=order_list, owner=owner, menu_item=item, comments=request.data["comments"], quantity=request.data["quantity"])
             return Response(status=status.HTTP_202_ACCEPTED)
-        except:
+        
+        except Exception as e:
+            print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['post'])
@@ -146,7 +150,6 @@ class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
 class OrderListViewSet(viewsets.ModelViewSet):
-    queryset = OrderList.objects.all()
     serializer_class = OrderListSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'id'
@@ -240,12 +243,27 @@ class OrderListViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post'], detail=True)
-    def set_order_paid(self, request, id=None):
+    def set_order_waiting_payment(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=6), id=id)
             order_requests = order_list.order_request.all()
             if order_requests:
                 order_list.status = 7
+                order_list.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['post'], detail=True)
+    def set_order_paid(self, request, id=None):
+        try:
+            order_list = get_object_or_404(OrderList.objects.filter(status=7), id=id)
+            order_requests = order_list.order_request.all()
+            if order_requests:
+                order_list.status = 8
                 order_list.save()
                 return Response(status=status.HTTP_202_ACCEPTED)
             else:
@@ -262,9 +280,31 @@ class OrderListViewSet(viewsets.ModelViewSet):
     
     @action(detail=False)
     def get_order_history(self, request, id=None):
-        qs = self.get_queryset().filter(Q(status=6) | Q(status=7))
+        qs = self.get_queryset().filter(status=8)
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)
+
+    @action(detail=False)
+    def get_waiter_orders(self, request, id=None):
+        qs = self.get_queryset().filter(Q(status=5) | Q(status=6))
+        serializer = OrderListSerializer(qs, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False)
+    def get_cashier_orders(self, request, id=None):
+        qs = self.get_queryset().filter(Q(status=7) | Q(status=8))
+        serializer = OrderListSerializer(qs, many=True)
+        return Response(serializer.data)    
+
+    def get_queryset(self):
+        qs = OrderList.objects.order_by('id')
+        restaurant = self.request.query_params.get('restaurant', None)
+        user = self.request.query_params.get('user', None)
+        if restaurant is not None:
+            qs = qs.filter(restaurant__id=restaurant)
+        if user is not None:
+            qs = qs.filter(owner_id=user)
+        return qs   
 
 class OrderRequestViewSet(viewsets.ModelViewSet):
     queryset = OrderRequest.objects.all().order_by('id')
