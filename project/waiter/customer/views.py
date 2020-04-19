@@ -23,7 +23,16 @@ from django.db.models import Sum, F, DecimalField, ExpressionWrapper
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
+   def get_permissions(self):
+        # Overrides to tightest security: Only superuser can create, update, partial update, destroy, list
+        self.permission_classes = [IsSuperUser]
+
+        # Allow only by explicit exception
+        if self.action == 'retrieve':
+            self.permission_classes = [IsUser]
+
+        return super(self.__class__, self).get_permissions()    
 
 class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
