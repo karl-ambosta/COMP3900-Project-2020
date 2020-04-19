@@ -223,7 +223,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("http://localhost:8000/orderList/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/")
                     .then((response) => {this.items = response.data})
                     .then(this.cleanData)
                     .catch( error => {console.log(error); });
@@ -263,7 +263,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("http://localhost:8000/menuItems/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/menuItems/")
                     .then((response) => {this.foodNames = response.data})
                     .catch( error => {console.log(error); });
             },
