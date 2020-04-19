@@ -1,16 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
-#import uuid 
 from django.db.models.signals import post_save, pre_delete
 from django.db.models import Sum, F, ExpressionWrapper
 
 class UserProfile(models.Model):
+    """ 
+    User Profiles
+    """
+    ROLE_CHOICES = (
+        ('1', 'Customer'),
+        ('2', 'Cashier'),
+        ('3', 'Kitchen'),
+        ('4', 'Manager'),
+    )
     user = models.OneToOneField(User, primary_key=True, related_name='profile',on_delete=models.CASCADE )
-    #uid = models.CharField(max_length=20, null=False, blank=False)
-    first_name = models.CharField(max_length=20, null=True, blank=True)
-    last_name = models.CharField(max_length=20, null=True, blank=True)
+    first_name = models.CharField(max_length=20, blank=True)
+    last_name = models.CharField(max_length=20, blank=True)
     mobile = models.CharField(max_length=20, null=True, blank=True)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -19,9 +27,9 @@ class UserProfile(models.Model):
 
     @receiver(post_save, sender=User)
     def create_profile_for_user(sender, instance=None, created=False, **kargs):
-        if created:
-            UserProfile.objects.get_or_create(user=instance)
-
+        if created: 
+            UserProfile.objects.create(user=instance)
+            
     @receiver(pre_delete, sender=User)
     def delete_profile_for_user(sender, instance=None, **kargs):
         if instance:
@@ -116,3 +124,8 @@ class OpeningHours(models.Model):
     day = models.PositiveSmallIntegerField(choices=WEEKDAYS)
     from_hour = models.TimeField()
     to_hour = models.TimeField()
+'''
+class UserRole(models.Model): 
+
+'''
+
