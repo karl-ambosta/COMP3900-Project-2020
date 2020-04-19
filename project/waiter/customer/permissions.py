@@ -28,7 +28,6 @@ class IsCashier(permissions.BasePermission):
 
 class IsKitchen(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        print("I am kitchen staff")
         if (UserProfile.objects.get(user=request.user).role) == '3':
             return True
   
@@ -46,8 +45,7 @@ class IsWaiter (permissions.BasePermission):
 class MenuItemPermissions(permissions.BasePermission): 
     def has_permission(self, request, view):
         if view.action == 'create': 
-            return ((UserProfile.objects.get(user=request.user).role) == '1') or ((UserProfile.objects.get(user=request.user).role) == '4')
-            #return (UserProfile.objects.get(user=request.user).role) == '3'            
+            return ((UserProfile.objects.get(user=request.user).role) == '3') or ((UserProfile.objects.get(user=request.user).role) == '4')          
         elif view.action == 'list':
             return True
 

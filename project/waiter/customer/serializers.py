@@ -9,6 +9,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'url','first_name', 'last_name','username','email', 'is_staff']
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     username = serializers.CharField(source = "user.username",read_only=True)
     email = serializers.EmailField (source="user.email",read_only=True)

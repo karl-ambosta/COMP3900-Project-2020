@@ -25,14 +25,15 @@ from .chatbot import ChatbotAPILogic
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser | IsUser]
+    permission_classes = [IsUser]
 
 class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all().order_by('order')
     serializer_class = MenuItemSerializer
     lookup_field = 'id'
     lookup_value_regex = '[0-9]+'
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [MenuItemPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'price', 'menu_category__name']
     
