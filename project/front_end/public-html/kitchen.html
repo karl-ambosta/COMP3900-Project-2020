@@ -5,6 +5,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <title>Kitchen - UNSW Cafe</title>
 </head>
 
@@ -16,6 +17,28 @@
     agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
     language-code="en"
     ></df-messenger>
+
+    <div id="logoutApp">
+
+        <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+            <img src="../templates/pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+            <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    
+                </ul>
+                <button class="btn btn-outline-light my-2 my-sm-0" v-on:click="logoutUser()">Logout
+                    <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+
     <div class="title2">
         <h1>Orders for UNSW Cafe</h1>
         <h5>Kitchen View</h5>
@@ -153,6 +176,26 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
+
+    var logoutApp = new Vue ({
+        el: '#logoutApp',
+        delimiters: ['{{', '}}'],
+        data: {
+
+        },
+        methods: {
+            logoutUser: function() {
+                console.log("here")
+                axios
+                    .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/logout/', null)
+                    .then((response) => {
+                        window.open("index.html", "_self")
+                    }).catch( error => {console.log(error); return })
+            } 
+        }
+    })
+
+
     var activeordersapp = new Vue ({
         el: '#activeordersapp',
         delimiters: ['{{', '}}'],
