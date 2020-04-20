@@ -15,7 +15,7 @@ var titleApp = new Vue ({
         this.userName = sessionStorage.getItem('user')
 
         axios
-            .get('http://127.0.0.1:8000/restaurant/')
+            .get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/')
             .then((response) => {
                 this.restList = response.data
                 document.getElementById('preModal').style.display = "block"
@@ -67,7 +67,7 @@ var orderApp = new Vue({
         axios.defaults.headers.common['Authorization'] = basicAuth
 
         axios
-            .get('http://127.0.0.1:8000/orderList/')
+            .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/')
             .then((response) => {
                 this.orderList = response.data.filter(item => item.owner == titleApp.userName)
             }).catch( error => {console.log(error); return});
@@ -100,7 +100,7 @@ var orderApp = new Vue({
             sessionStorage.orderID = orderID
 
             axios
-                .get('http://127.0.0.1:8000/orderRequest/', { params: {order_list: orderID }})
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderRequest/', { params: {order_list: orderID }})
                 .then((response) => {
                     infoApp.order.order_request = response.data
                 }).catch(error => {console.log(error);})
@@ -120,7 +120,7 @@ var orderApp = new Vue({
             }
 
             axios
-            .post('http://127.0.0.1:8000/orderList/', { restaurant: rInfo.id, table_number: Number(rInfo.tableNo), order_request: [], status: 1 } )
+            .post('https://api.unswcafe.tuesdaywaiter.tk/orderList/', { restaurant: rInfo.id, table_number: Number(rInfo.tableNo), order_request: [], status: 1 } )
             .then((response) => {
                 newOrder = response.data
                 sessionStorage.orderID = newOrder.id
@@ -129,7 +129,7 @@ var orderApp = new Vue({
                     order = this.currentOrder[i]
     
                     axios
-                    .post('http://127.0.0.1:8000/menuItems/' + order.id + '/order/', { comment: order.comment, quantity: Number(order.quantity) } )
+                    .post('https://api.unswcafe.tuesdaywaiter.tk/menuItems/' + order.id + '/order/', { comment: order.comment, quantity: Number(order.quantity) } )
                     .then((response) => {
                         console.log(response.data)
                     }).catch( error => {console.log(error); 
@@ -201,7 +201,7 @@ var orderApp = new Vue({
             setInterval(() => {
 
             axios
-                .get('http://127.0.0.1:8000/orderList/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/')
                 .then((response) => {
                     this.orderList = response.data.filter(item => item.owner == titleApp.userName)
                 }).catch( error => {console.log(error); return});
@@ -257,13 +257,13 @@ var menuApp = new Vue({
         var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
         axios.defaults.headers.common['Authorization'] = basicAuth
         axios
-            .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: titleApp.restaurant.id }})
+            .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/', { params: { restaurant: titleApp.restaurant.id }})
             .then((response) => {
                 this.items = response.data
             }).catch( error => {console.log(error); });
             
         axios
-            .get('http://127.0.0.1:8000/menuCategories/', { params: {restaurant: titleApp.restaurant.id }})
+            .get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/', { params: {restaurant: titleApp.restaurant.id }})
             .then((response) => {
                 this.types = response.data
             }).catch(error => {console.log(error);})
