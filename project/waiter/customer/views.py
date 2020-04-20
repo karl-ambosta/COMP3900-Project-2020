@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action, api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
-from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer, WaiterCallsSerializer
-from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls
+from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer, WaiterCallsSerializer, TableSerializer
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls, Table
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.social_serializers import TwitterLoginSerializer
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
@@ -77,8 +77,12 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
             order_list = get_object_or_404(OrderList.objects.all(), owner=owner, status=1)
             
-            if not item.active or not item.menu_category.restaurant.is_open() or order_list.restaurant.id != item.menu_category.restaurant.id:
-                return Response(status=status.HTTP_403_FORBIDDEN)
+            if not item.active:
+                return Response('item is no longer available', status=status.HTTP_403_FORBIDDEN)
+            if not item.menu_category.restaurant.is_open():
+                return Response('restaurant is closed', status=status.HTTP_403_FORBIDDEN)
+            if order_list.restaurant.id != item.menu_category.restaurant.id:
+                return Response('item belongs to a different restaurant', status=status.HTTP_403_FORBIDDEN)
 
             order_list.order_request.create(order_list=order_list, owner=owner, menu_item=item, comments=request.data["comments"], quantity=request.data["quantity"])
             return Response(status=status.HTTP_202_ACCEPTED)
@@ -117,7 +121,6 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
-
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -160,8 +163,16 @@ class OrderListViewSet(viewsets.ModelViewSet):
             existing_list = get_object_or_404(OrderList.objects.filter(status=1), owner=request.user)
             return Response(status=status.HTTP_403_FORBIDDEN)
         except:
+            try:
+                table = get_object_or_404(Table.objects.filter(restaurant=request.data['restaurant']), table_number=request.data['table_number'])
+                if table.in_use:
+                    return Response('table is in use', status=status.HTTP_403_FORBIDDEN)
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
             if serializer.is_valid():
-                serializer.save(owner=request.user)
+                table.in_use = True
+                table.save()
+                serializer.save(owner=request.user, table_number=table)
                 return Response(serializer.data)
             else:
                 print(serializer.errors)
@@ -261,9 +272,12 @@ class OrderListViewSet(viewsets.ModelViewSet):
     def set_order_paid(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=7), id=id)
+            table = get_object_or_404(Table.objects.filter(restaurant=order_list.restaurant), table_number=order_list.table_number.table_number)
             order_requests = order_list.order_request.all()
             if order_requests:
                 order_list.status = 8
+                table.in_use = False
+                table.save()
                 order_list.save()
                 return Response(status=status.HTTP_202_ACCEPTED)
             else:
@@ -318,12 +332,25 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'id'
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def create_tables(self, request, id=None):
+        try:
+            restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
+            for i in range(1, restaurant.total_tables + 1):
+                Table.objects.get_or_create(table_number=i, restaurant=restaurant)
+            return Response(status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class OpeningHoursViewSet(viewsets.ModelViewSet):
     queryset = OpeningHours.objects.all()
@@ -383,3 +410,10 @@ class WaiterCallsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
+
+class TableViewSet(viewsets.ModelViewSet):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+    def create(self, request):
+        return Response(status=status.HTTP_403_FORBIDDEN)
