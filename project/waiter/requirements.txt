@@ -6,4 +6,3 @@ django-allauth==0.41.0
 django-rest-auth[with_social]==0.9.5
 django-cors-headers==3.2.1
 Pillow==7.1.1
-requests==2.23.0
