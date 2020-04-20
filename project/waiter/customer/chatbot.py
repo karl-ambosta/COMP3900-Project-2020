@@ -9,7 +9,6 @@ from rest_framework.views import APIView
 from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer, WaiterCallsSerializer
 from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch
-import os,requests
 
 ## NOTE: Search for TODO to find what is remaining.
 # 1) implement a placing of a new waiter call (Action 1)
