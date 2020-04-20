@@ -5,9 +5,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <title>Waiter - UNSW Cafe</title>
 </head>
-
+<!--
+<body onload = "JavaScript:AutoRefresh(5000);">
+-->
 <body>
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
     <df-messenger
@@ -16,6 +19,28 @@
     agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
     language-code="en"
     ></df-messenger>
+
+    <div id="logoutApp">
+
+        <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+            <img src="../templates/pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+            <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    
+                </ul>
+                <button class="btn btn-outline-light my-2 my-sm-0" v-on:click="logoutUser()">Logout
+                    <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+
     <div class="title2">
         <h1>Orders for UNSW Cafe</h1>
         <h5>Waiter View</h5>
@@ -52,16 +77,21 @@
                     <template v-for="(item,index) in items">
                         <tr>
                             <td class="align-middle">
-                                {{ item.tablenumber }}
+                                {{ item.table_number }}
                             </td>
                             <td class="align-middle">
-                                {{ item.caller }}
+                                <div v-if="item.caller === 2">
+                                    Kitchen
+                                </div>
+                                <div v-else>
+                                    Customer
+                                </div>   
                             </td>
                             <td class="align-middle">
                                 {{ item.status }}
                             </td>
                             <td class="text-center align-middle" nowrap>
-                                <button v-on:click.prevent="rowRemove(index)" type="button" class="btn btn-success">Completed</button>
+                                <button v-on:click.prevent="rowRemove(item, index)" type="button" class="btn btn-success">Completed</button>
                             </td>
                         </tr>
                         </template>
@@ -82,16 +112,22 @@
                     <template v-for="item in items">
                         <tr>
                             <td class="align-middle">
-                                {{ item.tablenumber }}
+                                {{ item.table_number }}
                             </td>
                             <td class="align-middle">
-                                {{ item.status }}
+                                {{ item.status}}
                             </td>
                             <td class="align-middle">
-                                Ordered at: {{ item.ordertime }}
-                                <li v-for="dish in item.orderdetails">
-                                    {{ dish }}
-                                </li>
+                                Customer Name: {{ item.owner}}
+                                <ul>
+                                    <div v-for="dish in item.order_request">
+                                        <div v-for="food in foodNames">
+                                            <li v-if="dish === food.id">
+                                                {{ food.name }}
+                                            </li>
+                                        </div>
+                                    </div>
+                                </ul>
                             </td>
                         </tr>
                         </template>
@@ -133,44 +169,156 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script type = "text/JavaScript">
+    <!--
+       function AutoRefresh( t ) {
+          setTimeout("location.reload(true);", t);
+       }
+    //-->
+ </script>
 <script>
+
+    var logoutApp = new Vue ({
+        el: '#logoutApp',
+        delimiters: ['{{', '}}'],
+        data: {
+
+        },
+        methods: {
+            logoutUser: function() {
+                console.log("here")
+                axios
+                    .post('https://api.unswcafe.tuesdaywaiter.tk/orderList/rest-auth/logout/', null)
+                    .then((response) => {
+                        window.open("index.html", "_self")
+                    }).catch( error => {console.log(error); return })
+            } 
+        }
+    })
+
     var calloutsapp = new Vue ({
         el: '#calloutsapp',
         delimiters: ['{{', '}}'],
         data: {
             items: [
                 // get set of items here 
-                { tablenumber: 'Table 1', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
-                { tablenumber: 'Table 10', caller: 'Customer', status: 'Customer requires attention'},
-                { tablenumber: 'Table 6', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
-                { tablenumber: 'Table 4', caller: 'Kitchen', status: 'Order #XXX ready for pick up'},
-                { tablenumber: 'Table 12', caller: 'Customer', status: 'Customer requires attention'},
             ],
         },
+        created: function() {
+            this.fetchData()
+            // TODO test auto refresh | Testing
+            this.interval = setInterval(() => this.fetchData(), 5000);
+            
+        },
         methods: {
-            rowRemove: function (index) {
-                this.$delete(this.items, index)
-            }
-        }
+            rowRemove: function (item, index) {
+                var basicAuth = 'Basic' + sessionStorage.getItem('btoa');
+                fetch("https://api.unswcafe.tuesdaywaiter.tk/orderList/waiterCalls/" + item.id + "/",{
+                    method: 'delete',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': basicAuth,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then((response) => {
+                    this.$delete(this.items, index)
+                    console.log(response.data)
+                }).catch( error => {console.log(error); });
+                // TODO; implement order status change to served.
+                // this.order_served()
+            },
+        
+            fetchData: function() {
+                var basicAuth = 'Basic' + sessionStorage.getItem('btoa');
+                axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/waiterCalls/')
+                    .then((response) => {this.items = response.data})
+                    .catch( error => {console.log(error); })
+            },
+
+        },
     })
 
+    // Note; this api pulls in orders for all restaurants, how is the front end meant to deal with this...?
     var activeordersapp = new Vue ({
         el: '#activeordersapp',
         delimiters: ['{{', '}}'],
         data: {
             items: [
                 // get set of items here 
-                { tablenumber: 'Table 1', status: 'Pickup Ready', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
-                { tablenumber: 'Table 2', status: 'Pickup Ready', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
-                { tablenumber: 'Table 3', status: 'Cooking', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
-                { tablenumber: 'Table 4', status: 'Cooking', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
-                { tablenumber: 'Table 5', status: 'Preparing', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
-                { tablenumber: 'Table 6', status: 'Preparing', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
-                { tablenumber: 'Table 7', status: 'Order Received', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
-                { tablenumber: 'Table 8', status: 'Order Received', ordertime: '##:##PM', orderdetails: ['Item1','Item2']},
             ],
-        }
+            foodNames: [
+                // hold menu items
+            ],
+        },
+        created() {
+            this.interval = setInterval(() => this.polling(), 5000);
+        },
+        methods : {
+            polling: function() {
+                this.fetchData();
+                this.getFoodNames();
+            },
+            fetchData: function() {
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/orderList/")
+                    .then((response) => {this.items = response.data})
+                    .then(this.cleanData)
+                    .catch( error => {console.log(error); });
+            },
+            cleanData: function() {
+                this.items.forEach(element => {
+                    // convert status
+                    switch (element.status) {
+                        case 1:
+                            element.status = "Active";
+                            break;
+                        case 2:
+                            element.status = "Received";
+                            break;
+                        case 3:
+                            element.status = "Preparing";
+                            break;
+                        case 4:
+                            element.status = "Cooking";
+                            break;
+                        case 5:
+                            element.status = "Pickup Ready";
+                            break;
+                        case 6:
+                            element.status = "Served";
+                            break;
+                        case 7:
+                            element.status = "Awaiting Payment";
+                            break;
+                        case 8:
+                            element.status = "Paid";
+                            break;
+                    }
+                });
+            },
+            getFoodNames: function(food) {
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/menuItems/")
+                    .then((response) => {this.foodNames = response.data})
+                    .catch( error => {console.log(error); });
+            },
+            test: function() {
+                console.log("Test.")
+                this.foodNames.forEach(element => {
+                    console.log(element.name);
+                });
+            }
+        },
+        
     })
 
     var menuapp = new Vue ({
@@ -179,20 +327,19 @@
         data: {
             items: [
                 // List of Menu Items
-			    // item = { name, description, price, menu_category }
             ],
         },
         created() {
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/menuItems/')
                 .then((response) => {
 					this.items = response.data
                 }).catch( error => {console.log(error); });
                 
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/menuCategories/')
                 .then((response) => {
 					this.types = response.data
                 }).catch( error => {console.log(error); });

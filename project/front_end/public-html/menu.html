@@ -84,7 +84,7 @@
 							<div class="row">
 								<div class="col">
 									<div class="border">
-										<img v-bind:id="item.name" src="pictures/main_pic1.jpeg" align="left" width="100" height="100" v-on:click="viewModal(item.name)">
+										<img v-bind:id="item.name" v-bind:src="'../../waiter/' + item.picture" align="left" width="150" height="100" v-on:click="viewModal(item.name)">
 										<div class="item_text">
 											<h5><b>{{ item.name }}</b></h5>
 											<p>{{ item.description }}</p>
@@ -119,83 +119,83 @@
 			<div class="modal-content" style="background-color: rgba(128, 128, 128, 0.5);">
 				<button type="button" class="close" data-dismiss="modal">&times;</button><br>
 		
-			<div class="container2" style="overflow-x:auto;">
-				<!-- Navbar -->
-				<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
-					<li class="nav-item pill-1">
-						<a class="nav-link active" id="login-tab" data-toggle="pill" href="#login" role="tab" aria-controls=login aria-selected="true">Login</a>
-					</li>
-					<li class="nav-item pill-1">
-						<a class="nav-link" id="register-tab" data-toggle="pill" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
-					</li>
-				</ul>
-				<hr>
+				<div class="container2" style="overflow-x:auto;">
+					<!-- Navbar -->
+					<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+						<li class="nav-item pill-1">
+							<a class="nav-link active" id="login-tab" data-toggle="pill" href="#login" role="tab" aria-controls=login aria-selected="true">Login</a>
+						</li>
+						<li class="nav-item pill-1">
+							<a class="nav-link" id="register-tab" data-toggle="pill" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+						</li>
+					</ul>
+					<hr>
 
-				<!-- Content Section -->
-				<div class="tab-content" id="pills-tabContent">
-		
-					<!-- Login Tab -->
-					<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
-						<div id="loginApp">
-							<div style="text-align: center;">
-								<form id="loginForm" class="form-signin" @submit.prevent="login">
-									<img class="mb-4" src="pictures/logo_transp.png" alt="" width="72" height="72">
-									<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-									<label for="inputEmail" class="sr-only">Username</label>
-									<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
+					<!-- Content Section -->
+					<div class="tab-content" id="pills-tabContent">
+			
+						<!-- Login Tab -->
+						<div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+							<div id="loginApp">
+								<div style="text-align: center;">
+									<form id="loginForm" class="form-signin" @submit.prevent="login">
+										<img class="mb-4" src="pictures/logo_transp.png" alt="" width="72" height="72">
+										<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+										<label for="inputEmail" class="sr-only">Username</label>
+										<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
 
-									<label for="inputPassword" class="sr-only">Password</label>
-									<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-									<div class="checkbox mb-3">
-									<label>
-										<input type="checkbox" value="remember-me"> Remember me
-									</label>
-									</div>
-									<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
-									<p id="errorMessage" style="color:red"></p>
-									<p class="mt-5 mb-3 text-info">© 2019-2020</p>
-								</form>
+										<label for="inputPassword" class="sr-only">Password</label>
+										<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+										<div class="checkbox mb-3">
+										<label>
+											<input type="checkbox" value="remember-me"> Remember me
+										</label>
+										</div>
+										<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
+										<p id="errorMessage" style="color:red"></p>
+										<p class="mt-5 mb-3 text-info">© 2019-2020</p>
+									</form>
+								</div>
 							</div>
 						</div>
-					</div>
-			
-					<!-- Register Tab -->
-					<div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-						<div id="registerApp">
-							<div style="text-align: center;">
-								<form id="registerForm" class="form-signin" @submit.prevent="register">
-									<img class="mb-4" src="pictures/logo_transp.png" alt="" width="72" height="72">
-									<h1 class="h3 mb-3 font-weight-normal">Register form</h1>
-									<label for="inputEmail" class="sr-only">Username</label>
-									<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
+				
+						<!-- Register Tab -->
+						<div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+							<div id="registerApp">
+								<div style="text-align: center;">
+									<form id="registerForm" class="form-signin" @submit.prevent="register">
+										<img class="mb-4" src="pictures/logo_transp.png" alt="" width="72" height="72">
+										<h1 class="h3 mb-3 font-weight-normal">Register form</h1>
+										<label for="inputEmail" class="sr-only">Username</label>
+										<input type="text" v-model="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus=""><br>
 
-									<label for="email" class="sr-only">Email Address</label>
-									<input class="form-control" v-model="email" type="email" id="inputEmail" name="emailAddress" placeholder="Email Address..."><br>
-									
-									<label for="inputPassword" class="sr-only">Password</label>
-									<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required=""><br>
+										<label for="email" class="sr-only">Email Address</label>
+										<input class="form-control" v-model="email" type="email" id="inputEmail" name="emailAddress" placeholder="Email Address..."><br>
+										
+										<label for="inputPassword" class="sr-only">Password</label>
+										<input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="Password" required=""><br>
 
-									<label for="inputPassword" class="sr-only">Confirm Password</label>
-									<input type="password" v-model="confirmPassword" id="inputConfirmPassword" class="form-control" placeholder="Confirm Password" required="">
-									<div class="checkbox mb-3">
-									<label>
-										<input type="checkbox" value="remember-me"> Remember me
-									</label>
-									</div>
-									<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
-									<p id="errorMessage2" style="color:red"></p>
-									<p class="mt-5 mb-3 text-info">© 2019-2020</p>
-								</form>
+										<label for="inputPassword" class="sr-only">Confirm Password</label>
+										<input type="password" v-model="confirmPassword" id="inputConfirmPassword" class="form-control" placeholder="Confirm Password" required="">
+										<div class="checkbox mb-3">
+										<label>
+											<input type="checkbox" value="remember-me"> Remember me
+										</label>
+										</div>
+										<button class="btn btn-lg btn-outline-light btn-block" type="submit">Sign in</button><br>
+										<p id="errorMessage2" style="color:red"></p>
+										<p class="mt-5 mb-3 text-info">© 2019-2020</p>
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-	</div>
+		</div>
 	</div>
 
-
-	</body>
+</body>
 	
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

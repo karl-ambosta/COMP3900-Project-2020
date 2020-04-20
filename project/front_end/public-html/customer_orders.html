@@ -5,23 +5,61 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <title>Waiter - Customer Orders</title>
-    </head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <body>
 
         <div id="titleApp">
-            <div class="title">Welcome {{ user }}!</div>
-            <br>
-            <div class="title2">Orders for Table #{{ tableNo }} <br> at '{{ restaurant.name }}'</div>
-        </div>
+            <!-- Restaurant Info Modal -->
+            <div class="modal" id="preModal" data-backdrop="false">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="background-color: white;">
+                        <div class="modal-header">
+                            <h3>Info</h3>
+                            
+                        </div>
+                        <div class="modal-body">
+                            <h4 style="text-align: center;">Please fill out the details below before you start ordering.</h4><br><br>
+                            <div style="text-align: center;">
+                                <h5>What restaurant are you dining at?</h5>
+                            
+                                <select id="restChoose" class="restChoose" v-model="chosen_restaurant" style="width:50%; align-self: center;" value="Choose restaurant" required="">
+                                    <template v-for="r in restList">
+                                        <option >{{ r.name }}</option>
+                                    </template>
+                                </select>
+                            
 
-        <br>
-    
-        <!-- Buttons -->
-        <div class="container" style="width:100%; text-align:center; background-color: transparent;">
-            <div class="callWaiter">
-                <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="callWaiter()">Call Waiter</button>
-                <button type="button" style="width: 150px;" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="finishOrdering()">Get Bill</button>
+                                <hr>
+                                <h5>What table will you be seated at?</h5>
+                                <input class="tableNo" type="number" v-model="chosen_table" id="tableNo" name="tableNo" placeholder="TableNo" required="">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <p id="submitMessage" style="color: red;"></p>
+                            <a href="#" class="btn btn-primary" data-dismiss="modal" v-on:click="processForm">Save changes</a>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div>
+                <div class="title">Welcome {{ userName }}!</div>
+                <br>
+                <div class="title2">Orders for Table #{{ restaurant.tableNo }} <br> at '{{ restaurant.name }}'</div>
+            </div>
+
+            
+    
+            <!-- Buttons -->
+            <div class="container" style="width:100%; text-align:center; background-color: transparent;">
+                <div class="callWaiter">
+                    <button type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" v-on:click="callWaiter()">Call Waiter</button>
+                    <button type="button" style="width: 150px;" class="btn btn-lg btn-outline-light my-2 my-sm-0" v-on:click="finaliseOrders()">Get Bill</button>
+                </div>
+            </div>
+
+
+
         </div>
 
         <br><br>
@@ -55,8 +93,8 @@
                             <tbody>
                                 <template v-for="item in orderList">
                                     <tr>
-                                        <td nowrap> Order #{{ item.id }} - Placed at {{  }}</td>
-                                        <td>{{ item.status }}</td>
+                                        <td nowrap> Order #{{ item.id }} - Placed at {{ convertTime(item.created_at) }}</td>
+                                        <td>{{ getStatusName(item.status) }}</td>
                                         <td nowrap><a class="Order 1" href="#" data-toggle="modal" data-target="#infoModal" data-backdrop="false" v-on:click="updateOrderInfo(item.id)">View Order Info</a></td>
                                     </tr>
                                 </template>
@@ -98,7 +136,7 @@
                                 <tr>
                                     <td colspan="2"></td>
                                     <td><b>Order Total</b></td>
-                                    <td>$ {{ orderTotals() }}</td>
+                                    <td>$ {{ orderTotals }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -143,7 +181,7 @@
                                                 <div class="row">
                                                     <div class="col">
                                                         <div class="border">
-                                                            <img v-bind:id="item.name" class="imgZoom" src="../../pictures/main_pic1.jpeg" align="left">
+                                                            <img v-bind:id="item.name" class="imgZoom" v-bind:src="'../../waiter/' + item.picture" align="left">
                                                             <div class="item_text">
                                                                 <h5><b>{{ item.name }}</b></h5>
                                                                 <p>{{ item.description }}</p>
@@ -206,32 +244,42 @@
                                             <h5>ORDER <span class="text-primary font-weight-bold">#{{ order.id }}</span></h5>
                                         </div>
                                         <div class="d-flex flex-column text-sm-right">
-                                            <p class="mb-0">Expected Arrival: <span class="font-weight-bold">{{ }}</span></p>
-                                            <p>Order Placed at: <span class="font-weight-bold">{{  }}</span></p>
+                                            <p>Order Placed at: <span class="font-weight-bold">{{ convertTime(order.created_at)  }}</span></p>
                                         </div>
                                     </div> <!-- Add class 'active' to progress -->
                                     <div class="row d-flex justify-content-center">
                                         <div class="col-12">
                                             <ul id="progressbar" class="text-center">
-                                                <template v-if="order.status == 'Processed'">
+                                                <template v-if="order.status == 2">
+                                                    <li class="active step0"></li>
+                                                    <li class="step0"></li>
+                                                    <li class="step0"></li>
+                                                    <li class="step0"></li>
+                                                    <li class="step0"></li>
+                                                </template>
+                                                <template v-if="order.status == 3">
+                                                    <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="step0"></li>
                                                     <li class="step0"></li>
                                                     <li class="step0"></li>
                                                 </template>
-                                                <template v-if="order.status == 'Cooking'">
+                                                <template v-if="order.status == 4">
+                                                    <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="step0"></li>
-                                                    <li class="step0"></li>
-                                                </template>
-                                                <template v-if="order.status == 'Serving'">
-                                                    <li class="active step0"></li>
-                                                    <li class="active step0"></li>
-                                                    <li class="active step0"></li>
                                                     <li class="step0"></li>
                                                 </template>
-                                                <template v-if="order.status == 'Completed'">
+                                                <template v-if="order.status == 5">
+                                                    <li class="active step0"></li>
+                                                    <li class="active step0"></li>
+                                                    <li class="active step0"></li>
+                                                    <li class="active step0"></li>
+                                                    <li class="step0"></li>
+                                                </template>
+                                                <template v-if="order.status == 6">
+                                                    <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="active step0"></li>
                                                     <li class="active step0"></li>
@@ -241,24 +289,29 @@
                                         </div>
                                     </div>
                                     <div class="row justify-content-between top">
-                                        <div class="row d-flex icon-content"> <img class="icon" src="../../pictures/order_processed.png">
+                                        <div class="row d-flex icon-content"> <img class="icon" src="../templates/pictures/order_processed.png">
                                             <div class="d-flex flex-column">
-                                                <p class="font-weight-bold">1. Order<br>Processed</p>
+                                                <p class="font-weight-bold">Order<br>Processed</p>
                                             </div>
                                         </div>
-                                        <div class="row d-flex icon-content"> <img class="icon" src="../../pictures/cooking_icon.png">
+                                        <div class="row d-flex icon-content"> <img class="icon" src="../templates/pictures/preparing_icon.png">
                                             <div class="d-flex flex-column">
-                                                <p class="font-weight-bold">2. Order<br>Cooking</p>
+                                                <p class="font-weight-bold">Preparing<br>Order</p>
                                             </div>
                                         </div>
-                                        <div class="row d-flex icon-content"> <img class="icon" src="../../pictures/served_icon.png">
+                                        <div class="row d-flex icon-content"> <img class="icon" src="../templates/pictures/cooking_icon.png">
                                             <div class="d-flex flex-column">
-                                                <p class="font-weight-bold">3. Serving<br>Order</p>
+                                                <p class="font-weight-bold">Order<br>Cooking</p>
                                             </div>
                                         </div>
-                                        <div class="row d-flex icon-content"> <img class="icon" src="../../pictures/order_finish.png">
+                                        <div class="row d-flex icon-content"> <img class="icon" src="../templates/pictures/served_icon.png">
                                             <div class="d-flex flex-column">
-                                                <p class="font-weight-bold">4. Order<br>Served</p>
+                                                <p class="font-weight-bold">Serving<br>Order</p>
+                                            </div>
+                                        </div>
+                                        <div class="row d-flex icon-content"> <img class="icon" src="../templates/pictures/order_finish.png">
+                                            <div class="d-flex flex-column">
+                                                <p class="font-weight-bold">Order<br>Completed</p>
                                             </div>
                                         </div>
                                     </div>
@@ -274,12 +327,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <template v-for="items in order.order_request">
+                                        <template v-for="item in order.order_request">
                                             <tr>
-                                                <td nowrap>{{  }}</td>
-                                                <td>{{  }}</td>
-                                                <td>{{  }}</td>
-                                                <td nowrap>${{ }}</td>
+                                                <td nowrap>{{ getItemName(item.menu_item) }}</td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td>{{ item.comments }}</td>
+                                                <td nowrap>${{ item.total }}</td>
                                             </tr>
                                         </template>
                                     <tr>
@@ -303,7 +356,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>      
 
 </body>
 
@@ -318,10 +371,32 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="customer.js"></script>
 
+
+
 <style>
 body {
-    background-image: url("../../pictures/background-texture.jpg");
+    background-image: url("../templates/pictures/background-texture.jpg");
     font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
+}
+
+#preModal {
+    display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 3; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+#preModal-backdrop {
+    /* bug fix - no overlay */    
+    display: none;    
 }
 
 .title {
@@ -485,8 +560,8 @@ z-index:100;
 
 .top {
     padding-top: 10px;
-    padding-left: 13% !important;
-    padding-right: 13% !important
+    padding-left: 9% !important;
+    padding-right: 9% !important
 }
 
 #progressbar {
@@ -500,7 +575,7 @@ z-index:100;
 #progressbar li {
     list-style-type: none;
     font-size: 13px;
-    width: 25%;
+    width: 20%;
     float: left;
     position: relative;
     font-weight: 400
@@ -542,8 +617,8 @@ z-index:100;
     left: -50%
 }
 
-#progressbar li:nth-child(2):after,
-#progressbar li:nth-child(3):after {
+#progressbar li:nth-child(3):after,
+#progressbar li:nth-child(4):after {
     left: -50%
 }
 
@@ -587,6 +662,8 @@ z-index:100;
 .flex-column {
     margin-left: 5px;
 }
+
+
 
 /**To keep upscaled images visible on mobile, 
 increase left & right margins a bit**/  

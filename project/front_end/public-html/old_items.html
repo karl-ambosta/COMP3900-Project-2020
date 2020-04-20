@@ -4,7 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Courgette&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Management - Old Items - UNSW Cafe</title>
@@ -18,7 +17,7 @@
     language-code="en"
     ></df-messenger>
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
-        <img src="pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+        <img src="../templates/pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
         <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -45,87 +44,161 @@
         </div>
     </nav>
 
-    <div class="title">Old Menu Items</div>
+    <div id="app">
+        <div class="title">Old Menu Items for {{ restaurant.name }}</div>
 
-    <div id="app" class="container" style="overflow-x:auto;">          
-        <table class="table table-sm table-borderless table-striped table-hover display nowrap" style="text-align: center;">
-            <thead>
-            <tr>
-                <th style="width: 20%">Item Name</th>
-                <th style="width: 40%">Description</th>
-                <th style="width: 20%">Price</th>
-                <th class="text-center" style="width: 20%">Return to Current Menu?</th>
-            </tr>
-            </thead>
-            <!-- Start of table, dynamic space-->
-            <tbody>
-                <template v-for="item in itemList">
-                    <tr>
-                        <td class="align-middle">{{ item.itemName }}</td>
-                        <td class="align-middle">{{ item.description }}</td>
-                        <td class="align-middle">${{ item.price.toFixed(2) }}</td>
-                        <td nowrap class="text-center align-middle">
-                            <button id="item1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Add to Menu</button>
-                        </td>
-                    </tr>
-                </template>
-            </tbody>
-        </table>
-    </div>
+        <h4 id="errorMessage" style="text-align: center;"></h4>
 
-    <!-- Remove Item Modal -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-dialog">
-        <div class="modal-content">
-    
-            <!-- Modal Header -->
-            <div class="modal-header">
-            <h4 class="modal-title">Remove Item?</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-    
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div>Are you sure you want to add this item back to the current menu?</div><br>
-            </div>
-    
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" onclick="removefromMenu()">Yes</button>
-                <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">No</button>
-            </div>
+        <hr>
+
+        <div class="container" style="overflow-x:auto;">          
+            <table class="table table-sm table-borderless table-striped table-hover display nowrap" style="text-align: center;">
+                <thead>
+                <tr>
+                    <th style="width: 15%">Item Name</th>
+                    <th style="width: 35%">Description</th>
+                    <th style="width: 10%">Price</th>
+                    <th style="width: 20%">Image</th>
+                    <th class="text-center" style="width: 20%">Return to Current Menu?</th>
+                </tr>
+                </thead>
+                <!-- Start of table, dynamic space-->
+                <tbody>
+                    <template v-for="item in itemList">
+                        <tr>
+                            <td class="align-middle">{{ item.name }}</td>
+                            <td class="align-middle">{{ item.description }}</td>
+                            <td class="align-middle">${{ item.price }}</td>
+                            <td><img v-bind:id="item.name" v-bind:src="'../templates/' + item.picture" align="center" width="150" height="100" v-on:click="viewModal(item.name)"></td>
+                            <td nowrap class="text-center align-middle">
+                                <button id="item1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal" v-on:click="setSelected(item.name)">Add to Menu</button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
         </div>
+
+        <!-- Remove Item Modal -->
+        <div class="modal" id="confirmModal">
+            <div class="modal-dialog">
+            <div class="modal-content">
+        
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">Remove Item?</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body" style="text-align: center;">
+                    <h5>Which category would you like to place this item in: </h5><br>
+
+                    <div><b>Item Category:</b>
+                        <select id="itemCategory" v-model="selectedItem.menu_category" class="itemCategory" style="width:50%" required="">
+                            <template v-for="t in typeList">
+                                <option>{{ t.name }}</option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    <h5><b><u>Item Details</u></b></h5>
+                    <div><b>Item Name:</b> {{ selectedItem.name }}</div>
+                    <div><b>Item Description:</b> {{ selectedItem.description }}</div>
+                    <div><b>Item Price:</b> {{ selectedItem.price }}</div>
+                    
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal" v-on:click="returntoMenu()">Yes</button>
+                    <button type="button" class="btn btn-lg btn-primary" data-dismiss="modal">No</button>
+                </div>
+            </div>
+            </div>
         </div>
     </div>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
     function logout() {
         window.location.href='login.html'
     }
 
-    function returntoMenu() {
-        // Add Item back to Menu
-    }
-
     var app = new Vue ({
         el: '#app',
         delimiters: ['{{', '}}'],
         data: {
+            restaurant: [
+                // id, name
+            ],
             itemList: [ 
-                {itemName: "item1", description: 'Description for Item1', price: 2.50},
-                {itemName: "item2", description: 'Description for Item2', price: 5.50},
-                {itemName: "item3", description: 'Description for Item3', price: 7.00},
-                {itemName: "item4", description: 'Description for Item4', price: 3.50},
-            ]
+                // list of old menu items. active = false
+            ],
+            typeList: [
+
+            ],
+            selectedItem: [ ]
+        },
+        async created() {
+
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+            axios.defaults.headers.common['Authorization'] = basicAuth
+            
+            this.restaurant = JSON.parse(sessionStorage.restaurant);
+            
+            await axios
+                .get('http://127.0.0.1:8000/menuItems/get_inactive_items/', { params: { restaurant: this.restaurant.id} })
+                .then((response) => {
+                    this.itemList = response.data
+                }).catch( error => {console.log(error); return; })
+
+            await axios
+                .get('http://127.0.0.1:8000/menuCategories/', { params: { restaurant: this.restaurant.id} })
+                .then((response) => {
+                    this.typeList = response.data
+                }).catch( error => {console.log(error); return; })
+        },
+        computed: {
+            getTypeID: function() {
+                return this.typeList.filter(x => x.name == this.selectedItem.menu_category)[0].id
+            }
         },
         methods: {
-            convertTime: function(timeString) {
-                var s = moment(timeString, "HH:mm A").format('hh:mm A')
-                return s;
-            },      
+            updateData: function() {
+                axios
+                    .get('http://127.0.0.1:8000/menuItems/get_inactive_items/', { params: { restaurant: this.restaurant.id} })
+                    .then((response) => {
+                        this.itemList = response.data
+                    }).catch( error => {console.log(error); return; })
+            },
+            setSelected: function(itemName) {
+                this.selectedItem = this.itemList.filter(x => x.name == itemName)[0]
+            },
+            returntoMenu: function() {
+                if(this.selectedItem.menu_category == null) {
+                    message = document.getElementById("errorMessage")
+                    message.textContent = "Item not returned. Must select a category"
+                    message.style.color = "red"
+                    return;
+                } else {
+                    message = document.getElementById("errorMessage")
+                    message.textContent = "Item: '" + this.selectedItem.name + "' successfully returned to Category: '" + this.selectedItem.menu_category + "'"
+                    message.style.color = "greenyellow"
+                    payload = {name: this.selectedItem.name, description: this.selectedItem.description, price: this.selectedItem.price, menu_category: this.getTypeID, active: true}
+                    
+                    axios
+                        .put('http://127.0.0.1:8000/menuItems/' + this.selectedItem.id + "/", payload)
+                        .then((response) => {
+                            this.updateData();
+                        }).catch( error => {console.log(error); ;return })
+                }
+            }
         }
     })
 
@@ -133,7 +206,7 @@
 
 <style>
 body {
-    background-image: url("pictures/background-texture.jpg");
+    background-image: url("../templates/pictures/background-texture.jpg");
     font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 }
 

@@ -6,11 +6,21 @@ from django.db.models import Sum, F, ExpressionWrapper, Max, When, Q
 from datetime import *
 
 class UserProfile(models.Model):
+    """ 
+    User Profiles - Stores specific information about each user including their roles
+    """
+    ROLE_CHOICES = (
+        ('1', 'Customer'),
+        ('2', 'Cashier'),
+        ('3', 'Kitchen'),
+        ('4', 'Manager'),
+        ('5', 'Waiter'),
+    )
     user = models.OneToOneField(User, primary_key=True, related_name='profile',on_delete=models.CASCADE )
-    #uid = models.CharField(max_length=20, null=False, blank=False)
-    first_name = models.CharField(max_length=20, null=True, blank=True)
-    last_name = models.CharField(max_length=20, null=True, blank=True)
+    first_name = models.CharField(max_length=20, blank=True)
+    last_name = models.CharField(max_length=20, blank=True)
     mobile = models.CharField(max_length=20, null=True, blank=True)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default='1')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -19,9 +29,9 @@ class UserProfile(models.Model):
 
     @receiver(post_save, sender=User)
     def create_profile_for_user(sender, instance=None, created=False, **kargs):
-        if created:
-            UserProfile.objects.get_or_create(user=instance)
-
+        if created: 
+            UserProfile.objects.create(user=instance)
+            
     @receiver(pre_delete, sender=User)
     def delete_profile_for_user(sender, instance=None, **kargs):
         if instance:
