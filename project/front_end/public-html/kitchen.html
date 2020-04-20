@@ -218,8 +218,8 @@
         },
         methods : {
             fetchKitchenOrders: function() {
-                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
-                //axios.defaults.headers.common['Authorization'] = basicAuth
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
                     .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/")
                     .then((response) => {this.kitchenOrders = response.data})
@@ -227,16 +227,16 @@
                     .catch( error => {console.log(error); });
             },
             fetchOrderRequests: function() {
-                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
-                //axios.defaults.headers.common['Authorization'] = basicAuth
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
                     .get("https://api.unswcafe.tuesdaywaiter.tk/orderRequest/")
                     .then((response) => {this.orderRequests = response.data})
                     .catch( error => {console.log(error); });
             },
             preparing: function(food_id, order_status) {
-                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
-                //axios.defaults.headers.common['Authorization'] = basicAuth
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
                     .post("https://api.unswcafe.tuesdaywaiter.tk/" + food_id + "/set_order_preparing/")
                     .then((response) => {
@@ -379,16 +379,16 @@
         },
         methods : {
             fetchPreviousOrders: function() {
-                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
-                //axios.defaults.headers.common['Authorization'] = basicAuth
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
                     .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/get_order_history/")
                     .then((response) => {this.previousOrders = response.data})
                     .catch( error => {console.log(error); });
             },
             getFoodNames: function(food) {
-                //var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
-                //axios.defaults.headers.common['Authorization'] = basicAuth
+                var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+                axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
                     .get("https://api.unswcafe.tuesdaywaiter.tk/menuItems/")
                     .then((response) => {this.foodNames = response.data})
