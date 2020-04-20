@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from .serializers import UserSerializer,UserProfileSerializer, MenuItemSerializer, MenuCategorySerializer, OrderListSerializer, OrderRequestSerializer, RestaurantSerializer, OpeningHoursSerializer, WaiterCallsSerializer
 from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch
-import requests
+import os,requests
 
 ## NOTE: Search for TODO to find what is remaining.
 # 1) implement a placing of a new waiter call (Action 1)
@@ -140,10 +140,12 @@ class ChatbotAPILogic:
     # Function to call the waiter
     def call_waiter(self, table_num: int) -> bool:
         # call a waiter using the given
-        url = 'https://127.0.0.1:8000/waiterCalls/'
-        obj = {"table_number":table_num, "caller":"Customer", "status":"Customer requires attention"}
-        response = requests.post(url, data = obj)
-        if response:
+        obj, created = WaiterCalls.objects.get_or_create(
+            table_number=table_num,
+            caller=2,
+            status="Customer requires attention",
+        )
+        if created:
             return True
         else:
             return False
