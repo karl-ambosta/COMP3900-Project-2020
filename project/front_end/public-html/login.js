@@ -29,35 +29,33 @@ var loginApp = new Vue({
                     var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                     axios.defaults.headers.common['Authorization'] = basicAuth
 
-                    if(this.username == 'admin' && this.password == 'admin') {
-                        this.adminLogin();
-                    } else if(this.username == 'cashier' && this.password == 'cashier1') {
-                        this.cashierLogin();
-                    } else if(this.username == 'kitchen' && this.password == 'kitchenstaff') {
-                        this.kitchenLogin();
-                    } else if(this.username == 'waiter' && this.password == 'waiter12') {
-                        this.waiterLogin();
-                    } else {
-                        this.customerLogin();
-                    }
+                    axios
+                        .get('https://api.unswcafe.tuesdaywaiter.tk/profile/')
+                        .then((response) => {
+                            userInfo = response.data.filter(x => x.username == this.username)[0]
+                            console.log(userInfo)
+                            if(userInfo.role == 1) { // user logged in is a customer
+                                this.customerLogin(userInfo)
+                            } else if(userInfo.role == 2) { // user logged in is a cashier
+                                window.open("cashier.html", "_self")
+                            } else if(userInfo.role == 3) { // user logged in is kitchen staff
+                                window.open("kitchen.html", "_self")
+                            } else if(userInfo.role == 4) { // user logged in is a manager
+                                window.open("dashboard.html", "_self")
+                            } else if(userInfo.role == 5) { // user logged in is a waiter
+                                window.open("waiter.html", "_self")
+                            }
+                        }).catch( error => {console.log(error); return })
                 }).catch( error => { 
                     document.getElementById('errorMessage').textContent = "Please enter the correct login details" 
                 });
         },
-        customerLogin() {
-            window.open("customer_orders.html", "_self");
-        },
-        kitchenLogin() {
-            window.open("kitchen.html", "_self")
-        },
-        cashierLogin() {
-            window.open("cashiers.html", "_self")
-        },
-        waiterLogin() {
-            window.open("waiters.html", "_self")
-        },
-        adminLogin() {
-            window.open("dashboard.html", "_self")
+        customerLogin(userProfile) {
+            if(userProfile.first_name == "" || userProfile.last == "") {
+                window.open("customer.html", "_self");
+            } else {
+                window.open("customer_orders.html", "_self");
+            }
         }
     }
 });
