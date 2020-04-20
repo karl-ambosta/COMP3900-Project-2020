@@ -179,6 +179,8 @@
  </script>
 <script>
 
+    // https://api.unswcafe.tuesdaywaiter.tk/
+
     var logoutApp = new Vue ({
         el: '#logoutApp',
         delimiters: ['{{', '}}'],
@@ -189,7 +191,7 @@
             logoutUser: function() {
                 console.log("here")
                 axios
-                    .post('https://api.unswcafe.tuesdaywaiter.tk/orderList/rest-auth/logout/', null)
+                    .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/logout/', null)
                     .then((response) => {
                         window.open("index.html", "_self")
                     }).catch( error => {console.log(error); return })
@@ -214,7 +216,7 @@
         methods: {
             rowRemove: function (item, index) {
                 var basicAuth = 'Basic' + sessionStorage.getItem('btoa');
-                fetch("https://api.unswcafe.tuesdaywaiter.tk/orderList/waiterCalls/" + item.id + "/",{
+                fetch("https://api.unswcafe.tuesdaywaiter.tk/waiterCalls/" + item.id + "/",{
                     method: 'delete',
                     withCredentials: true,
                     credentials: 'include',
@@ -235,7 +237,7 @@
                 var basicAuth = 'Basic' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/waiterCalls/')
+                    .get('https://api.unswcafe.tuesdaywaiter.tk/waiterCalls/')
                     .then((response) => {this.items = response.data})
                     .catch( error => {console.log(error); })
             },
@@ -267,7 +269,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/orderList/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/")
                     .then((response) => {this.items = response.data})
                     .then(this.cleanData)
                     .catch( error => {console.log(error); });
@@ -307,7 +309,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/menuItems/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/menuItems/")
                     .then((response) => {this.foodNames = response.data})
                     .catch( error => {console.log(error); });
             },
@@ -333,13 +335,13 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/menuItems/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
                 .then((response) => {
 					this.items = response.data
                 }).catch( error => {console.log(error); });
                 
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/menuCategories/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
                 .then((response) => {
 					this.types = response.data
                 }).catch( error => {console.log(error); });
