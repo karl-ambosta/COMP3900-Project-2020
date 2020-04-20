@@ -45,11 +45,28 @@ class Restaurant(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
+    total_tables = models.IntegerField()
 
     def is_open(self):
         opening = self.opening_hours.get(day=datetime.today().weekday()+1)
+        midnight = time(0,0,0)
+        if opening.to_hour == midnight:
+            return opening.from_hour <= datetime.time(datetime.now())
         return opening.from_hour <= datetime.time(datetime.now()) < opening.to_hour
 
+class Table(models.Model):
+    table_number = models.IntegerField()
+    restaurant = models.ForeignKey(Restaurant, related_name='tables', on_delete=models.CASCADE)
+    in_use = models.BooleanField(default=False)
+
+    @receiver(post_save, sender=Restaurant)
+    def create_tables(sender, instance, created, **kwargs):
+        if created:
+            for i in range(1, instance.total_tables+1):
+                Table.objects.get_or_create(table_number=i, restaurant=instance)
+
+    def __str__(self):
+        return str(self.table_number)
 
 class MenuCategoryOrderManager(models.Manager):
     def move(self, object, new_order):
@@ -161,8 +178,8 @@ class OrderList(models.Model):
 
     owner = models.ForeignKey(User, related_name='order_lists', on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, related_name='order_lists', on_delete=models.CASCADE)
-    table_number = models.IntegerField()
-    status = models.PositiveSmallIntegerField(choices=ORDER_STATUS)
+    table_number = models.ForeignKey(Table, related_name='order_lists', on_delete=models.CASCADE)
+    status = models.PositiveSmallIntegerField(choices=ORDER_STATUS, blank=True, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = OrderListAnnotatedManager()
@@ -229,3 +246,4 @@ class WaiterCalls(models.Model):
 
     class Meta:
         ordering = ['created']
+
