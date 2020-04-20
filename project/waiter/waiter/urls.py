@@ -33,6 +33,7 @@ router.register(r'orderRequest', views.OrderRequestViewSet, 'orderRequest')
 router.register(r'restaurant', views.RestaurantViewSet, 'restaurant')
 router.register(r'openingHours', views.OpeningHoursViewSet, 'openingHours')
 router.register(r'waiterCalls', views.WaiterCallsViewSet, 'waiterCalls')
+router.register(r'tables', views.TableViewSet, 'tables')
 
 urlpatterns = [
     path('', include(router.urls)),
