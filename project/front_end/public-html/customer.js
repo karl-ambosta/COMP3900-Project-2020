@@ -15,7 +15,7 @@ var titleApp = new Vue ({
         this.userName = sessionStorage.getItem('user')
 
         axios
-            .get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/')
+            .get('http://127.0.0.1:8000/restaurant/')
             .then((response) => {
                 this.restList = response.data
                 document.getElementById('preModal').style.display = "block"
@@ -67,7 +67,7 @@ var orderApp = new Vue({
         axios.defaults.headers.common['Authorization'] = basicAuth
 
         axios
-            .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/')
+            .get('http://127.0.0.1:8000/orderList/')
             .then((response) => {
                 this.orderList = response.data.filter(item => item.owner == titleApp.userName)
             }).catch( error => {console.log(error); return});
@@ -100,7 +100,7 @@ var orderApp = new Vue({
             sessionStorage.orderID = orderID
 
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/orderRequest/', { params: {order_list: orderID }})
+                .get('http://127.0.0.1:8000/orderRequest/', { params: {order_list: orderID }})
                 .then((response) => {
                     infoApp.order.order_request = response.data
                 }).catch(error => {console.log(error);})
@@ -109,7 +109,6 @@ var orderApp = new Vue({
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
 
-            axios.defaults.headers.common['Content-Type'] = "text/html"
 
             rInfo = titleApp.restaurant
 
@@ -120,66 +119,46 @@ var orderApp = new Vue({
             }
 
             axios
-            .post('https://api.unswcafe.tuesdaywaiter.tk/orderList/', { restaurant: rInfo.id, table_number: Number(rInfo.tableNo), order_request: [], status: 1 } )
+            .post('http://127.0.0.1:8000/orderList/',  { restaurant: rInfo.id, table_number: rInfo.tableNo, order_request: [] })
             .then((response) => {
                 newOrder = response.data
                 sessionStorage.orderID = newOrder.id
 
                 for(i = 0; i < this.currentOrder.length; i++) {
                     order = this.currentOrder[i]
-    
+
                     axios
-                    .post('https://api.unswcafe.tuesdaywaiter.tk/menuItems/' + order.id + '/order/', { comment: order.comment, quantity: Number(order.quantity) } )
+                    .post('http://127.0.0.1:8000/menuItems/' + order.id + '/order/', {comments: order.comment, quantity: order.quantity })
                     .then((response) => {
                         console.log(response.data)
-                    }).catch( error => {console.log(error); 
-                        if (error.response) {
-                            /*
-                            * The request was made and the server responded with a
-                            * status code that falls out of the range of 2xx
-                            */
-                           console.log(error.response.data);
-                           console.log(error.response.status);
-                           console.log(error.response.headers);
-                       } else if (error.request) {
-                           /*
-                           * The request was made but no response was received, `error.request`
-                           * is an instance of XMLHttpRequest in the browser and an instance
-                           * of http.ClientRequest in Node.js
-                           */
-                           console.log(error.request);
-                       } else {
-                           // Something happened in setting up the request and triggered an Error
-                           console.log('Error', error.message);
-                       }
-                       console.log(error.config);return })
+                        if(i == this.currentOrder.length - 1) {
+                            console.log("sending order of " + (i+1) + "items")
+                            axios
+                            .post('http://127.0.0.1:8000/orderList/' + sessionStorage.getItem('orderID') + '/send_order/', )
+                            .then((response) => {
+                                
+                            }).catch( error => {console.log(error); return})
+                        }
+                    }).catch( error => {console.log(error); return })
                }
+
+               this.currentOrder = []
+
+               
 
             }).catch( error => {console.log(error); 
-               if (error.response) {
-                   /*
-                   * The request was made and the server responded with a
-                   * status code that falls out of the range of 2xx
-                   */
-                   console.log(error.response.data);
-                   console.log(error.response.status);
-                   console.log(error.response.headers);
-               } else if (error.request) {
-                   /*
-                   * The request was made but no response was received, `error.request`
-                   * is an instance of XMLHttpRequest in the browser and an instance
-                   * of http.ClientRequest in Node.js
-                   */
-                   console.log(error.request);
-               } else {
-                   // Something happened in setting up the request and triggered an Error
-                   console.log('Error', error.message);
-               }
-               console.log(error.config);return })
+                if (error.response) {
 
-            console.log("r.id = " + rInfo.id + " tableNo = " + Number(rInfo.tableNo))
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);return })
 
-            this.currentOrder = ''
             document.getElementById("orderMessage").style.color = "green"
             document.getElementById("orderMessage").textContent = "Order successfully sent!"
         },
@@ -193,7 +172,11 @@ var orderApp = new Vue({
             } else if(statusID == 5) {
                 return 'Serving'
             } else if(statusID == 6) {
-                return 'Completed'
+                return 'Served'
+            } else if(statusID == 7) {
+                return 'Awaiting Payment'
+            } else if(statusID == 8) {
+                return 'Paid'
             }
         },
         updateData: function() {
@@ -201,7 +184,7 @@ var orderApp = new Vue({
             setInterval(() => {
 
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/')
+                .get('http://127.0.0.1:8000/orderList/')
                 .then((response) => {
                     this.orderList = response.data.filter(item => item.owner == titleApp.userName)
                 }).catch( error => {console.log(error); return});
@@ -257,13 +240,13 @@ var menuApp = new Vue({
         var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
         axios.defaults.headers.common['Authorization'] = basicAuth
         axios
-            .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/', { params: { restaurant: titleApp.restaurant.id }})
+            .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: titleApp.restaurant.id }})
             .then((response) => {
                 this.items = response.data
             }).catch( error => {console.log(error); });
             
         axios
-            .get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/', { params: {restaurant: titleApp.restaurant.id }})
+            .get('http://127.0.0.1:8000/menuCategories/', { params: {restaurant: titleApp.restaurant.id }})
             .then((response) => {
                 this.types = response.data
             }).catch(error => {console.log(error);})
