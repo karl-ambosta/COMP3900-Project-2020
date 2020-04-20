@@ -15,8 +15,8 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
-from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch, Q
-import datetime
+from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch, Q, Avg
+from datetime import datetime, time, timedelta
 from .permissions import MenuItemPermissions, RestaurantAndMenuCategoryPermissions, OpeningHoursPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
 from .chatbot import ChatbotAPILogic # Chatbot logic
 
@@ -94,7 +94,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     def update_order(self, request, id=None):
         try:
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
-            order_list = get_object_or_404(OrderList.objects.all(), owner=owner)
+            order_list = get_object_or_404(OrderList.objects.filter(status=1), owner=owner)
             item = get_object_or_404(self.queryset, id=id)
             order_request = get_object_or_404(OrderRequest.objects.all(), owner=owner, order_list=order_list, menu_item=item)
             if request.data["quantity"] == 0:   
@@ -337,10 +337,11 @@ class OrderRequestViewSet(viewsets.ModelViewSet):
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-    #permission_classes = [permissions.IsAuthenticated]
-    permission_classes = [RestaurantAndMenuCategoryPermissions]
+    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [RestaurantAndMenuCategoryPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['id', 'order_list']
+    lookup_field = 'id'
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
@@ -355,6 +356,83 @@ class RestaurantViewSet(viewsets.ModelViewSet):
             for i in range(1, restaurant.total_tables + 1):
                 Table.objects.get_or_create(table_number=i, restaurant=restaurant)
             return Response(status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True)
+    def get_all_earnings(self, request, id=None):
+        try:
+            restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
+            earnings = OrderList.objects.filter(restaurant=restaurant, status=8).aggregate(Sum('order_total'))
+            return Response({'earnings': earnings['order_total__sum']}, status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True)
+    def get_monthly_earnings(self, request, id=None):
+        try:
+            restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
+            all_earnings = {}
+            for year in OrderList.objects.filter(restaurant=restaurant, status=8).datetimes('created_at', 'year'):
+                for i in range(1,13):
+                    earnings = OrderList.objects.filter(restaurant=restaurant, status=8, created_at__month=i, created_at__year=year.year).aggregate(Sum('order_total'))
+                    all_earnings[i] = earnings['order_total__sum']
+            return Response(all_earnings, status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=True)
+    def get_yearly_earnings(self, request, id=None):
+        try:
+            restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
+            all_earnings = {}
+            for year in OrderList.objects.filter(restaurant=restaurant, status=8).datetimes('created_at', 'year'):
+                earnings = OrderList.objects.filter(restaurant=restaurant, status=8, created_at__year=year.year).aggregate(Sum('order_total'))
+                all_earnings[year.year] = earnings['order_total__sum']
+            return Response(all_earnings, status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=True)
+    def get_available_tables(self, request, id=None):
+        try:
+            restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
+            number_of_tables = Table.objects.filter(restaurant=restaurant, in_use=False).count()
+            return Response({'tables_free': number_of_tables}, status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True)
+    def get_table_turnover(self, request, id=None):
+        try:
+            restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
+            hours = restaurant.opening_hours.get(day=datetime.today().weekday()+1)
+            if hours:
+                if hours.to_hour == time(0,0,0):
+                    tomorrow = datetime.today() + timedelta(days=1)
+                    to_h = datetime.combine(tomorrow, hours.to_hour)
+                else:
+                    to_h = datetime.combine(datetime.today(), hours.to_hour)
+                from_h = datetime.combine(datetime.today(), hours.from_hour)
+                diff = to_h - from_h
+                hours_open = diff.total_seconds() / 3600
+            turnover = OrderList.objects.filter(restaurant=restaurant, created_at__date=datetime.now().date()).count() / hours_open
+            return Response({'turnover': '{0:.2f}'.format(turnover)}, status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True)
+    def get_average_dishes_per_order(self, request, id=None):
+        try:
+            restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
+            avg = OrderList.objects.filter(restaurant=restaurant, status__range=(2,8)).aggregate(Avg('order_request__quantity'))['order_request__quantity__avg']
+            return Response({'average': '{0:.2f}'.format(avg)}, status=status.HTTP_202_ACCEPTED)
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
