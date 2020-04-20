@@ -376,9 +376,10 @@ class RestaurantViewSet(viewsets.ModelViewSet):
             restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
             all_earnings = {}
             for year in OrderList.objects.filter(restaurant=restaurant, status=8).datetimes('created_at', 'year'):
+                all_earnings[year.year] = {}
                 for i in range(1,13):
-                    earnings = OrderList.objects.filter(restaurant=restaurant, status=8, created_at__month=i, created_at__year=year.year).aggregate(Sum('order_total'))
-                    all_earnings[i] = earnings['order_total__sum']
+                    earnings = OrderList.objects.filter(restaurant=restaurant, status=8, created_at__month=i, created_at__year=year.year).aggregate(Sum('order_total'))        
+                    all_earnings[year.year][i] = earnings['order_total__sum']
             return Response(all_earnings, status=status.HTTP_202_ACCEPTED)
         except Exception as e:
             print(e)
