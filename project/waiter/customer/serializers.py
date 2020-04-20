@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls
+from .models import UserProfile, MenuItem, MenuCategory, OrderList, OrderRequest, Restaurant, OpeningHours, WaiterCalls, Table
 from rest_framework import serializers
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,10 +19,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
 class RestaurantSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Restaurant
-        fields = ['id', 'name', 'description', 'opening_hours']
+        fields = ['id', 'name', 'description', 'opening_hours', 'tables', 'total_tables']
+
+class TableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Table
+        fields = ['id', 'table_number', 'restaurant', 'in_use']
 
 class MenuCategorySerializer(serializers.ModelSerializer):
     
@@ -39,6 +44,7 @@ class MenuItemSerializer(serializers.ModelSerializer):
 class OrderListSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     order_total = serializers.DecimalField(decimal_places=2, max_digits=9, read_only=True)
+    table_number = serializers.IntegerField(source='table_number.table_number')
     status = serializers.ReadOnlyField()
 
     class Meta:
@@ -63,3 +69,6 @@ class WaiterCallsSerializer(serializers.ModelSerializer):
     class Meta:
         model = WaiterCalls
         fields = ['id', 'table_number', 'caller', 'status']
+
+
+
