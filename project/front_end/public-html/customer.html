@@ -13,7 +13,7 @@
         <div class="title">Customer Page</div>
 
         <div id="app" class="container">
-            <h3 style="text-shadow: 1px 1px black;">Customer Information</h3>
+            <h3 style="text-shadow: 1px 1px black;">Customer Information for {{ username }}</h3>
             <form id="customerInfo" @submit.prevent="processForm" class="customer_info" method="POST">
                 <div>
                     <label class="firstName" for="cname">First Name</label>
@@ -22,32 +22,15 @@
                     <input class="lastName" v-model="custName.lastName" type="text" id="inputName" name="firstName" placeholder="Last name.." required="">
                 </div>
                 
-                <div>
-                    <label class="restaurant" for="restaurant">Which restaurant are you dining at?</label><br>
-                    <select id="restaurant" v-model="chosen_restaurant" class="restaurant_name" required="">
-                        <template v-for="r in restaurants">
-                            <option v-bind:value="r.name">{{ r.name }}</option>
-                        </template>
-                    </select>
-                </div>
-                <br>
-                <div class="form-label-group" >
-                    <label class="table_no" for="table_no">Table Number</label>
-                    <input class="table_no" v-model="table_no" type="text" id="inputTableNumber" name="tableno" placeholder="Table Number..." required="">
-                </div class="form-label-group">
                 <hr>
-                <p class="header">If you would like a digital receipt of your purchase,<br> please fill in one of the below fields:</p>
-                <div>
-                    <label class="email" for="email">Email Address</label>
-                    <input class="email" v-model="email" type="email" id="inputEmail" name="tableno" placeholder="Email Address...">
-                </div>
-                <br>
+                <p class="header">If you would like a digital receipt of your purchase or discount notices,<br> please fill in the field below:</p>
                 <div>
                     <label class="mobile" for="mobile_no">Mobile Number</label>
                     <input class="mobile_no" v-model="mobile" type="tel" id="mobile_no" name="tableno" placeholder="Mobile Number..." pattern="[0-9]{4}-[0-9]{3}-[0-9]{3}">
                     <small>Format: 04xx-xxx-xxx</small>
                 </div>
                 <hr>
+                <p id="errorMessage" style="color: red;"></p>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Enter Details</button>
             </form>
         </div>
@@ -59,10 +42,6 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
-    function goBack() {
-        history.back();
-    }
-
     function toOrders() {
         window.open("customer_orders.html", "_self");
     }
@@ -88,16 +67,15 @@
         el: '#app',
         delimiters: ['{{', '}}'],
         data: {
+            username: '',
             custName: {firstName: '', lastName: ''},
-            chosen_restaurant: '',
-            table_no: '',
-            email: '',
             mobile: '',
-            restaurants: ''
         },
         created() {
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
+
+            this.username = sessionStorage.getItem('user')
 
             axios
                 .get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/')
@@ -109,35 +87,33 @@
         methods: {
 			processForm: function() {
                 // send input to database
-
-                rIdx = this.restaurants.findIndex(x => x.name == this.chosen_restaurant)
-                rID = this.restaurants[rIdx].id
-                
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
-                userName = sessionStorage.getItem('user')
-                sessionStorage.setItem('restaurant', JSON.stringify(
-                    { id: rID, name: this.chosen_restaurant}
-                ));
                 axios.defaults.headers.common['Authorization'] = basicAuth
 
-                axios
-                    .get('https://api.unswcafe.tuesdaywaiter.tk/users/')
-                    .then((response) => {
+                details = {first_name: this.custName.firstName, last_name: this.custName.lastName}
 
+                if(this.mobile != '') {
+                    details.mobile = this.mobile
+                }
+                
+
+                userName = sessionStorage.getItem('user')
+
+                axios
+                    .get('http://127.0.0.1:8000/profile/')
+                    .then((response) => {
+                        console.log(response.data)
+                        userID = response.data.filter(x => x.username == this.username)[0].user
+
+                        axios
+                            .put('http://127.0.0.1:8000/profile/' + userID + "/", details)
+                            .then((response) => {
+                                console.log(response.data)
+                            }).catch( error => {console.log(error);return })
+                        
                         window.open("customer_orders.html", "_self")                        
 
-                    }).catch( error => {console.log(error); return});
-               
-                
-                /*
-                axios
-                    .post('https://api.unswcafe.tuesdaywaiter.tk/profile/', userInfo)
-                    .then((response) => {
-					    this.items = response.data
-                    }).catch( error => {console.log(error); });
-                */
-
-      			//console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
+                    }).catch( error => {console.log(error); return })
     		}
 		}
     
@@ -148,7 +124,7 @@
 
 <style>
 body {
-    background-image: url("../../pictures/background-texture.jpg");
+    background-image: url("../templates/pictures/background-texture.jpg");
     font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 }
 .title {
