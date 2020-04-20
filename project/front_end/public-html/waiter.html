@@ -207,14 +207,14 @@
         },
         created: function() {
             this.fetchData()
-            // TODO test auto refresh
-            //this.interval = setInterval(() => this.fetchData(), 5000);
+            // TODO test auto refresh | Testing
+            this.interval = setInterval(() => this.fetchData(), 5000);
             
         },
         methods: {
             rowRemove: function (item, index) {
                 var basicAuth = 'Basic' + sessionStorage.getItem('btoa');
-                fetch("https://api.unswcafe.tuesdaywaiter.tk/orderList/waiterCalls/" + item.id,{
+                fetch("https://api.unswcafe.tuesdaywaiter.tk/orderList/waiterCalls/" + item.id + "/",{
                     method: 'delete',
                     withCredentials: true,
                     credentials: 'include',
@@ -256,11 +256,13 @@
             ],
         },
         created() {
-            this.fetchData();
-            this.getFoodNames();
-            //this.interval = setInterval(() => this.fetchData(), 5000);
+            this.interval = setInterval(() => this.polling(), 5000);
         },
         methods : {
+            polling: function() {
+                this.fetchData();
+                this.getFoodNames();
+            },
             fetchData: function() {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
