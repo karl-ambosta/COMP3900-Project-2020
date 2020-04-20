@@ -43,7 +43,10 @@ class IsWaiter (permissions.BasePermission):
 
 
 class MenuItemPermissions(permissions.BasePermission): 
-    
+    """
+    Menu Items Permissions - Who can create, list, retrieve, update or destroy
+    """
+
     def has_permission(self, request, view):
         user_role = (UserProfile.objects.get(user=request.user).role)
         if view.action == 'create': #CREATE: Kitchen or Manager
@@ -67,13 +70,16 @@ class MenuItemPermissions(permissions.BasePermission):
         else:
             return False
 
-
-class RestaurantPermissions(permissions.BasePermission): 
+class OpeningHoursPermissions(permissions.BasePermission): 
+    """
+    Opening Hours Permissions - Who can create, list, retrieve, update or destroy
+    """
+    
     def has_permission(self, request, view):
         user_role = (UserProfile.objects.get(user=request.user).role)
-        if view.action == 'create' and ((user_role ==3) or (user_role==4)): 
+        if view.action == 'create' and ((request.user.is_staff) or (user_role==4)): #CREATE: Manager
             return True
-        elif view.action == 'list':
+        elif view.action == 'list': #LIST: All Users
             return True
         elif view.action in ['retrieve', 'update', 'partial_update', 'destroy']:
             return True
@@ -82,13 +88,40 @@ class RestaurantPermissions(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         user_role = (UserProfile.objects.get(user=request.user).role)
-        if view.action == 'retrieve':
-            print("working")
+        if view.action == 'retrieve': #RETRIEVE: All Users
             return True
         elif view.action in ['update', 'partial_update']:
-            if user_role == 3 or user_role == 4:
+            if ((request.user.is_staff) or (user_role == 4)): #UPDATE: Admin Account or Manager
                 return True
-        elif view.action == 'destroy':
-            return request.user.is_staff
+        elif view.action == 'destroy': #DESTROY: Admin Account or Manager
+            return ((request.user.is_staff) or (user_role==4)) 
+        else:
+            return False
+
+class RestaurantAndMenuCategoryPermissions(permissions.BasePermission): 
+    """
+    Restaurant and Menu Category Permissions - Who can create, list, retrieve, update or destroy
+    """
+
+    def has_permission(self, request, view):
+        user_role = (UserProfile.objects.get(user=request.user).role)
+        if view.action == 'create' and ((user_role ==3) or (user_role==4)): #CREATE: Kitchen or Manager
+            return True
+        elif view.action == 'list': #LIST: All Users
+            return True
+        elif view.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            return True
+        else:
+            return False
+
+    def has_object_permission(self, request, view, obj):
+        user_role = (UserProfile.objects.get(user=request.user).role)
+        if view.action == 'retrieve': #RETRIEVE: All Users
+            return True
+        elif view.action in ['update', 'partial_update']:
+            if user_role == 3 or user_role == 4: #UPDATE: Kitchen or Manager
+                return True
+        elif view.action == 'destroy': #DESTROY: Admin, Kitchen or Manager
+            return ((request.user.is_staff) or (user_role ==3) or (user_role==4)) 
         else:
             return False

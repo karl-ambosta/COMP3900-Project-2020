@@ -17,10 +17,8 @@ from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch, Q
 import datetime
-from .permissions import MenuItemPermissions, RestaurantPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
-
-# Chatbot logic
-from .chatbot import ChatbotAPILogic
+from .permissions import MenuItemPermissions, RestaurantAndMenuCategoryPermissions, OpeningHoursPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
+from .chatbot import ChatbotAPILogic # Chatbot logic
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -37,7 +35,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'price', 'menu_category__name']
     
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, permission_classes = [IsManager])
     def move(self, request, id=None):
         obj = self.get_object()
         new_order = request.data.get('order', None)
@@ -61,7 +59,6 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         serializer = MenuItemSerializer(qs, many=True)
         return Response(serializer.data)
 
-
     def get_queryset(self):
         qs = MenuItem.objects.order_by('order')
         restaurant = self.request.query_params.get('restaurant', None)
@@ -72,7 +69,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             qs = qs.filter(menu_category=category)
         return qs
     
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes =[IsCustomer, IsWaiter, IsCashier, IsManager])
     def order(self, request, id=None):
         try:
             item = get_object_or_404(self.queryset, id=id)
@@ -89,7 +86,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes =[IsCustomer, IsWaiter, IsCashier, IsManager])
     def update_order(self, request, id=None):
         try:
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
@@ -106,7 +103,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
     
-    @action(detail=False)
+    @action(detail=False, permission_classes = [IsCustomer, IsWaiter, IsCashier, IsManager])
     def get_inactive_items(self, request, id=None):
         qs = self.get_queryset().filter(active=False)
         serializer = MenuItemSerializer(qs, many=True)
@@ -114,7 +111,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
 class MenuCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = MenuCategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [RestaurantAndMenuCategoryPermissions]
     lookup_field = 'id'
 
     def create(self, request): 
@@ -131,7 +128,7 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
             qs = qs.filter(restaurant__id=restaurant)
         return qs.distinct()
 
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, permission_classes = [IsManager])
     def move(self, request, id=None):
         obj = self.get_object()
         new_order = request.data.get('order', None)
@@ -327,7 +324,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
     #permission_classes = [permissions.IsAuthenticated]
-    permission_classes = [RestaurantPermissions]
+    permission_classes = [RestaurantAndMenuCategoryPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['id', 'order_list']
 
@@ -341,7 +338,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
 class OpeningHoursViewSet(viewsets.ModelViewSet):
     queryset = OpeningHours.objects.all()
     serializer_class = OpeningHoursSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [OpeningHoursPermissions]
 
     def create(self, request): 
         serializer = self.serializer_class(data=request.data)
