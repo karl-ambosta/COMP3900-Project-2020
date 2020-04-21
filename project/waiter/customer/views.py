@@ -17,7 +17,7 @@ from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 from rest_auth.social_serializers import TwitterLoginSerializer
 from django.db.models import Sum, F, DecimalField, ExpressionWrapper, Prefetch, Q
 import datetime
-from .permissions import MenuItemPermissions, RestaurantAndMenuCategoryPermissions, OpeningHoursPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
+from .permissions import MenuItemPermissions, OrderListPermissions, RestaurantAndMenuCategoryPermissions, OpeningHoursPermissions, IsUser, IsCashier, IsCustomer, IsKitchen, IsManager, IsWaiter
 from .chatbot import ChatbotAPILogic # Chatbot logic
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -30,12 +30,11 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     serializer_class = MenuItemSerializer
     lookup_field = 'id'
     lookup_value_regex = '[0-9]+'
-    #permission_classes = [permissions.IsAuthenticated]
     permission_classes = [MenuItemPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'price', 'menu_category__name']
     
-    @action(methods=['post'], detail=True, permission_classes = [IsManager])
+    @action(methods=['post'], detail=True, permission_classes = [IsKitchen | IsManager])
     def move(self, request, id=None):
         obj = self.get_object()
         new_order = request.data.get('order', None)
@@ -47,19 +46,19 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         MenuItem.objects.move(obj, new_order)
         return Response({'success': True, 'order': new_order})
     
-    def create(self, request):
+    def create(self, request): # Permissions: Kitchen staff or manager
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
 
-    def list(self, request):
+    def list(self, request): #Permissions: All Users
         qs = self.get_queryset().filter(active=True)
         qs = self.filter_queryset(qs)
         serializer = MenuItemSerializer(qs, many=True)
         return Response(serializer.data)
 
-    def get_queryset(self):
+    def get_queryset(self): #Permissions: All Users
         qs = MenuItem.objects.order_by('order')
         restaurant = self.request.query_params.get('restaurant', None)
         category = self.request.query_params.get('category', None)
@@ -69,7 +68,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             qs = qs.filter(menu_category=category)
         return qs
     
-    @action(detail=True, methods=['post'], permission_classes =[IsCustomer, IsWaiter, IsCashier, IsManager])
+    @action(detail=True, methods=['post'], permission_classes =[IsCustomer|IsKitchen|IsWaiter|IsCashier|IsManager])
     def order(self, request, id=None):
         try:
             item = get_object_or_404(self.queryset, id=id)
@@ -90,7 +89,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=['post'], permission_classes =[IsCustomer, IsWaiter, IsCashier, IsManager])
+    @action(detail=True, methods=['post'], permission_classes =[IsCustomer|IsWaiter|IsCashier|IsManager|IsKitchen])
     def update_order(self, request, id=None):
         try:
             owner = get_object_or_404(User.objects.all(), username=self.request.user)
@@ -107,7 +106,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         except:
             return Response(status=status.HTTP_204_NO_CONTENT)
     
-    @action(detail=False, permission_classes = [IsCustomer, IsWaiter, IsCashier, IsManager])
+    @action(detail=False, permission_classes = [IsKitchen|IsManager|IsWaiter])
     def get_inactive_items(self, request, id=None):
         qs = self.get_queryset().filter(active=False)
         serializer = MenuItemSerializer(qs, many=True)
@@ -118,13 +117,13 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [RestaurantAndMenuCategoryPermissions]
     lookup_field = 'id'
 
-    def create(self, request): 
+    def create(self, request): #Permissions: Manager
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
     
-    def get_queryset(self):
+    def get_queryset(self): #Permissions: All Users
         qs = MenuCategory.objects.order_by('order')
         restaurant = self.request.query_params.get('restaurant', None)
         if restaurant is not None:
@@ -143,7 +142,7 @@ class MenuCategoryViewSet(viewsets.ModelViewSet):
         MenuCategory.objects.move(obj, new_order)
         return Response({'success': True, 'order': new_order})
 
-    def list(self, request):
+    def list(self, request):#All Users
         qs = self.get_queryset().prefetch_related(Prefetch('menu_item', queryset=MenuItem.objects.exclude(active=False)))
         serializer = MenuCategorySerializer(qs, many=True)
         return Response(serializer.data)
@@ -153,7 +152,7 @@ class FacebookLogin(SocialLoginView):
 
 class OrderListViewSet(viewsets.ModelViewSet):
     serializer_class = OrderListSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [OrderListPermissions]
     lookup_field = 'id'
 
     def create(self, request):
@@ -177,11 +176,12 @@ class OrderListViewSet(viewsets.ModelViewSet):
                 print(serializer.errors)
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods=['post'], detail=True)
+    @action(methods=['post', 'get'], detail=True, permission_classes =[IsCustomer|IsWaiter|IsCashier|IsManager|IsKitchen])
     def send_order(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=1), id=id)
             order_requests = order_list.order_request.all()
+            print(order_requests)
             if order_requests:
                 order_list.status = 2
                 order_list.save()
@@ -192,7 +192,7 @@ class OrderListViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, permission_classes =[IsWaiter|IsManager|IsKitchen])
     def set_order_preparing(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=2), id=id)
@@ -207,7 +207,7 @@ class OrderListViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, permission_classes =[IsWaiter|IsManager|IsKitchen])
     def set_order_cooking(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=3), id=id)
@@ -222,7 +222,7 @@ class OrderListViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, permission_classes =[IsWaiter|IsManager|IsKitchen|IsCashier])
     def set_order_pickup(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=4), id=id)
@@ -237,7 +237,7 @@ class OrderListViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
     
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, permission_classes =[IsWaiter|IsManager|IsKitchen|IsCashier])
     def set_order_served(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=5), id=id)
@@ -252,7 +252,7 @@ class OrderListViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, permission_classes =[IsWaiter|IsManager|IsKitchen|IsCashier])
     def set_order_waiting_payment(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=6), id=id)
@@ -267,7 +267,7 @@ class OrderListViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post'], detail=True)
+    @action(methods=['post'], detail=True, permission_classes =[IsWaiter|IsManager|IsCashier])
     def set_order_paid(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=7), id=id)
@@ -286,24 +286,24 @@ class OrderListViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False)
-    def get_kitchen_orders(self, request, id=None):
+    def get_kitchen_orders(self, request, id=None, permission_classes =[IsCustomer|IsWaiter|IsCashier|IsManager|IsKitchen]):
         qs = self.get_queryset().filter(Q(status=2) | Q(status=3) | Q(status=4) | Q(status=5))
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)
     
     @action(detail=False)
-    def get_order_history(self, request, id=None):
+    def get_order_history(self, request, id=None, permission_classes =[IsCustomer|IsWaiter|IsCashier|IsManager|IsKitchen]):
         qs = self.get_queryset().filter(status=8)
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)
 
     @action(detail=False)
-    def get_waiter_orders(self, request, id=None):
+    def get_waiter_orders(self, request, id=None, permission_classes = [IsWaiter|IsCashier|IsManager|IsKitchen]):
         qs = self.get_queryset().filter(Q(status=5) | Q(status=6))
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)
 
-    @action(detail=False)
+    @action(detail=False, permission_classes = [IsCustomer|IsWaiter|IsCashier|IsManager])
     def get_cashier_orders(self, request, id=None):
         qs = self.get_queryset().filter(Q(status=7) | Q(status=8))
         serializer = OrderListSerializer(qs, many=True)
@@ -322,7 +322,7 @@ class OrderListViewSet(viewsets.ModelViewSet):
 class OrderRequestViewSet(viewsets.ModelViewSet):
     queryset = OrderRequest.objects.all().order_by('id')
     serializer_class = OrderRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsCustomer| IsWaiter|IsKitchen |IsCashier|IsManager]
     
     def create(self, request): 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -337,7 +337,6 @@ class OrderRequestViewSet(viewsets.ModelViewSet):
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-    #permission_classes = [permissions.IsAuthenticated]
     permission_classes = [RestaurantAndMenuCategoryPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['id', 'order_list']
@@ -348,7 +347,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsManager|IsWaiter|IsCashier])
     def create_tables(self, request, id=None):
         try:
             restaurant = get_object_or_404(Restaurant.objects.all(), id=id)
