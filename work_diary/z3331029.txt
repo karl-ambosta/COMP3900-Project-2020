@@ -41,7 +41,7 @@ Setup chatbot and tested during meeting with team. Planning API integration for 
 
 Week 9
 
-*notes here*
+Setup waiter calls feature for front and backend, integrated chatbot into this DB. Connected waiter and kitchen to backend and also connected cashier stats into stats api.
 
 Week 10
 

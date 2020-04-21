@@ -206,31 +206,29 @@
             items: [
                 // get set of items here 
             ],
+            waiterOrders: [
+                // get waiter orders
+            ]
         },
         created: function() {
             this.fetchData()
-            // TODO test auto refresh | Testing
             this.interval = setInterval(() => this.fetchData(), 5000);
             
         },
         methods: {
             rowRemove: function (item, index) {
                 var basicAuth = 'Basic' + sessionStorage.getItem('btoa');
-                fetch("https://api.unswcafe.tuesdaywaiter.tk/waiterCalls/" + item.id + "/",{
-                    method: 'delete',
-                    withCredentials: true,
-                    credentials: 'include',
-                    headers: {
-                        'Authorization': basicAuth,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then((response) => {
-                    this.$delete(this.items, index)
+                axios.defaults.headers.common['Authorization'] = basicAuth
+                axios
+                    .delete("https://api.unswcafe.tuesdaywaiter.tk/waiterCalls/" + item.id + "/")
+                    .then
+                    .then((response) => {
                     console.log(response.data)
                 }).catch( error => {console.log(error); });
-                // TODO; implement order status change to served.
-                // this.order_served()
+                if (item.caller == 1){
+                    this.updateOrderStatus(item);
+                }
+                this.$delete(this.items, index);
             },
         
             fetchData: function() {
@@ -241,7 +239,28 @@
                     .then((response) => {this.items = response.data})
                     .catch( error => {console.log(error); })
             },
-
+            getWaiterOrders: function() {
+                var basicAuth = 'Basic' + sessionStorage.getItem('btoa');
+                axios.defaults.headers.common['Authorization'] = basicAuth;
+                axios
+                    .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/get_waiter_orders/')
+                    .then((response) => {this.waiterOrders = response.data})
+                    .catch( error => {console.log(error); })
+            },
+            updateOrderStatus: function(item) {
+                // if time, change waiter calls model to also contain order id
+                this.waiterOrders.forEach(order => {
+                    if (order.table_number == item.table_number){
+                        var basicAuth = 'Basic' + sessionStorage.getItem('btoa');
+                        axios.defaults.headers.common['Authorization'] = basicAuth;
+                        axios
+                            .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + order.id + "/set_order_served/")
+                            .then((response) => {
+                                console.log(response.data)
+                            }).catch( error => {console.log(error); });
+                    }
+                });
+            },
         },
     })
 
@@ -258,6 +277,7 @@
             ],
         },
         created() {
+            this.polling();
             this.interval = setInterval(() => this.polling(), 5000);
         },
         methods : {

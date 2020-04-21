@@ -91,9 +91,9 @@
                                 {{ order.status }}
                             </td>
                             <td class="text-center align-middle" nowrap>
-                                <button v-bind:id="order.id" type="button" class="btn btn-info" v-on:click.prevent="preparing(order.id, order.status)">Preparing</button>
-                                <button v-bind:id="order.id" class="btn btn-warning" v-on:click.prevent="cooking(order.id, order.status)">Cooking</button>
-                                <button v-bind:id="order.id" class="btn btn-success" v-on:click.prevent="pickup_ready(order.id, order.status, order.table_number)">Pickup Ready</button>
+                                <button v-bind:id="order.id" type="button" class="btn btn-info" v-on:click.prevent="preparing(order)">Preparing</button>
+                                <button v-bind:id="order.id" class="btn btn-warning" v-on:click.prevent="cooking(order)">Cooking</button>
+                                <button v-bind:id="order.id" class="btn btn-success" v-on:click.prevent="pickup_ready(order)">Pickup Ready</button>
                             </td>
                         </tr>
                     </template>
@@ -211,10 +211,13 @@
             ],
         },
         created() {
-            this.fetchKitchenOrders();
-            this.fetchOrderRequests();
+            this.polling();
             this.getFoodNames();
-            //this.interval = setInterval(() => this.fetchData(), 5000);
+            this.interval = setInterval(() => this.polling(), 5000);
+        },
+        polling: function() {
+                this.fetchKitchenOrders();
+                this.fetchOrderRequests();
         },
         methods : {
             fetchKitchenOrders: function() {
@@ -234,36 +237,36 @@
                     .then((response) => {this.orderRequests = response.data})
                     .catch( error => {console.log(error); });
             },
-            preparing: function(food_id, order_status) {
+            preparing: function(item) {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + food_id + "/set_order_preparing/")
+                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_preparing/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
-                order_status = "Preparing";
+                item.status = "Preparing";
             },
-            cooking: function(food_id, order_status) {
+            cooking: function(item) {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + food_id + "/set_order_cooking/")
+                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_cooking/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
-                order_status = "Cooking";
+                item.status = "Cooking";
             },
-            pickup_ready: function(food_id, order_status, table_number) {
+            pickup_ready: function(item) {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + food_id + "/set_order_pickup/")
+                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_pickup/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
-                order_status = "Pickup Ready";
-                this.call_waiter(food_id, table_number);
+                item.status = "Pickup Ready";
+                this.call_waiter(item);
             },
             getFoodNames: function(food) {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
@@ -273,14 +276,14 @@
                     .then((response) => {this.foodNames = response.data})
                     .catch( error => {console.log(error); });
             },
-            call_waiter: function(food_id, table_number){
+            call_waiter: function(item){
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
-                var message = "Order: #" + food_id + " ready for pick up"
+                var message = "Order: #" + item.id + " ready for pick up"
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
                     .post('https://api.unswcafe.tuesdaywaiter.tk/waiterCalls/', {
-                        "table_number": table_number,
-                        "caller": "Kitchen",
+                        "table_number": item.table_number,
+                        "caller": 1,
                         "status": message
                     })
                     .then((response) => {
@@ -373,11 +376,14 @@
             ],
         },
         created() {
-            this.getFoodNames();
-            this.fetchPreviousOrders();
-            //this.interval = setInterval(() => this.fetchData(), 5000);
+            this.polling();
+            this.interval = setInterval(() => this.polling(), 5000);
         },
         methods : {
+            polling: function() {
+                this.getFoodNames();
+                this.fetchPreviousOrders();
+            },
             fetchPreviousOrders: function() {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
