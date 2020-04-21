@@ -124,8 +124,8 @@ class Command(BaseCommand):
                 "Breakfast": ['Bacon & Egg Roll', 'Scrambled Eggs', 'French Toast', 'Big Brekkie', 'Eggs Benedict', 'Salmon Roll'],
                 "Lunch": ['Grilled Salmon', 'Big Burger', 'Steak Sandwich', 'Salad', 'Gourmet Pizza'],
                 "Dinner": ['Classic Roast', 'Spaghetti Bolognese', 'Fish & Chips', 'Steak & Chips', 'Roast Chicken & Salad', 'Butter Chicken with Rice'],
-                "Specials": ['Seafood Sensation'],
-                "Drinks": ['Coca Cola', 'Red Wine', 'Sparkling Water', 'Coffee', 'Tea', 'Lemon & Lime Bitters']
+                "Specials": ['Seafood Sensation', 'Fried Rice', 'Grilled Fish & Chips', 'Vegetarian Pizza', 'Steamed Veggies'],
+                "Drinks": ['Coca Cola', 'Fanta', 'Latte', 'Red Wine', 'Sparkling Water', 'Coffee', 'Tea', 'Lemon & Lime Bitters']
             }
 
 
