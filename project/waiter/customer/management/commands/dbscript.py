@@ -2,6 +2,8 @@ from django.core.management.base import BaseCommand
 from customer.models import *
 from django.contrib.auth.models import User
 import datetime
+import random
+import requests
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
@@ -26,7 +28,7 @@ class Command(BaseCommand):
         waiter.save()
 
         customer1 = User.objects.create_user('customer1', email='customer1@user.com', password='globalpass')
-        customer2 = User.objects.create_user('customer2', email='customer1@user.com', password='globalpass')
+        customer2 = User.objects.create_user('customer2', email='customer2@user.com', password='globalpass')
         customer1.save()
         customer2.save()
 
@@ -57,7 +59,7 @@ class Command(BaseCommand):
         manager_profile.role = 4 #Manager
         manager_profile.save()
 
-        waiter_profile = UserProfile.objects.get(user=manager)
+        waiter_profile = UserProfile.objects.get(user=waiter)
         waiter_profile.first_name = 'Timmy'
         waiter_profile.last_name = 'Trumpet'
         waiter_profile.role = 5 #Waiter
@@ -94,6 +96,7 @@ class Command(BaseCommand):
         restaurant1 = Restaurant.objects.get(name='UNSW Cafe')
         restaurant2 = Restaurant.objects.get(name='Anzac Parade Cafe')
         restaurant3 = Restaurant.objects.get(name = 'Barker St Cafe')
+
         for i in range(1,8): 
             restaurant1_hours = OpeningHours.objects.create(restaurant = restaurant1, day = i, from_hour = datetime.time(6, 00),to_hour = datetime.time(17, 00))
             restaurant2_hours = OpeningHours.objects.create(restaurant = restaurant2, day = i, from_hour = datetime.time(6, 00),to_hour = datetime.time(17, 00))
@@ -111,3 +114,56 @@ class Command(BaseCommand):
             restaurant2_cat.save()
             restaurant3_cat.save()
 
+        """
+        Add Menu Items
+
+        """ 
+        
+        foods =  { 
+                "Entree": ['Pumpkin Soup', 'Sourdough Bread', 'Chicken Soup', 'Spring Rolls', 'Garlic Bread', 'Cheese Toast'], 
+                "Breakfast": ['Bacon & Egg Roll', 'Scrambled Eggs', 'French Toast', 'Big Brekkie', 'Eggs Benedict', 'Salmon Roll'],
+                "Lunch": ['Grilled Salmon', 'Big Burger', 'Steak Sandwich', 'Salad', 'Gourmet Pizza'],
+                "Dinner": ['Classic Roast', 'Spaghetti Bolognese', 'Fish & Chips', 'Steak & Chips', 'Roast Chicken & Salad', 'Butter Chicken with Rice'],
+                "Specials": ['Seafood Sensation'],
+                "Drinks": ['Coca Cola', 'Red Wine', 'Sparkling Water', 'Coffee', 'Tea', 'Lemon & Lime Bitters']
+            }
+
+
+        count = 1
+        for i,cat in enumerate(categories):
+
+            cat_object = MenuCategory.objects.get(id=(count))
+            print(cat_object)
+            restaurant1_menuitems1 = MenuItem.objects.create(name=random.choice(foods[cat]), price = round(random.randrange(10,20),2),description = "hi", order = i+1, menu_category=cat_object)
+            restaurant1_menuitems1.save()
+            restaurant1_menuitems2 = MenuItem.objects.create(name=random.choice(foods[cat]), price = round(random.randrange(10,20),2),description = "hi", order = i+2, menu_category=cat_object)
+            restaurant1_menuitems2.save()
+            restaurant1_menuitems3 = MenuItem.objects.create(name=random.choice(foods[cat]), price = round(random.randrange(10,20),2),description = "hi", order = i+3, menu_category=cat_object)
+            restaurant1_menuitems3.save()
+            
+            count = count + 1
+            cat_object = MenuCategory.objects.get(id=(count))   
+            print(cat_object)                   
+            restaurant2_menuitems1 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+1, menu_category=cat_object)
+            restaurant2_menuitems1.save()
+            restaurant2_menuitems2 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+2, menu_category=cat_object)
+            restaurant2_menuitems2.save()
+            restaurant2_menuitems3 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+3, menu_category=cat_object)
+            restaurant2_menuitems3.save()
+            
+            count = count + 1    
+            cat_object = MenuCategory.objects.get(id=(count))   
+            print(cat_object) 
+
+            restaurant3_menuitems1 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+1, menu_category=cat_object)
+            restaurant3_menuitems1.save()
+            restaurant3_menuitems2 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+2, menu_category=cat_object)
+            restaurant3_menuitems2.save()
+            restaurant3_menuitems3 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+3, menu_category=cat_object)
+            restaurant3_menuitems3.save()
+            count = count + 1  
+
+            
+            
+            
+                
