@@ -89,7 +89,7 @@ class Command(BaseCommand):
 
 
         """
-        Opening Hours
+        Opening Hours and Categories
         """
         restaurant1 = Restaurant.objects.get(name='UNSW Cafe')
         restaurant2 = Restaurant.objects.get(name='Anzac Parade Cafe')
@@ -101,3 +101,13 @@ class Command(BaseCommand):
             restaurant1_hours.save()
             restaurant2_hours.save()
             restaurant3_hours.save()
+
+        categories = ['Entree', 'Breakfast', 'Lunch', 'Dinner', 'Specials', 'Drinks']
+        for i,cat in enumerate(categories): 
+            restaurant1_cat = MenuCategory.objects.create(name=cat,restaurant = restaurant1, order=i)
+            restaurant2_cat = MenuCategory.objects.create(name=cat,restaurant = restaurant2, order=i)
+            restaurant3_cat = MenuCategory.objects.create(name=cat,restaurant = restaurant3, order=i)
+            restaurant1_cat.save()
+            restaurant2_cat.save()
+            restaurant3_cat.save()
+
