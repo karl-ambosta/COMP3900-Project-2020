@@ -44,6 +44,33 @@ class Command(BaseCommand):
         customer2_profile.first_name = 'yacob'
         customer2_profile.last_name = 'peralberg'
         customer2_profile.save()
+
+        cashier_profile = UserProfile.objects.get(user=cashier)
+        kitchen_profile = UserProfile.objects.get(user=kitchen)
+        manager_profile = UserProfile.objects.get(user=manager)
+        waiter_profile = UserProfile.objects.get(user=waiter)
+
+        cashier_profile.first_name = 'bob'
+        cashier_profile.last_name = 'jones'
+        cashier_profile.role = 2
+        cashier_profile.save()
+
+        kitchen_profile.first_name = 'charles'
+        kitchen_profile.last_name = 'pel'
+        kitchen_profile.role = 3
+        kitchen_profile.save()
+
+        manager_profile.first_name = 'george'
+        manager_profile.last_name = 'bone'
+        manager_profile.role = 4
+        manager_profile.save()
+
+        waiter_profile.first_name = 'timmy'
+        waiter_profile.last_name = 'trumpet'
+        waiter_profile.role = 5
+        waiter_profile.save()
+
+
         
         
 
