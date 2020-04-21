@@ -144,7 +144,8 @@ var orderApp = new Vue({
 
                this.currentOrder = []
 
-               
+                document.getElementById("orderMessage").style.color = "green"
+                document.getElementById("orderMessage").textContent = "Order successfully sent!"
 
             }).catch( error => {console.log(error); 
                 if (error.response) {
@@ -159,8 +160,7 @@ var orderApp = new Vue({
                 }
                 console.log(error.config);return })
 
-            document.getElementById("orderMessage").style.color = "green"
-            document.getElementById("orderMessage").textContent = "Order successfully sent!"
+            
         },
         getStatusName: function(statusID) {
             if(statusID == 2) {
