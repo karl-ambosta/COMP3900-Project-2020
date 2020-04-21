@@ -73,7 +73,6 @@ class Command(BaseCommand):
         customer2_profile.last_name = 'Peralberg'
         customer2_profile.save()
 
-<<<<<<< HEAD
         """
         Create Restaurants
 
