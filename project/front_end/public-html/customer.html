@@ -77,12 +77,6 @@
 
             this.username = sessionStorage.getItem('user')
 
-            axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/')
-                .then((response) => {
-                    this.restaurants = response.data
-                }).catch( error => {console.log(error); return });
-
         },
         methods: {
 			processForm: function() {
