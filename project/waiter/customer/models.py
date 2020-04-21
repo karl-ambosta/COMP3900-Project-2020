@@ -30,8 +30,11 @@ class UserProfile(models.Model):
     @receiver(post_save, sender=User)
     def create_profile_for_user(sender, instance=None, created=False, **kargs):
         if created: 
-            UserProfile.objects.create(user=instance)
-            
+            try:
+                UserProfile.objects.create(user=instance)
+            except Exception as e:
+                print('error: {}'.format(e))
+
     @receiver(pre_delete, sender=User)
     def delete_profile_for_user(sender, instance=None, **kargs):
         if instance:
@@ -53,6 +56,7 @@ class Restaurant(models.Model):
         if opening.to_hour == midnight:
             return opening.from_hour <= datetime.time(datetime.now())
         return opening.from_hour <= datetime.time(datetime.now()) < opening.to_hour
+
 
 class Table(models.Model):
     table_number = models.IntegerField()
