@@ -127,13 +127,18 @@ class ChatbotAPILogic:
     # TODO
     ## OPTIONAL: return new order ID and have this come out in chat bot
     def place_order(self, item: str, quantity: int, table_number: int , comments: str):
-        # place order in the system using the given
+        try:
+            owner = get_object_or_404(User.objects.all(), id=1)
+            order_list = get_object_or_404(OrderList.objects.filter(status=1,restaurant=1), table_number=table_number)
+            menu_item = get_object_or_404(MenuItem.objects.all(), name=item)
+            order_list.order_request.create(order_list=order_list, owner=owner, menu_item=menu_item, comments=comments, quantity=quantity)
+            order_list.status = 2
+            order_list.save()
 
-        ## This needs assistance
-
-        # OPTIONAL: return new order ID and have this come out in chat bot
-        ## return order_id #int
-        return True
+            return order_list.id
+        except Exception as e:
+            print(e)
+            return -1
 
     # Need to test
     # Function to call the waiter
