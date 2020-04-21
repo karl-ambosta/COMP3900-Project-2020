@@ -337,7 +337,8 @@ class OrderRequestViewSet(viewsets.ModelViewSet):
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-    permission_classes = [RestaurantAndMenuCategoryPermissions]
+    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [RestaurantAndMenuCategoryPermissions]
     filter_backends = [filters.SearchFilter]
     search_fields = ['id', 'order_list']
     lookup_field = 'id'
