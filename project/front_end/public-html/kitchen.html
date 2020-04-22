@@ -115,16 +115,16 @@
                 <tbody>
                         <template v-for="order in previousOrders">
                             <tr>
-                                <td nowrap class="align-middle">Order #{{ order.id }} - Customer: {{ order.owner }}</td>
+                                <td nowrap class="align-middle">Order #{{ order.id }} - Customer: {{ order.owner }}<br> Table: {{ order.table_number }}</td>
                                 <td>
-                                    Status: {{order.status}}<br>
+                                    Status: {{order.status }}<br>
                                     Order:<br>
                                     <ul>
                                         <div v-for="item in order.order_request">
                                             <div v-for="food in foodNames">
                                                 <div v-if="food.id === item">
                                                     <li>
-                                                        {{ food.name }}
+                                                        {{ getRequest(item).quantity }} x {{ food.name }}
                                                     </li>
                                                 </div>
                                             </div>
@@ -139,11 +139,13 @@
 
         <!-- Menu Tab -->
         <div class="tab-pane fade" id="menu" role="tabpanel" aria-labelledby="menu-tab">
+            <h4 style="text-align: center;"><b>Menu for UNSW Cafe</b></h4>
             <table id="menuapp" class="table table-sm table-borderless table-striped table-hover display nowrap">
                 <thead>
                     <tr>
                     <th style="width: 15%">Item</th>
-                    <th style="width: 75%">Description</th>
+                    <th style="width: 60%">Description</th>
+                    <th style="width: 15%">Category</th>
                     <th style="width: 10%">Price</th>
                     </tr>
                 </thead>
@@ -153,6 +155,7 @@
                         <tr>
                             <td>{{ item.name }}</td>
                             <td>{{ item.description }}</td>
+                            <td>{{ getTypeName(item.menu_category).name }}</td>
                             <td>${{ item.price }}</td>
                         </tr>
                         </template>
@@ -216,7 +219,7 @@
             this.interval = setInterval(() => this.polling(), 5000);
         },
         methods : {
-	    polling: function() {
+	        polling: function() {
                 this.fetchKitchenOrders();
                 this.fetchOrderRequests();
             },
@@ -224,7 +227,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("http://127.0.0.1:8000/orderList/")
+                    .get("http://127.0.0.1:8000/orderList/get_kitchen_orders/")
                     .then((response) => {this.kitchenOrders = response.data})
                     .then(this.cleanData)
                     .catch( error => {console.log(error); 
@@ -352,24 +355,20 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('http://127.0.0.1:8000/menuItems/')
+                .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: 1 }})
                 .then((response) => {
 					this.items = response.data
                 }).catch( error => {console.log(error); });
                 
             axios
-                .get('http://127.0.0.1:8000/menuCategories/')
+                .get('http://127.0.0.1:8000/menuCategories/', { params: { restaurant: 1 }})
                 .then((response) => {
 					this.types = response.data
                 }).catch( error => {console.log(error); });
         },
         methods: {
             getTypeName: function(typeID) {
-                return this.types.filter(function(t) {
-                    if(t.id == typeID) {
-                        return t;
-                    }
-                })
+                return this.types.filter(t => t.id == typeID)[0]
             }
         }
 
@@ -390,12 +389,11 @@
             this.polling();
             this.interval = setInterval(() => this.polling(), 5000);
         },
-        polling: function() {
+        methods : {
+            polling: function() {
                 this.getFoodNames();
                 this.fetchPreviousOrders();
-        },
-        methods : {
-            
+            },
             fetchPreviousOrders: function() {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
@@ -423,6 +421,9 @@
                     .then((response) => {this.foodNames = response.data})
                     .catch( error => {console.log(error); });
             },
+            getRequest: function(requestID) {
+                return activeordersapp.orderRequests.filter(r => r.id == requestID)[0]
+            }
         },
       })
 

@@ -64,7 +64,9 @@ Things that can be added here: <br>
 
 	<div id="app" class="container">
 		<div class="d-sm-flex align-items-center justify-content-between mb-4">
-			<div class="title">Dashboard</div>
+			<div class="title">Dashboard <br>
+				<h4>{{ currentDate }}</h4>
+			</div>
 			<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
 		</div>
         
@@ -76,8 +78,11 @@ Things that can be added here: <br>
 					<div class="card-body">
 						<div class="row no-gutters align-items-center">
 							<div class="col mr-2">
-								<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-								<div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+								<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Total)</div>
+								<template v-for="t in totalEarnings">
+									<div class="h5 mb-0 font-weight-bold text-gray-800">${{ t }}</div>
+								</template>
+								
 							</div>
 							<div class="col-auto">
 								<i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -94,7 +99,10 @@ Things that can be added here: <br>
 						<div class="row no-gutters align-items-center">
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-								<div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+								<template v-for="year in yearlyEarnings">
+									<div class="h5 mb-0 font-weight-bold text-gray-800">${{ year }}</div>
+								</template>
+								
 							</div>
 							<div class="col-auto">
 								<i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -130,26 +138,26 @@ Things that can be added here: <br>
 				</div>
 			</div>
 
-			<!-- Average Dishes Per Order Card -->
+			<!-- Tables Free Card -->
 			<div class="col-xl-3 col-md-6 mb-4">
 				<div class="card border-left-warning shadow h-100 py-2">
 					<div class="card-body">
 						<div class="row no-gutters align-items-center">
 							<div class="col mr-2">
-								<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Av Dishes per Order</div>
-								<div class="h5 mb-0 font-weight-bold text-gray-800">4</div>
+								<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Tables Free</div>
+								<div class="h5 mb-0 font-weight-bold text-gray-800">{{ availableTables.tables_free }}</div>
 							</div>
 							<div class="col-auto">
-								<i class="fas fa-utensils fa-2x text-gray-300"></i>
+								<i class="fas fa-chair fa-2x text-gray-300"></i>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		  
+
 		<div class="row">
-			<div class="col-xl-9">
+			<div class="container">
 				<div class="card shadow mb-4 ">
 					<!-- Card Header - Dropdown -->
 					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -161,7 +169,7 @@ Things that can be added here: <br>
 						<line-chart :data="dataChart" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
 					</div>
 				</div>
-
+<!--
 				<div class="container" style="text-align: center;">
 					<select id="timePeriod" v-model="type">
 						<option value="hourly">by Hour</option>
@@ -172,8 +180,9 @@ Things that can be added here: <br>
 
 					<button class="btn btn-primary" type="submit" v-on:click="changeData">Update Chart</button>
 				</div>
+-->
 			</div>
-
+<!--
 			<div class="col-xl-3 col-md-6 mb-4">
 				<div class="row">
 					<div class="card border-left-warning shadow h-20 py-2">
@@ -191,7 +200,7 @@ Things that can be added here: <br>
 					</div>
 				</div>
 			</div>
-
+-->
 
 		</div>
 
@@ -234,7 +243,6 @@ Things that can be added here: <br>
 		},
 		mounted() {
 			this.renderLineChart();
-			console.log("mounted")
 		},
 		computed: {
 			chartData: function() {
@@ -280,11 +288,21 @@ Things that can be added here: <br>
 		data: {
 			message: "Hello World",
 			type: '',
+			totalEarnings: '',
 			monthlyEarnings: '',
 			yearlyEarnings: '',
 			turnoverRate: '',
 			availableTables: '',
 			averageDishes: '',
+			values: [],
+			currentDate: '',
+
+			/*
+			dataChart: {
+				labels: ["12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am"],
+				earnings: [6, 6, 3, 5, 5, 6, 6, 6, 3, 5, 5, 6, 11],
+				
+			},
 			hourlyData: {
 				labels: ["12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am"],
 				earnings: [6, 6, 3, 5, 5, 6, 6, 6, 3, 5, 5, 6, 11]
@@ -297,42 +315,66 @@ Things that can be added here: <br>
 				labels: ["This week", "Last week", "2 weeks ago", "3 weeks ago", "4 weeks ago", "5 weeks ago", "6 weeks ago"],
 				earnings: [10, 5, 2.5, 0, 2.5, 5, 10]
 			},
-			monthlyData: {
+			*/
+			dataChart: {
 				labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-				earnings: [10, 39, 10, 40, 39, 10, 15, 23, 26, 3, 11, 20],
+				earnings: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			},
 
-			dataChart: {
-				labels: ["12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am"],
-				earnings: [6, 6, 3, 5, 5, 6, 6, 6, 3, 5, 5, 6, 11],
-				
-			}
+			
 		},
 		created() {
+
+			this.currentDate =  moment(new Date()).format('DD MMM YYYY');
+			
+
 			var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
 			axios.defaults.headers.common['Authorization'] = basicAuth
-			
+
+			axios
+				.get('http://127.0.0.1:8000/restaurant/1/get_all_earnings/')
+				.then((response) => {
+					this.totalEarnings = response.data
+				}).catch(error => {console.log(error); return })
+
 			axios
 				.get('http://127.0.0.1:8000/restaurant/1/get_monthly_earnings/')
 				.then((response) => {
-					console.log(response.data)
 					this.monthlyEarnings = response.data
+
+					this.values = []
+
+					for (const property in response.data) {
+						for(const p in response.data[property]) {
+							if(response.data[property][p] == null) {
+								this.values.push(0)
+							} else {
+								this.values.push(response.data[property][p])
+							}
+						}
+					}
+
+					this.dataChart = {
+						labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+						earnings: this.values,
+					}
+					
 				}).catch(error => {console.log(error); return })
+			
+			
 
 			axios
 				.get('http://127.0.0.1:8000/restaurant/1/get_yearly_earnings/')
 				.then((response) => {
-					console.log(response.data)
 					this.yearlyEarnings = response.data
 				}).catch(error => {console.log(error); return })
 
 			axios
 				.get('http://127.0.0.1:8000/restaurant/1/get_available_tables/')
 				.then((response) => {
-					console.log(response.data)
 					this.availableTables = response.data
 				}).catch(error => {console.log(error); return })
-				
+			/*
 			axios
 				.get('http://127.0.0.1:8000/restaurant/1/get_average_dishes_per_order/')
 				.then((response) => {
@@ -346,7 +388,9 @@ Things that can be added here: <br>
 					console.log(response.data)
 					this.averageDishes = response.data
 				}).catch(error => {console.log(error); return })
+			*/
 		},
+
 		methods: {
 			changeData: function() {
 				if(this.type == 'hourly') {
@@ -370,7 +414,7 @@ Things that can be added here: <br>
 						earnings: this.monthlyData.earnings,
 					}
 				}
-			}
+			},
 		}
 	});
 

@@ -26,6 +26,9 @@ var titleApp = new Vue ({
             if(this.chosen_restaurant == '') {
                 message = document.getElementById('submitMessage')
                 message.textContent = "Please fill out all fields"
+            } else if(!Number.isInteger(Number(this.chosen_table)) || Number(this.chosen_table) < 0 || Number(this.chosen_table) > 10 || this.chosen_table == '') {
+                message = document.getElementById('submitMessage')
+                message.textContent = "Invalid Table Number (Select 1-10)"
             } else {
                 rID = this.restList.filter(x => x.name == this.chosen_restaurant)[0].id
                 sessionStorage.setItem('restaurant', JSON.stringify(
@@ -36,6 +39,22 @@ var titleApp = new Vue ({
                 
                 this.restaurant = JSON.parse(sessionStorage.restaurant)
             } 
+        },
+        callWaiter: function() {
+            var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
+            var message = "Table: #" + titleApp.restaurant.tableNo + " requires assistance"
+            axios.defaults.headers.common['Authorization'] = basicAuth;
+            axios
+                .post('http://127.0.0.1:8000/waiterCalls/', {
+                    "table_number": titleApp.restaurant.tableNo,
+                    "caller": 2,
+                    "status": message
+                })
+                .then((response) => {
+                        console.log(response.data)
+                }).catch( error => {console.log(error); });
+
+            document.getElementById('confirmCall').textContent = "A waiter has been notified and will be with you shortly!"
         },
         finaliseOrders: function() {
             // set orders to finished
@@ -91,8 +110,10 @@ var orderApp = new Vue({
               console.log({ name: this.custName, restaurant: this.restaurant, table_no: this.table_no, email: this.email, mobile: this.mobile });
         },
         convertTime: function(timeString) {
-            var s = moment(timeString, "HH:mm A").format('hh:mm A')
-            return s;
+            var date = moment(timeString);
+            var dateComponent = date.format('ddd DD MMM YYYY');
+            var timeComponent = date.format('hh:mm A');
+            return timeComponent + " on " + dateComponent;
         },
         updateOrderInfo: function(orderID) {
             infoApp.order = this.orderList.filter(item => item.id == orderID)[0]
@@ -130,11 +151,7 @@ var orderApp = new Vue({
                     axios
                     .post('http://127.0.0.1:8000/menuItems/' + order.id + '/order/', {comments: order.comment, quantity: order.quantity })
                     .then((response) => {
-                        console.log(response.data)
-                        console.log("i = " + i)
-                        console.log("length = " + (this.currentOrder.length))
                         if(i == (this.currentOrder.length) ) {
-                            console.log("sending order of " + (i+1) + "items")
                             axios
                             .post('http://127.0.0.1:8000/orderList/' + sessionStorage.getItem('orderID') + '/send_order/', )
                             .then((response) => {
