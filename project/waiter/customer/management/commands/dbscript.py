@@ -98,9 +98,9 @@ class Command(BaseCommand):
         restaurant3 = Restaurant.objects.get(name = 'Barker St Cafe')
 
         for i in range(1,8): 
-            restaurant1_hours = OpeningHours.objects.create(restaurant = restaurant1, day = i, from_hour = datetime.time(6, 00),to_hour = datetime.time(17, 00))
-            restaurant2_hours = OpeningHours.objects.create(restaurant = restaurant2, day = i, from_hour = datetime.time(6, 00),to_hour = datetime.time(17, 00))
-            restaurant3_hours = OpeningHours.objects.create(restaurant = restaurant3, day = i, from_hour = datetime.time(6, 00),to_hour = datetime.time(17, 00))
+            restaurant1_hours = OpeningHours.objects.create(restaurant = restaurant1, day = i, from_hour = datetime.time(6, 00),to_hour = datetime.time(23, 00))
+            restaurant2_hours = OpeningHours.objects.create(restaurant = restaurant2, day = i, from_hour = datetime.time(6, 00),to_hour = datetime.time(23, 00))
+            restaurant3_hours = OpeningHours.objects.create(restaurant = restaurant3, day = i, from_hour = datetime.time(6, 00),to_hour = datetime.time(23, 00))
             restaurant1_hours.save()
             restaurant2_hours.save()
             restaurant3_hours.save()

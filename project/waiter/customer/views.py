@@ -152,7 +152,8 @@ class FacebookLogin(SocialLoginView):
 
 class OrderListViewSet(viewsets.ModelViewSet):
     serializer_class = OrderListSerializer
-    permission_classes = [OrderListPermissions]
+    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [OrderListPermissions]
     lookup_field = 'id'
 
     def create(self, request):
@@ -252,7 +253,7 @@ class OrderListViewSet(viewsets.ModelViewSet):
             print(e)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post'], detail=True, permission_classes =[IsWaiter|IsManager|IsKitchen|IsCashier])
+    @action(methods=['post'], detail=True, permission_classes =[IsCustomer|IsWaiter|IsManager|IsKitchen|IsCashier])
     def set_order_waiting_payment(self, request, id=None):
         try:
             order_list = get_object_or_404(OrderList.objects.filter(status=6), id=id)
@@ -293,19 +294,19 @@ class OrderListViewSet(viewsets.ModelViewSet):
     
     @action(detail=False)
     def get_order_history(self, request, id=None, permission_classes =[IsCustomer|IsWaiter|IsCashier|IsManager|IsKitchen]):
-        qs = self.get_queryset().filter(status=8)
+        qs = self.get_queryset().filter(Q(status=6) | Q(status=7) | Q(status=8))
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)
 
     @action(detail=False)
-    def get_waiter_orders(self, request, id=None, permission_classes = [IsWaiter|IsCashier|IsManager|IsKitchen]):
+    def get_waiter_orders(self, request, id=None, permission_classes = [permissions.IsAuthenticated]):
         qs = self.get_queryset().filter(Q(status=5) | Q(status=6))
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, permission_classes = [IsCustomer|IsWaiter|IsCashier|IsManager])
+    @action(detail=False, permission_classes = [permissions.IsAuthenticated])
     def get_cashier_orders(self, request, id=None):
-        qs = self.get_queryset().filter(Q(status=7) | Q(status=8))
+        qs = self.get_queryset().filter(Q(status=7)) # removed:  | Q(status=8)
         serializer = OrderListSerializer(qs, many=True)
         return Response(serializer.data)    
 
