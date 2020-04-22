@@ -118,7 +118,7 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/orderList/')
+                .get('http://127.0.0.1:8000/orderList/')
                 .then((response) => {
                     for(i = 0; i < response.data.length; i++) {
                         if(response.data[i].owner == sessionStorage.getItem('user')) {

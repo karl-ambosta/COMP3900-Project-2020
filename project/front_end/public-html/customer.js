@@ -132,22 +132,41 @@ var orderApp = new Vue({
                     .then((response) => {
                         console.log(response.data)
                         console.log("i = " + i)
-                        console.log("length-1 = " + (this.currentOrder.length-1))
-                        if(i == (this.currentOrder.length - 1) ) {
+                        console.log("length = " + (this.currentOrder.length))
+                        if(i == (this.currentOrder.length) ) {
                             console.log("sending order of " + (i+1) + "items")
                             axios
                             .post('http://127.0.0.1:8000/orderList/' + sessionStorage.getItem('orderID') + '/send_order/', )
                             .then((response) => {
-                                
-                            }).catch( error => {console.log(error); return})
+                                this.currentOrder = []
+                                document.getElementById("orderMessage").style.color = "green"
+                                document.getElementById("orderMessage").textContent = "Order successfully sent!"
+                            }).catch( error => {console.log(error); 
+                                if (error.response) {
+                
+                                    console.log(error.response.data);
+                                    console.log(error.response.status);
+                                    console.log(error.response.headers);
+                                } else if (error.request) {
+                                    console.log(error.request);
+                                } else {
+                                    console.log('Error', error.message);
+                                }
+                                console.log(error.config);return })
                         }
-                    }).catch( error => {console.log(error); return })
+                    }).catch( error => {console.log(error); 
+                        if (error.response) {
+        
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            console.log(error.request);
+                        } else {
+                            console.log('Error', error.message);
+                        }
+                        console.log(error.config);return })
                }
-
-               this.currentOrder = []
-
-                document.getElementById("orderMessage").style.color = "green"
-                document.getElementById("orderMessage").textContent = "Order successfully sent!"
 
             }).catch( error => {console.log(error); 
                 if (error.response) {

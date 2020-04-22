@@ -153,13 +153,13 @@
             this.restaurant = JSON.parse(sessionStorage.restaurant);
             
             await axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/get_inactive_items/', { params: { restaurant: this.restaurant.id} })
+                .get('http://127.0.0.1:8000/menuItems/get_inactive_items/', { params: { restaurant: this.restaurant.id} })
                 .then((response) => {
                     this.itemList = response.data
                 }).catch( error => {console.log(error); return; })
 
             await axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/', { params: { restaurant: this.restaurant.id} })
+                .get('http://127.0.0.1:8000/menuCategories/', { params: { restaurant: this.restaurant.id} })
                 .then((response) => {
                     this.typeList = response.data
                 }).catch( error => {console.log(error); return; })
@@ -172,7 +172,7 @@
         methods: {
             updateData: function() {
                 axios
-                    .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/get_inactive_items/', { params: { restaurant: this.restaurant.id} })
+                    .get('http://127.0.0.1:8000/menuItems/get_inactive_items/', { params: { restaurant: this.restaurant.id} })
                     .then((response) => {
                         this.itemList = response.data
                     }).catch( error => {console.log(error); return; })
@@ -193,7 +193,7 @@
                     payload = {name: this.selectedItem.name, description: this.selectedItem.description, price: this.selectedItem.price, menu_category: this.getTypeID, active: true}
                     
                     axios
-                        .put('https://api.unswcafe.tuesdaywaiter.tk/menuItems/' + this.selectedItem.id + "/", payload)
+                        .put('http://127.0.0.1:8000/menuItems/' + this.selectedItem.id + "/", payload)
                         .then((response) => {
                             this.updateData();
                         }).catch( error => {console.log(error); ;return })

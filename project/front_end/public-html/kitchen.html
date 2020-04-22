@@ -187,7 +187,7 @@
             logoutUser: function() {
                 console.log("here")
                 axios
-                    .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/logout/', null)
+                    .post('http://127.0.0.1:8000/rest-auth/logout/', null)
                     .then((response) => {
                         window.open("index.html", "_self")
                     }).catch( error => {console.log(error); return })
@@ -224,16 +224,27 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/")
+                    .get("http://127.0.0.1:8000/orderList/")
                     .then((response) => {this.kitchenOrders = response.data})
                     .then(this.cleanData)
-                    .catch( error => {console.log(error); });
+                    .catch( error => {console.log(error); 
+                                if (error.response) {
+                
+                                    console.log(error.response.data);
+                                    console.log(error.response.status);
+                                    console.log(error.response.headers);
+                                } else if (error.request) {
+                                    console.log(error.request);
+                                } else {
+                                    console.log('Error', error.message);
+                                }
+                                console.log(error.config);return })
             },
             fetchOrderRequests: function() {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderRequest/")
+                    .get("http://127.0.0.1:8000/orderRequest/")
                     .then((response) => {this.orderRequests = response.data})
                     .catch( error => {console.log(error); });
             },
@@ -241,7 +252,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_preparing/")
+                    .post("http://127.0.0.1:8000/orderList/" + item.id + "/set_order_preparing/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
@@ -251,7 +262,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_cooking/")
+                    .post("http://127.0.0.1:8000/orderList/" + item.id + "/set_order_cooking/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
@@ -261,7 +272,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_pickup/")
+                    .post("http://127.0.0.1:8000/orderList/" + item.id + "/set_order_pickup/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
@@ -272,7 +283,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .get("https://api.unswcafe.tuesdaywaiter.tk/menuItems/")
+                    .get("http://127.0.0.1:8000/menuItems/")
                     .then((response) => {this.foodNames = response.data})
                     .catch( error => {console.log(error); });
             },
@@ -281,7 +292,7 @@
                 var message = "Order: #" + item.id + " ready for pick up"
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .post('https://api.unswcafe.tuesdaywaiter.tk/waiterCalls/', {
+                    .post('http://127.0.0.1:8000/waiterCalls/', {
                         "table_number": item.table_number,
                         "caller": 1,
                         "status": message
@@ -341,13 +352,13 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .get('http://127.0.0.1:8000/menuItems/')
                 .then((response) => {
 					this.items = response.data
                 }).catch( error => {console.log(error); });
                 
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+                .get('http://127.0.0.1:8000/menuCategories/')
                 .then((response) => {
 					this.types = response.data
                 }).catch( error => {console.log(error); });
@@ -379,24 +390,36 @@
             this.polling();
             this.interval = setInterval(() => this.polling(), 5000);
         },
-        methods : {
-            polling: function() {
+        polling: function() {
                 this.getFoodNames();
                 this.fetchPreviousOrders();
-            },
+        },
+        methods : {
+            
             fetchPreviousOrders: function() {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/get_order_history/")
+                    .get("http://127.0.0.1:8000/orderList/get_order_history/")
                     .then((response) => {this.previousOrders = response.data})
-                    .catch( error => {console.log(error); });
+                    .catch( error => {console.log(error); 
+                                if (error.response) {
+                
+                                    console.log(error.response.data);
+                                    console.log(error.response.status);
+                                    console.log(error.response.headers);
+                                } else if (error.request) {
+                                    console.log(error.request);
+                                } else {
+                                    console.log('Error', error.message);
+                                }
+                                console.log(error.config);return })
             },
             getFoodNames: function(food) {
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("https://api.unswcafe.tuesdaywaiter.tk/menuItems/")
+                    .get("http://127.0.0.1:8000/menuItems/")
                     .then((response) => {this.foodNames = response.data})
                     .catch( error => {console.log(error); });
             },
