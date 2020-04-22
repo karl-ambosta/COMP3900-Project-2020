@@ -10,7 +10,7 @@ class IsUser(permissions.BasePermission):
     """
     def has_object_permission(self, request, view, obj):
         if request.user:
-            if request.user.is_superuser:
+            if request.user.is_superuser or request.user.is_staff:
                 return True
             else:
                 return obj.username == request.user.username

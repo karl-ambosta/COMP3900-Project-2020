@@ -132,6 +132,7 @@ var orderApp = new Vue({
                     .then((response) => {
                         console.log(response.data)
                         console.log("i = " + i)
+                        console.log("length-1 = " + (this.currentOrder.length-1))
                         if(i == (this.currentOrder.length - 1) ) {
                             console.log("sending order of " + (i+1) + "items")
                             axios
