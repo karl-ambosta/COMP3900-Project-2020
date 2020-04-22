@@ -193,6 +193,7 @@
                 axios
                     .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/logout/', null)
                     .then((response) => {
+                        sessionStorage.clear()
                         window.open("index.html", "_self")
                     }).catch( error => {console.log(error); return })
             } 

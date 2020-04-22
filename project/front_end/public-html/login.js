@@ -25,7 +25,11 @@ var loginApp = new Vue({
                     this.results = response.data.key;
                     sessionStorage.user = this.username
                     sessionStorage.btoa = btoa(this.username + ":" + this.password)
-                    // token = sessionStorage.getItem('token')
+
+                    sessionStorage.setItem('restaurant', JSON.stringify(
+                        { id: 1, name: 'Restaurant #1'}
+                    ));
+
                     var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                     axios.defaults.headers.common['Authorization'] = basicAuth
 

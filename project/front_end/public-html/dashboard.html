@@ -31,163 +31,210 @@ Things that can be added here: <br>
   agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
   language-code="en"
   ></df-messenger>
-    <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
-        <img src="pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
-        <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link disabled" href="#">Dashboard<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="menu_edit.html" >Edit Menu</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="history.html">Restauraunt History</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="old_items.html">Old Menu Items</a>
-                </li>
-            </ul>
-            <button class="btn btn-outline-light my-2 my-sm-0" onclick="logout()">Logout
-              <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
-          </button>
-        </div>
-    </nav>
+  	<div id="logoutApp">
+		<nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+			<img src="pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+			<a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link disabled" href="#">Dashboard<span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="menu_edit.html" >Edit Menu</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="history.html">Restauraunt History</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="old_items.html">Old Menu Items</a>
+					</li>
+				</ul>
+				<button class="btn btn-outline-light my-2 my-sm-0" v-on:click="logoutUser()">Logout
+				<span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+			</button>
+			</div>
+		</nav>
+  	</div>
 
-    
-
-    <div class="container">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <div class="title">Dashboard</div>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-          </div>
+	<div id="app" class="container">
+		<div class="d-sm-flex align-items-center justify-content-between mb-4">
+			<div class="title">Dashboard</div>
+			<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+		</div>
         
         <div class="row">
 
-            <!-- Earnings (Monthly) Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+			<!-- Earnings (Monthly) Card -->
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="card border-left-primary shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
+								<div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+							</div>
+							<div class="col-auto">
+								<i class="fas fa-calendar fa-2x text-gray-300"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <!-- Earnings (Annual) Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+			<!-- Earnings (Annual) Card -->
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="card border-left-success shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
+								<div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+							</div>
+							<div class="col-auto">
+								<i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <!-- Reminders Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Reminders</div>
-                      <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">6</div>
-                        </div>
-                        <div class="col">
-                          <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+			<!-- Table Turnover Card -->
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="card border-left-info shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Turnover Rate(hr)</div>
+								<div class="row no-gutters align-items-center">
+									<div class="col-auto">
+										<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">6</div>
+									</div>
+									<div class="col">
+										<div class="progress progress-sm mr-2">
+											<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-auto">
+								<i class="far fa-clock fa-2x text-gray-300"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <!-- Pending Messages Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Messages</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-comments fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+			<!-- Average Dishes Per Order Card -->
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="card border-left-warning shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center">
+							<div class="col mr-2">
+								<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Av Dishes per Order</div>
+								<div class="h5 mb-0 font-weight-bold text-gray-800">4</div>
+							</div>
+							<div class="col-auto">
+								<i class="fas fa-utensils fa-2x text-gray-300"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		  
+		<div class="row">
+			<div class="col-xl-9">
+				<div class="card shadow mb-4 ">
+					<!-- Card Header - Dropdown -->
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+					</div>
+
+					<!-- Card Body -->
+					<div class="card-body">
+						<line-chart :data="dataChart" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
+					</div>
+				</div>
+
+				<div class="container" style="text-align: center;">
+					<select id="timePeriod" v-model="type">
+						<option value="hourly">by Hour</option>
+						<option value="weekly">by Week</option>
+						<option value="daily">by Day</option>
+						<option value="monthly">by Month</option>
+					</select>
+
+					<button class="btn btn-primary" type="submit" v-on:click="changeData">Update Chart</button>
+				</div>
+			</div>
+
+			<div class="col-xl-3 col-md-6 mb-4">
+				<div class="row">
+					<div class="card border-left-warning shadow h-20 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Available Tables</div>
+									<div class="h5 mb-0 font-weight-bold text-gray-800">{{ availableTables.tables_free }}</div>
+								</div>
+								<div class="col-auto">
+									<i class="fas fa-chair fa-2x text-gray-300"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
 
     </div>
     
-	<div id="app" class="container">
-		<div class="card shadow mb-4">
-			<!-- Card Header - Dropdown -->
-			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-				<h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-			</div>
-
-			<!-- Card Body -->
-			<div class="card-body">
-				<line-chart :data="dataChart" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
-			</div>
-		</div>
-
-		<div class="container" style="text-align: center;">
-			<select id="timePeriod" v-model="type">
-				<option value="hourly">by Hour</option>
-				<option value="weekly">by Week</option>
-				<option value="daily">by Day</option>
-				<option value="monthly">by Month</option>
-			</select>
-
-			<button class="btn btn-primary" type="submit" v-on:click="changeData">Update Chart</button>
-		</div>
-	</div>
     
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
 <script>
 
+	var logoutApp = new Vue ({
+        el: '#logoutApp',
+        delimiters: ['{{', '}}'],
+        data: {
+
+        },
+        methods: {
+            logoutUser: function() {
+                console.log("here")
+                axios
+                    .post('http://127.0.0.1:8000/rest-auth/logout/', null)
+                    .then((response) => {
+						sessionStorage.clear()
+                        window.open("index.html", "_self")
+                    }).catch( error => {console.log(error); return })
+            } 
+        }
+    })
+
 	Vue.component("line-chart", {
 		extends: VueChartJs.Line,
 		props: ["data", "options"],
+		created() {
+
+		},
 		mounted() {
 			this.renderLineChart();
+			console.log("mounted")
 		},
 		computed: {
 			chartData: function() {
@@ -233,6 +280,11 @@ Things that can be added here: <br>
 		data: {
 			message: "Hello World",
 			type: '',
+			monthlyEarnings: '',
+			yearlyEarnings: '',
+			turnoverRate: '',
+			availableTables: '',
+			averageDishes: '',
 			hourlyData: {
 				labels: ["12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am"],
 				earnings: [6, 6, 3, 5, 5, 6, 6, 6, 3, 5, 5, 6, 11]
@@ -255,6 +307,45 @@ Things that can be added here: <br>
 				earnings: [6, 6, 3, 5, 5, 6, 6, 6, 3, 5, 5, 6, 11],
 				
 			}
+		},
+		created() {
+			var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
+			axios.defaults.headers.common['Authorization'] = basicAuth
+			
+			axios
+				.get('http://127.0.0.1:8000/restaurant/1/get_monthly_earnings/')
+				.then((response) => {
+					console.log(response.data)
+					this.monthlyEarnings = response.data
+				}).catch(error => {console.log(error); return })
+
+			axios
+				.get('http://127.0.0.1:8000/restaurant/1/get_yearly_earnings/')
+				.then((response) => {
+					console.log(response.data)
+					this.yearlyEarnings = response.data
+				}).catch(error => {console.log(error); return })
+
+			axios
+				.get('http://127.0.0.1:8000/restaurant/1/get_available_tables/')
+				.then((response) => {
+					console.log(response.data)
+					this.availableTables = response.data
+				}).catch(error => {console.log(error); return })
+				
+			axios
+				.get('http://127.0.0.1:8000/restaurant/1/get_average_dishes_per_order/')
+				.then((response) => {
+					console.log(response.data)
+					this.averageDishes = response.data
+				}).catch(error => {console.log(error); return })
+
+			axios
+				.get('http://127.0.0.1:8000/restaurant/1/get_table_turnover/')
+				.then((response) => {
+					console.log(response.data)
+					this.averageDishes = response.data
+				}).catch(error => {console.log(error); return })
 		},
 		methods: {
 			changeData: function() {

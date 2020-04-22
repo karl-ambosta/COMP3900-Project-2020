@@ -63,8 +63,8 @@
         
         <br>
 
-        <div class="container" style="text-align: center; background-color:transparent">
-            <button id="customerEnd" type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" onclick="window.open('../general/login.html', '_self')">Finish</button>
+        <div id="logoutApp" class="container" style="text-align: center; background-color:transparent">
+            <button id="customerEnd" type="button" class="btn btn-lg btn-outline-light my-2 my-sm-0" v-on:click="logoutUser()">Finish</button>
         </div>
 
         <div class="modal" id="myModal">
@@ -97,11 +97,33 @@
 			</div>
 			</div>
 		</div>
-</div>
+    </div>
 
 
     </body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var logoutApp = new Vue ({
+        el: '#logoutApp',
+        delimiters: ['{{', '}}'],
+        data: {
 
+        },
+        methods: {
+            logoutUser: function() {
+                console.log("here")
+                axios
+                    .post('http://127.0.0.1:8000/rest-auth/logout/', null)
+                    .then((response) => {
+                        sessionStorage.clear()
+                        window.open("index.html", "_self")
+                    }).catch( error => {console.log(error); return })
+            } 
+        }
+    })
+
+</script>
 <style>
 body {
     background-image: url("../templates/pictures/background-texture.jpg");

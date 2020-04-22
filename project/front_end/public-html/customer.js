@@ -131,7 +131,8 @@ var orderApp = new Vue({
                     .post('http://127.0.0.1:8000/menuItems/' + order.id + '/order/', {comments: order.comment, quantity: order.quantity })
                     .then((response) => {
                         console.log(response.data)
-                        if(i == this.currentOrder.length - 1) {
+                        console.log("i = " + i)
+                        if(i == (this.currentOrder.length - 1) ) {
                             console.log("sending order of " + (i+1) + "items")
                             axios
                             .post('http://127.0.0.1:8000/orderList/' + sessionStorage.getItem('orderID') + '/send_order/', )
