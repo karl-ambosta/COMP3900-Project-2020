@@ -97,26 +97,23 @@ var registerApp = new Vue ({
             await axios
                 .post('http://127.0.0.1:8000/rest-auth/register/', details)
                 .then((response) => {
-
                     console.log(response.data)
+                    message = document.getElementById("errorMessage2")
+                    message.textContent = "User has been successfully registered. Please login in!"
+                    message.style.color = "greenyellow"
 
+                    this.username = ''
+                    this.email = ''
+                    this.password = ''
+                    this.confirmPassword = ''
                 }).catch((error) => {
                     console.log(error);
-                    return
-                    /*
-                    // Error
-                    if (error.response) {
+                    message = document.getElementById("errorMessage2")
+                    message.textContent = "Cannot register user!"
+                    message.style.color = "greenyellow"
 
-                        if(error.response.status == 500) {
-
-                        }
-                        console.log(error.response.data);
-                        document.getElementById('errorMessage2').textContent = error.response.data
-                        console.log(error.response.status);
-                        
-                        console.log(error.config);
-                    }
-                    */
+                    this.password = ''
+                    this.confirmPassword = ''
                 });
 
             

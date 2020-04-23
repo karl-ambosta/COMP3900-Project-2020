@@ -47,7 +47,7 @@
 		
 		<div class="title" style="text-align: center;">Menu</div>
 
-		<div id="app">
+	<div id="app">
 
 			<div class="container" style="width: 25%; text-align: center;">
 					<div>
@@ -58,6 +58,15 @@
 							</template>
 						</select>
 					</div>
+
+					<br>
+
+					<div >
+						<div class="input-group" style="width: 100%; left: 0%;">
+						   <input id="searchInput" type="text" class="form-control" v-model="searchInput" placeholder="Search..." />
+						   <button class="btn btn-primary btn-block" type="submit" style="width: 25%;" v-on:click="searchItem">Search</button>
+						</div>
+				   </div>
 			</div>
 
 			<hr>
@@ -75,7 +84,7 @@
 						<a class="nav-link" onclick="filterType(this)" value="all" style="text-align: center;">Show All</a>
 					</li>
 					<template v-for="t in types">
-						<template v-if="t.restaurant == getRestaurantID(chosen_restaurant)[0].id">
+						<template v-if="t.restaurant == getRestaurantID(chosen_restaurant)">
 							<li class="nav-item">
 								<a class="nav-link" onclick="filterType(this)" v-bind:value="t.name" style="text-align: center;">{{ t.name }}</a>
 							</li>
@@ -87,7 +96,7 @@
 
 		<div class="container">
 			<template v-for="t in types">
-				<template v-if="t.restaurant == getRestaurantID(chosen_restaurant)[0].id">
+				<template v-if="t.restaurant == getRestaurantID(chosen_restaurant)">
 					<div v-bind:id="t.name" class="items">
 						<div class="category_title">{{ t.name }}</div>
 						<template v-for="(item,index) in itemsOfType(t.id)">
@@ -109,6 +118,51 @@
 				</template>
 			</template>
 		</div>
+
+		<!-- Menu Modal -->
+		<div class="modal" id="searchModal" >
+			<div class="modal-dialog">
+				<div class="modal-content" style=" background-color: transparent;">
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 style="text-align: center; color: white;">Search Results for <br>{{ chosen_restaurant }}</h4>
+						<button type="button" class="close"  data-dismiss="modal" onclick="document.getElementById('searchModal').style.display = 'none'">&times;</button>
+					</div>
+			
+					<!-- Modal body -->
+					<div class="modal-body" style="background-color: transparent;">
+						<div class="container2"> 
+							<template v-for="t in types">
+								<template v-if="t.restaurant == getRestaurantID(t.name)">
+									
+									<template v-for="item in searchResults">
+										<template v-if="item.menu_category == t.id">
+											<div class="category_title">{{ t.name }}</div>
+											<div class="row">
+												<div class="col">
+													<div class="border" style="width: 125%;">
+														<img v-bind:id="item.id" class="imgZoom" v-bind:src="'../../waiter/' + item.picture" align="left" width="150" height="100">
+														<div class="item_text">
+															<h5><b>{{ item.name }}</b></h5>
+															<p>{{ item.description }}</p>
+															<h5 class="price_text" style="left: 45%"><b>${{ item.price }}</b></h5>
+															
+														</div>
+													</div>
+												</div>
+											</div>
+										</template>
+									</template>
+								</template>
+							</template>
+						</div>  
+					</div>
+				</div>
+			</div>
+		</div>       
+
+
+
 	</div>
 
 	<!-- The Modal -->
@@ -190,7 +244,7 @@
 										<div class="checkbox mb-3">
 										</div>
 										<button class="btn btn-lg btn-outline-light btn-block" type="submit">Register</button><br>
-										<p id="errorMessage2" style="color:red"></p>
+										<p id="errorMessage2"></p>
 										<p class="mt-5 mb-3 text-info">© 2019-2020</p>
 									</form>
 								</div>
@@ -250,7 +304,9 @@
 		  restaurants: [
 
 		  ],
-		  chosen_restaurant: 'Restaurant #1'
+		  chosen_restaurant: 'UNSW Cafe',
+		  searchInput: '',
+		  searchResults: []
 		},
 		created() {
 			var basicAuth = 'Basic ' + btoa('admin1' + ':' + 'globalpass')
@@ -319,18 +375,38 @@
 			},
 			getRestaurantID: function(name) {
 				c = this.chosen_restaurant
-				return this.restaurants.filter(function(r) {
-					if(r.name == c) {
-						return r;
-					};
-				}) 
-			}
+				return this.restaurants.filter(r => r.name == c)[0].id
+			},
+			searchItem: function() {
+				axios
+					.get('http://127.0.0.1:8000/menuItems/?search=' + this.searchInput)
+					.then((response) => {
+						console.log(response.data)
+						this.searchResults = response.data
+					}).catch( error => {console.log(error); return; })
+
+				document.getElementById("searchInput").value = ''
+				document.getElementById("searchModal").style.display = "block"
+			},
+			typeInSearch: function(categoryID) {
+				count = this.searchResults.filter(x => x.menu_category == categoryID)[0]
+				if(count > 0) {
+					console.log("category " + categoryID + " in search items")
+					return true
+				} else {
+					console.log("category " + categoryID + " not in search items")
+					return false
+				}
+			},
+			searchOfType: function(typeID) {
+				return this.searchResults.filter(item => item.menu_category == typeID)[0]
+			},
 		},
 		watch: {
     		chosen_restaurant: function() {
 				showTypes();
 			}
-    }
+    	}
       })
 
 </script>
