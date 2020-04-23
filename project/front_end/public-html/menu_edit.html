@@ -593,6 +593,11 @@
                 if(typeInfo.menu_item.length == 0) {
                     axios
                         .delete('http://127.0.0.1:8000/menuCategories/' + typeInfo.id + '/')
+                        .then((response) => {
+                            this.updateData();
+                        }).catch(error => {console.log(error); return })
+
+
                 } else {
                     console.log("this category is NOT empty")
                     message = document.getElementById('message')
