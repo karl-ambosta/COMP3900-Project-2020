@@ -2,13 +2,20 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <title>Waiter - Customer Details</title>
     </head>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <body>
+        <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+        <df-messenger
+            intent="WELCOME"
+            chat-title="UNSW Cafe"
+            agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
+            language-code="en">
+        </df-messenger>
         
         <div class="title">Customer Page</div>
 
