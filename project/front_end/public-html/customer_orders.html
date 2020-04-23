@@ -183,7 +183,7 @@
                                                 <div class="row">
                                                     <div class="col">
                                                         <div class="border">
-                                                            <img v-bind:id="item.name" class="imgZoom" v-bind:src="'../../waiter/' + item.picture" align="left">
+                                                            <img v-bind:id="item.id" class="imgZoom" v-bind:src="'../../waiter/' + item.picture" align="left">
                                                             <div class="item_text">
                                                                 <h5><b>{{ item.name }}</b></h5>
                                                                 <p>{{ item.description }}</p>
@@ -192,7 +192,7 @@
                                                             </div>
                                                             <div class="addButton">
                                                                 <div class="btn-group dropright">
-                                                                    <button v-bind:id="item.name" type="button" class="btn btn-lg btn-outline-danger dropdown-toggle" @click="updateItemDetails(item.name)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Customise</button>
+                                                                    <button v-bind:id="item.id" type="button" class="btn btn-lg btn-outline-danger dropdown-toggle" @click="updateItemDetails(item.id)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Customise</button>
                                                                     <span class="sr-only">Toggle Dropdown</span>
                                                                     </button>
                                                                     <form class="dropdown-menu p-4"  @submit.prevent="processForm">
@@ -204,7 +204,7 @@
                                                                             <label class="text" for="email"><b>Comments for Chef: </b></label>
                                                                             <textarea type='text' v-model="comment" id='chefNotes' name='chefNotes' style='width: 300px; border: solid 1px black;' placeholder='Add any notes for the chef. e.g. Add more, less of something'></textarea>					
                                                                         </div>
-                                                                        <button type="submit" class="btn btn-lg btn-primary" v-on:click="processForm" data-dismiss="modal">Add to Order</button>
+                                                                        <button type="submit" class="btn btn-lg btn-primary" v-on:click="processForm()" data-dismiss="modal">Add to Order</button>
                                                                     </form>
                                                                 </div>
                                                             </div>

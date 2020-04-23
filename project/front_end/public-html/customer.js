@@ -159,8 +159,8 @@ var orderApp = new Vue({
                                 document.getElementById("orderMessage").style.color = "green"
                                 document.getElementById("orderMessage").textContent = "Order successfully sent!"
                             }).catch( error => {console.log(error); 
+                                /*
                                 if (error.response) {
-                
                                     console.log(error.response.data);
                                     console.log(error.response.status);
                                     console.log(error.response.headers);
@@ -169,36 +169,14 @@ var orderApp = new Vue({
                                 } else {
                                     console.log('Error', error.message);
                                 }
-                                console.log(error.config);return })
+                                console.log(error.config); */ return })
                         }
-                    }).catch( error => {console.log(error); 
-                        if (error.response) {
-        
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers);
-                        } else if (error.request) {
-                            console.log(error.request);
-                        } else {
-                            console.log('Error', error.message);
-                        }
-                        console.log(error.config);return })
-               }
+                    }).catch( error => {console.log(error); return })
+                }
 
             }).catch( error => {console.log(error); 
-                if (error.response) {
-
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);return })
-
-            
+                document.getElementById("orderMessage").style.color = "red"
+                document.getElementById("orderMessage").textContent = "Cannot place an order. Restaurant is closed!" })
         },
         getStatusName: function(statusID) {
             if(statusID == 2) {
@@ -227,7 +205,7 @@ var orderApp = new Vue({
                     this.orderList = response.data.filter(item => item.owner == titleApp.userName)
                 }).catch( error => {console.log(error); return});
                 
-            }, 5000)
+            }, 3000)
         },   
     },
 })
@@ -262,7 +240,7 @@ var menuApp = new Vue({
     el: '#menuApp',
     delimiters: ['{{', '}}'],
     data: {
-        itemName: '',
+        itemID: '',
         quantity: 0,
         comment: '',
         items: [
@@ -296,7 +274,7 @@ var menuApp = new Vue({
         resetFields: function() {
             this.quantity = ''
             this.comment = ''
-            this.itemName = ''
+            this.itemID = ''
         }
     },
     methods: {
@@ -314,18 +292,18 @@ var menuApp = new Vue({
                 }
             }
         },
-        updateItemDetails: function(itemName) {
-            if(itemName != null) {
-                this.itemName = itemName
+        updateItemDetails: function(itemID) {
+            if(itemID != null) {
+                this.itemID = itemID
             }
         },
         processForm: function() {
             // send input to database
             // POST { orderList object, menuItem object, comments, quantity}
-            idx = this.items.findIndex(x => x.name == this.itemName)
+            idx = this.items.findIndex(x => x.id == this.itemID)
             item = this.items[idx]
             
-            orderApp.currentOrder.push({ id: item.id, itemName: this.itemName, quantity: this.quantity, comment: this.comment, price: item.price });
+            orderApp.currentOrder.push({ id: this.itemID, itemName: item.name, quantity: this.quantity, comment: this.comment, price: item.price });
 
             this.resetFields            
         }			
@@ -338,7 +316,6 @@ var infoApp = new Vue({
     data: {
         order: [
             // id, status, order_request
-            
         ]
     },
     computed: {
@@ -347,7 +324,6 @@ var infoApp = new Vue({
             for(i = 0; i < this.order[0].itemList.length; i++) {
                 total = total + (this.order[0].itemList[i].price * this.order[0].itemList[i].quantity)
             }
-
             return total
         }
     },

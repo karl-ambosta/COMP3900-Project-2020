@@ -388,7 +388,6 @@
         },
         methods: {
             logoutUser: function() {
-                console.log("here")
                 axios
                     .post('http://127.0.0.1:8000/rest-auth/logout/', null)
                     .then((response) => {
@@ -438,23 +437,9 @@
             .get('http://127.0.0.1:8000/menuCategories/', { params: {restaurant: this.restaurant.id }})
             .then((response) => {
                 this.types = response.data
-            }).catch(error => {console.log(error);})
-			return;
+            }).catch(error => {console.log(error); return})         
         },
         computed: {
-            updateData: function() {
-                axios
-                    .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: this.restaurant.id }})
-                    .then((response) => {
-                        this.items = response.data
-                    }).catch( error => {console.log(error); });
-            
-                axios
-                    .get('http://127.0.0.1:8000/menuCategories/', { params: {restaurant: this.restaurant.id }})
-                    .then((response) => {
-                        this.types = response.data
-                    }).catch(error => {console.log(error);})
-            },
             removeItemData: function() {
                 name = this.removingItemName
                 return this.items.filter(function(item) {
@@ -468,6 +453,19 @@
             }
         },
         methods: { 
+            updateData: function() {
+                axios
+                    .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: this.restaurant.id }})
+                    .then((response) => {
+                        this.items = response.data
+                    }).catch( error => {console.log(error); });
+            
+                axios
+                    .get('http://127.0.0.1:8000/menuCategories/', { params: {restaurant: this.restaurant.id }})
+                    .then((response) => {
+                        this.types = response.data
+                    }).catch(error => {console.log(error);})
+            },
 			itemsOfType: function(typeID) {
 				return this.items.filter(function(item) {
 					if(item.menu_category == typeID) {
@@ -521,8 +519,9 @@
                 } 
                 
                 itemIdx = this.items.findIndex(x => x.name == this.editing.name)
+
                 
-                if(itemIdx != -1) {
+                if(itemIdx != -1 && this.items[itemIdx].id != this.editing.id) {
                     message.textContent = "Item with name '" + this.editing.name + "' already exists"
                     message.style.color = "red"
                     return
@@ -557,7 +556,7 @@
                     .put('http://127.0.0.1:8000/menuItems/' + itemID + "/", fd)
                     .then((response) => {
                         this.items = response.data
-                        this.updateData;
+                        this.updateData();
                     }).catch( error => {console.log(error); return })
                 
                 
@@ -581,7 +580,7 @@
                 axios
                     .put('http://127.0.0.1:8000/menuItems/' + item.id + '/', fd)
                     .then((response) => {
-                        this.updateData
+                        this.updateData()
                     }).catch( error => {console.log(error); return })
 
                 this.isRemove = false
@@ -614,7 +613,7 @@
                     axios
                         .put('http://127.0.0.1:8000/menuCategories/' + info.id + "/", data)
                         .then((response) => {
-                            this.updateData
+                            this.updateData()
                         }).catch( error => {console.log(error); return })
 
                     
@@ -757,15 +756,15 @@
                     axios
                         .post('http://127.0.0.1:8000/menuItems/', fd)
                         .then((response) => {
-                            this.updateData;
+                            this.updateData();
                         }).catch( error => { console.log(error); return; })
                     
+                    message = document.getElementById('message')
+                    message.textContent = "Item with name '" + this.newItem.name + "' successfully created in Category: '" + this.types[typeIdx].name + "' !"
+                    message.style.color = "greenyellow"
+
                     this.newItem = { name: '', description: '', price: '', menu_category: '' , picture: ''}                
                     isNew = false
-                    
-                    message = document.getElementById('message')
-                    message.textContent = "Item with name '" + this.newItem.name + "' successfully created in Category: " + this.types[typeIdx].name + "' !"
-                    message.style.color = "greenyellow"
                     
                 } else {
                     oldItemTypeID = this.items[itemIdx].menu_category
@@ -794,7 +793,7 @@
                     axios
                         .post('http://127.0.0.1:8000/menuCategories/', { name: categoryName, menu_item: [], restaurant: this.restaurant.id })
                         .then((response) => {
-                            this.updateData;
+                            this.updateData();
                         }).catch( error => {console.log(error); 
                             if (error.response) {
                                 console.log(error.response.data);
