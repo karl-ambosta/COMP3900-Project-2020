@@ -40,4 +40,4 @@ Week 9
 
 Week 10
 
-*notes here*
+This week was all about finalising any last minute design changes that need to be edited. Our system's main functionalities, works as intended. All that is left is to submit the report and test to see if anythin needs to be fixed.
