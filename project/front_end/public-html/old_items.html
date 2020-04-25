@@ -16,33 +16,36 @@
     agent-id="32b538a5-fe56-4ab0-9391-3f2c0f24fc36"
     language-code="en"
     ></df-messenger>
-    <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
-        <img src="../templates/pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
-        <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="dashboard.html">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="menu_edit.html" >Edit Menu</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="history.html">Restauraunt History</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link disabled" href="old_items.html">Old Menu Items<span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
-            <button class="btn btn-outline-light my-2 my-sm-0" onclick="logout()">Logout
-                <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+    <div id="logoutApp">
+        <nav class="navbar navbar-dark bg-dark navbar-expand-lg sticky-top">
+            <img src="../templates/pictures/logo_transp.png" width="40" height="40" alt=""> &nbsp; &nbsp;
+            <a class="navbar-brand" style="color:white; text-align: left;">Waiter</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-        </div>
-    </nav>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu_edit.html" >Edit Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="history.html">Restauraunt History</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link disabled" href="old_items.html">Old Menu Items<span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <button class="btn btn-outline-light my-2 my-sm-0" v-on:click="logoutUser()">Logout
+                    <span><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
+                </button>
+            </div>
+        </nav>
+    </div>
 
     <div id="app">
         <div class="title">Old Menu Items for {{ restaurant.name }}</div>
@@ -86,7 +89,7 @@
         
                 <!-- Modal Header -->
                 <div class="modal-header">
-                <h4 class="modal-title">Remove Item?</h4>
+                <h4 class="modal-title">Return Item?</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
         
@@ -108,6 +111,7 @@
                     <div><b>Item Name:</b> {{ selectedItem.name }}</div>
                     <div><b>Item Description:</b> {{ selectedItem.description }}</div>
                     <div><b>Item Price:</b> {{ selectedItem.price }}</div>
+                    <div><img v-bind:id="selectedItem.name" v-bind:src="'../../waiter/' + selectedItem.picture" align="center" width="150" height="100"></div>
                     
                 </div>
         
@@ -126,9 +130,24 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
-    function logout() {
-        window.location.href='login.html'
-    }
+
+    var logoutApp = new Vue ({
+        el: '#logoutApp',
+        delimiters: ['{{', '}}'],
+        data: {
+
+        },
+        methods: {
+            logoutUser: function() {
+                axios
+                    .post('http://127.0.0.1:8000/rest-auth/logout/', null)
+                    .then((response) => {
+                        sessionStorage.clear()
+                        window.open("index.html", "_self")
+                    }).catch( error => {console.log(error); return })
+            } 
+        }
+    })
 
     var app = new Vue ({
         el: '#app',
