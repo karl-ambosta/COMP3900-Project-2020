@@ -46,12 +46,12 @@ Added profile model for users
 
 Week 8
 
-Profile setup for different types of users
+Profile setup for different types of users, set up permissions.py to ensure that different users are restricted to certain actions. 
 
 Week 9
 
-*notes here*
+Wrote dbscript to insert different types of data into the system and reducing the manual work.
 
 Week 10
 
-*notes here*
+Contributed to final report
