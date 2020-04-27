@@ -74,13 +74,13 @@
                 <tbody>
                     <template v-for="order in kitchenOrders">
                         <tr>
-                            <td nowrap><b>Order #{{ order.id }}</b><br>
+                            <td nowrap><b>Order #{{ order.id }}:<br>{{ convertTime(order.created_at) }}</b><br>
                                 <ul>
                                     <div v-for="request in orderRequests">
                                         <div v-if="request.owner === order.owner">
                                             <div v-for="food in foodNames">
                                                 <div v-if="request.menu_item === food.id">
-                                                    <li>{{ request.quantity }} x {{ food.name }} - Comments: {{ request.comments }}</li>
+                                                    <li>{{ request.quantity }} x {{ food.name }} <template v-if="request.comments != ''"> - Comments: {{ request.comments }}</template></li>
                                                 </div>
                                             </div> 
                                         </div>
@@ -115,16 +115,25 @@
                 <tbody>
                         <template v-for="order in previousOrders">
                             <tr>
-                                <td nowrap class="align-middle">Order #{{ order.id }} - Customer: {{ order.owner }}<br> Table: {{ order.table_number }}</td>
+                                <td nowrap class="align-middle">
+                                    Order #{{ order.id }} - Customer: {{ order.owner }}<br> 
+                                    Table: {{ order.table_number }}<br>
+                                    Created: {{ convertTime(order.created_at) }}
+                                </td>
                                 <td>
-                                    Status: {{order.status }}<br>
+                                    Status: 
+                                    <template v-if="order.status == 6">Served</template>
+                                    <template v-else-if="order.status == 7">Awaiting Payment</template>
+                                    <template v-else="order.status == 8">Paid</template>
+                                    <br>
                                     Order:<br>
                                     <ul>
                                         <div v-for="item in order.order_request">
                                             <div v-for="food in foodNames">
                                                 <div v-if="food.id === item">
                                                     <li>
-                                                        {{ getRequest(item).quantity }} x {{ food.name }}
+                                                        {{ getRequest(item).quantity }} x {{ food.name }} 
+                                                        <template v-if="getRequest(item).comments != ''">: {{ getRequest(item).comments }}</template>
                                                     </li>
                                                 </div>
                                             </div>
@@ -190,7 +199,7 @@
             logoutUser: function() {
                 console.log("here")
                 axios
-                    .post('http://127.0.0.1:8000/rest-auth/logout/', null)
+                    .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/logout/', null)
                     .then((response) => {
                         window.open("index.html", "_self")
                     }).catch( error => {console.log(error); return })
@@ -227,7 +236,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("http://127.0.0.1:8000/orderList/get_kitchen_orders/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/get_kitchen_orders/")
                     .then((response) => {this.kitchenOrders = response.data})
                     .then(this.cleanData)
                     .catch( error => {console.log(error); 
@@ -247,7 +256,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("http://127.0.0.1:8000/orderRequest/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderRequest/")
                     .then((response) => {this.orderRequests = response.data})
                     .catch( error => {console.log(error); });
             },
@@ -255,7 +264,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .post("http://127.0.0.1:8000/orderList/" + item.id + "/set_order_preparing/")
+                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_preparing/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
@@ -265,7 +274,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .post("http://127.0.0.1:8000/orderList/" + item.id + "/set_order_cooking/")
+                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_cooking/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
@@ -275,7 +284,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .post("http://127.0.0.1:8000/orderList/" + item.id + "/set_order_pickup/")
+                    .post("https://api.unswcafe.tuesdaywaiter.tk/orderList/" + item.id + "/set_order_pickup/")
                     .then((response) => {
                             console.log(response.data)
                         }).catch( error => {console.log(error); });
@@ -286,7 +295,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa');
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .get("http://127.0.0.1:8000/menuItems/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/menuItems/")
                     .then((response) => {this.foodNames = response.data})
                     .catch( error => {console.log(error); });
             },
@@ -295,7 +304,7 @@
                 var message = "Order: #" + item.id + " ready for pick up"
                 axios.defaults.headers.common['Authorization'] = basicAuth;
                 axios
-                    .post('http://127.0.0.1:8000/waiterCalls/', {
+                    .post('https://api.unswcafe.tuesdaywaiter.tk/waiterCalls/', {
                         "table_number": item.table_number,
                         "caller": 1,
                         "status": message
@@ -335,6 +344,12 @@
                     }
                 });
             },
+            convertTime: function(timeString) {
+                var date = moment(timeString);
+                var dateComponent = date.format('ddd DD MMM YYYY');
+                var timeComponent = date.format('hh:mm A');
+                return timeComponent + " on " + dateComponent;
+            },
         },
     })
 
@@ -355,13 +370,13 @@
             var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
             axios.defaults.headers.common['Authorization'] = basicAuth
             axios
-                .get('http://127.0.0.1:8000/menuItems/', { params: { restaurant: 1 }})
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/', { params: { restaurant: 1 }})
                 .then((response) => {
 					this.items = response.data
                 }).catch( error => {console.log(error); });
                 
             axios
-                .get('http://127.0.0.1:8000/menuCategories/', { params: { restaurant: 1 }})
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/', { params: { restaurant: 1 }})
                 .then((response) => {
 					this.types = response.data
                 }).catch( error => {console.log(error); });
@@ -398,7 +413,7 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("http://127.0.0.1:8000/orderList/get_order_history/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/orderList/get_order_history/")
                     .then((response) => {this.previousOrders = response.data})
                     .catch( error => {console.log(error); 
                                 if (error.response) {
@@ -417,12 +432,15 @@
                 var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
                 axios.defaults.headers.common['Authorization'] = basicAuth
                 axios
-                    .get("http://127.0.0.1:8000/menuItems/")
+                    .get("https://api.unswcafe.tuesdaywaiter.tk/menuItems/")
                     .then((response) => {this.foodNames = response.data})
                     .catch( error => {console.log(error); });
             },
             getRequest: function(requestID) {
                 return activeordersapp.orderRequests.filter(r => r.id == requestID)[0]
+            },
+            convertTime: function(timeString) {
+                return activeordersapp.convertTime(timeString)
             }
         },
       })

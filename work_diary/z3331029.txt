@@ -45,4 +45,4 @@ Setup waiter calls feature for front and backend, integrated chatbot into this D
 
 Week 10
 
-*notes here*
+Setup and wrote final report, had assistance from Karl and Siliva for writing. Cleaned up deployment code and redeployed for testing/marking. Submitted code and final report.

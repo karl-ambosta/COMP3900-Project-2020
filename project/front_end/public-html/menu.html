@@ -169,7 +169,7 @@
 	<div id="myModal" class="modal">
 
 		<!-- The Close Button -->
-		<span class="close">&times;</span>
+		<span class="close" onclick="">&times;</span>
 
 		<!-- Modal Content (The Image) -->
 		<img class="modal-content" id="img01">
@@ -262,7 +262,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="login.js"></script>
 <script>
-// http://127.0.0.1:8000/
+// https://api.unswcafe.tuesdaywaiter.tk/
 	function hideTypes() {
 		var x = document.getElementsByClassName("items");
 		var i;
@@ -313,7 +313,7 @@
 			axios.defaults.headers.common['Authorization'] = basicAuth
 			
 			axios
-				.get('http://127.0.0.1:8000/restaurant/')
+				.get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/')
 				.then((response) => {
 					this.restaurants = response.data
 				}).catch( error => {console.log(error); 
@@ -330,13 +330,13 @@
                 console.log(error.config);return })
 
 			axios
-				.get('http://127.0.0.1:8000/menuCategories/')
+				.get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
 				.then((response) => {
 					this.types = response.data
 				}).catch( error => {console.log(error); });
 
             axios
-                .get('http://127.0.0.1:8000/menuItems/')
+                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
                 .then((response) => {
 					this.items = response.data
 				}).catch( error => {console.log(error); });
@@ -366,7 +366,7 @@
 				}
 
 				// Get the <span> element that closes the modal
-				var span = document.getElementsByClassName("close")[0];
+				var span = document.getElementsByClassName("close")[1];
 
 				// When the user clicks on <span> (x), close the modal
 				span.onclick = function() {
@@ -379,7 +379,7 @@
 			},
 			searchItem: function() {
 				axios
-					.get('http://127.0.0.1:8000/menuItems/?search=' + this.searchInput)
+					.get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/?search=' + this.searchInput)
 					.then((response) => {
 						console.log(response.data)
 						this.searchResults = response.data
