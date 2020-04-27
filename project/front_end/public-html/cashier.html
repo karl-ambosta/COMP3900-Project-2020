@@ -76,7 +76,7 @@
                         <template v-for="(bill,index) in billList">
                             <tr>
                                 <td class="align-middle">
-                                    Table {{ bill.tableNo }}
+                                    Table {{ bill.table_number }}
                                 </td>
                                 <td class="align-middle">
                                     $ {{ bill.order_total }}
@@ -99,14 +99,14 @@
                             
                                     <!-- Modal Header -->
                                     <div class="modal-header">
-                                    <h4 class="modal-title">Bill for Table {{ chosenBill.tableNo }}: Total = ${{ chosenBill.order_total }}</h4>
+                                    <h4 class="modal-title">Bill for Table {{ chosenBill.table_number }}: Total = ${{ chosenBill.order_total }}</h4>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                             
                                     <!-- Modal body -->
                                     <div class="modal-body">
                                         <b>Order Id: </b>{{ chosenBill.id }}<br>
-                                        <b>Table Number: </b>{{ chosenBill.tableNo }}<br>
+                                        <b>Table Number: </b>{{ chosenBill.table_number }}<br>
                                         <b>Order Created at: </b>{{ convertTime(chosenBill.created_at) }}<br>
                                         <ul>
                                             <template v-for="item in chosenBill.order_request">

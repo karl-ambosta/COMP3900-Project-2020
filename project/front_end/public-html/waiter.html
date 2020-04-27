@@ -118,19 +118,19 @@
                                 {{ item.status}}
                             </td>
                             <td class="align-middle">
-                                Customer Name: {{ item.owner}}
+                                Customer Name: {{ item.owner }}
+                                
                                 <ul>
                                     <div v-for="dish in item.order_request">
-                                        <div v-for="food in foodNames">
-                                            <li v-if="dish === food.id">
-                                                {{ getRequest(dish).quantity }} x {{ food.name }} : {{ getRequest(dish).comments}}
-                                            </li>
-                                        </div>
+                                        <li>
+                                            {{ getRequest(dish).quantity }} x {{ getItem(getRequest(dish).menu_item).name }} 
+                                            <template v-if="getRequest(dish).comments != ''">: {{ getRequest(dish).comments }}</template>
+                                        </li>
                                     </div>
                                 </ul>
                             </td>
                         </tr>
-                        </template>
+                    </template>
                 </tbody>
             </table>
         </div>
@@ -356,6 +356,9 @@
             },
             getRequest: function(requestID) {
                 return this.requests.filter(r => r.id == requestID)[0]
+            },
+            getItem: function(itemID) {
+                return this.foodNames.filter(item => item.id == itemID)[0]
             }
         },
         

@@ -74,13 +74,13 @@
                 <tbody>
                     <template v-for="order in kitchenOrders">
                         <tr>
-                            <td nowrap><b>Order #{{ order.id }}</b><br>
+                            <td nowrap><b>Order #{{ order.id }}:<br>{{ convertTime(order.created_at) }}</b><br>
                                 <ul>
                                     <div v-for="request in orderRequests">
                                         <div v-if="request.owner === order.owner">
                                             <div v-for="food in foodNames">
                                                 <div v-if="request.menu_item === food.id">
-                                                    <li>{{ request.quantity }} x {{ food.name }} - Comments: {{ request.comments }}</li>
+                                                    <li>{{ request.quantity }} x {{ food.name }} <template v-if="request.comments != ''"> - Comments: {{ request.comments }}</template></li>
                                                 </div>
                                             </div> 
                                         </div>
@@ -115,16 +115,25 @@
                 <tbody>
                         <template v-for="order in previousOrders">
                             <tr>
-                                <td nowrap class="align-middle">Order #{{ order.id }} - Customer: {{ order.owner }}<br> Table: {{ order.table_number }}</td>
+                                <td nowrap class="align-middle">
+                                    Order #{{ order.id }} - Customer: {{ order.owner }}<br> 
+                                    Table: {{ order.table_number }}<br>
+                                    Created: {{ convertTime(order.created_at) }}
+                                </td>
                                 <td>
-                                    Status: {{order.status }}<br>
+                                    Status: 
+                                    <template v-if="order.status == 6">Served</template>
+                                    <template v-else-if="order.status == 7">Awaiting Payment</template>
+                                    <template v-else="order.status == 8">Paid</template>
+                                    <br>
                                     Order:<br>
                                     <ul>
                                         <div v-for="item in order.order_request">
                                             <div v-for="food in foodNames">
                                                 <div v-if="food.id === item">
                                                     <li>
-                                                        {{ getRequest(item).quantity }} x {{ food.name }}
+                                                        {{ getRequest(item).quantity }} x {{ food.name }} 
+                                                        <template v-if="getRequest(item).comments != ''">: {{ getRequest(item).comments }}</template>
                                                     </li>
                                                 </div>
                                             </div>
@@ -335,6 +344,12 @@
                     }
                 });
             },
+            convertTime: function(timeString) {
+                var date = moment(timeString);
+                var dateComponent = date.format('ddd DD MMM YYYY');
+                var timeComponent = date.format('hh:mm A');
+                return timeComponent + " on " + dateComponent;
+            },
         },
     })
 
@@ -423,6 +438,9 @@
             },
             getRequest: function(requestID) {
                 return activeordersapp.orderRequests.filter(r => r.id == requestID)[0]
+            },
+            convertTime: function(timeString) {
+                return activeordersapp.convertTime(timeString)
             }
         },
       })
