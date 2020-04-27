@@ -27,7 +27,7 @@ var loginApp = new Vue({
                     sessionStorage.btoa = btoa(this.username + ":" + this.password)
 
                     sessionStorage.setItem('restaurant', JSON.stringify(
-                        { id: 1, name: 'Restaurant #1'}
+                        { id: 1, name: 'UNSW Cafe'}
                     ));
 
                     var basicAuth = 'Basic ' + sessionStorage.getItem('btoa')
