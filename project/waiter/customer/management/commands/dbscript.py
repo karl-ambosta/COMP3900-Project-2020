@@ -122,10 +122,10 @@ class Command(BaseCommand):
         foods =  { 
                 "Entree": ['Pumpkin Soup', 'Sourdough Bread', 'Chicken Soup', 'Spring Rolls', 'Garlic Bread', 'Cheese Toast'], 
                 "Breakfast": ['Bacon & Egg Roll', 'Scrambled Eggs', 'French Toast', 'Big Brekkie', 'Eggs Benedict', 'Salmon Roll'],
-                "Lunch": ['Grilled Salmon', 'Big Burger', 'Steak Sandwich', 'Salad', 'Gourmet Pizza'],
+                "Lunch": ['Grilled Salmon', 'Big Burger', 'Steak Sandwich', 'Salad', 'Gourmet Pizza', 'Cheese Pizza'],
                 "Dinner": ['Classic Roast', 'Spaghetti Bolognese', 'Fish & Chips', 'Steak & Chips', 'Roast Chicken & Salad', 'Butter Chicken with Rice'],
-                "Specials": ['Seafood Sensation', 'Fried Rice', 'Grilled Fish & Chips', 'Vegetarian Pizza', 'Steamed Veggies'],
-                "Drinks": ['Coca Cola', 'Fanta', 'Latte', 'Red Wine', 'Sparkling Water', 'Coffee', 'Tea', 'Lemon & Lime Bitters']
+                "Specials": ['Seafood Sensation', 'Fried Rice', 'Grilled Fish & Chips', 'Vegetarian Pizza', 'Steamed Veggies', 'Dumplings'],
+                "Drinks": ['Coca Cola', 'Latte', 'Red Wine', 'Sparkling Water', 'Coffee', 'Lemon & Lime Bitters']
             }
 
 
@@ -133,36 +133,28 @@ class Command(BaseCommand):
         for i,cat in enumerate(categories):
 
             cat_object = MenuCategory.objects.get(id=(count))
-            print(cat_object)
-            restaurant1_menuitems1 = MenuItem.objects.create(name=random.choice(foods[cat]), price = round(random.randrange(10,20),2),description = "hi", order = i+1, menu_category=cat_object)
+            restaurant1_menuitems1 = MenuItem.objects.create(name = foods[cat][0], price = round(random.randrange(10,20),2),description = foods[cat][0], order = i+1, menu_category=cat_object)
             restaurant1_menuitems1.save()
-            restaurant1_menuitems2 = MenuItem.objects.create(name=random.choice(foods[cat]), price = round(random.randrange(10,20),2),description = "hi", order = i+2, menu_category=cat_object)
+            
+            restaurant1_menuitems2 = MenuItem.objects.create(name=foods[cat][1], price = round(random.randrange(10,20),2),description = foods[cat][1], order = i+2, menu_category=cat_object)
             restaurant1_menuitems2.save()
-            restaurant1_menuitems3 = MenuItem.objects.create(name=random.choice(foods[cat]), price = round(random.randrange(10,20),2),description = "hi", order = i+3, menu_category=cat_object)
-            restaurant1_menuitems3.save()
             
             count = count + 1
-            cat_object = MenuCategory.objects.get(id=(count))   
-            print(cat_object)                   
-            restaurant2_menuitems1 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+1, menu_category=cat_object)
+            cat_object = MenuCategory.objects.get(id=(count))                   
+            restaurant2_menuitems1 = MenuItem.objects.create(name=foods[cat][2],price= round(random.randrange(10,20),2),description = foods[cat][2], order = i+1, menu_category=cat_object)
             restaurant2_menuitems1.save()
-            restaurant2_menuitems2 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+2, menu_category=cat_object)
+            restaurant2_menuitems2 = MenuItem.objects.create(name=foods[cat][3],price= round(random.randrange(10,20),2),description = foods[cat][3], order = i+2, menu_category=cat_object)
             restaurant2_menuitems2.save()
-            restaurant2_menuitems3 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+3, menu_category=cat_object)
-            restaurant2_menuitems3.save()
             
             count = count + 1    
             cat_object = MenuCategory.objects.get(id=(count))   
-            print(cat_object) 
-
-            restaurant3_menuitems1 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+1, menu_category=cat_object)
+            restaurant3_menuitems1 = MenuItem.objects.create(name=foods[cat][4],price= round(random.randrange(10,20),2),description = foods[cat][4],  order = i+1, menu_category=cat_object)
             restaurant3_menuitems1.save()
-            restaurant3_menuitems2 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+2, menu_category=cat_object)
+            restaurant3_menuitems2 = MenuItem.objects.create(name=foods[cat][5],price= round(random.randrange(10,20),2),description = foods[cat][5], order = i+2, menu_category=cat_object)
             restaurant3_menuitems2.save()
-            restaurant3_menuitems3 = MenuItem.objects.create(name=random.choice(foods[cat]),price= round(random.randrange(10,20),2),description = "hi", order = i+3, menu_category=cat_object)
-            restaurant3_menuitems3.save()
+            
             count = count + 1  
-
+        
             
             
             
