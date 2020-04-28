@@ -29,10 +29,10 @@ Developers:
 └── work_diary
 
 ```
-All project files can be found within the project folder.  
-    - `front_end/` contains all Front End files.  
-    - `waiter/` contains all Back End files, including starting the Django server.  
-`work/diary/` contains our work diaries used through the trimester. 
+All project files can be found within the project folder:  
+- `front_end/` contains all Front End files.  
+- `waiter/` contains all Back End files, including starting the Django server.  
+- `work/diary/` contains our work diaries used through the trimester. 
 
 ## Built With
 - Python3
