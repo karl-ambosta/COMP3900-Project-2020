@@ -262,7 +262,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="login.js"></script>
 <script>
-// https://api.unswcafe.tuesdaywaiter.tk/
+// http://127.0.0.1:8000/
 	function hideTypes() {
 		var x = document.getElementsByClassName("items");
 		var i;
@@ -313,7 +313,7 @@
 			axios.defaults.headers.common['Authorization'] = basicAuth
 			
 			axios
-				.get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/')
+				.get('http://127.0.0.1:8000/restaurant/')
 				.then((response) => {
 					this.restaurants = response.data
 				}).catch( error => {console.log(error); 
@@ -330,13 +330,13 @@
                 console.log(error.config);return })
 
 			axios
-				.get('https://api.unswcafe.tuesdaywaiter.tk/menuCategories/')
+				.get('http://127.0.0.1:8000/menuCategories/')
 				.then((response) => {
 					this.types = response.data
 				}).catch( error => {console.log(error); });
 
             axios
-                .get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/')
+                .get('http://127.0.0.1:8000/menuItems/')
                 .then((response) => {
 					this.items = response.data
 				}).catch( error => {console.log(error); });
@@ -379,7 +379,7 @@
 			},
 			searchItem: function() {
 				axios
-					.get('https://api.unswcafe.tuesdaywaiter.tk/menuItems/?search=' + this.searchInput)
+					.get('http://127.0.0.1:8000/menuItems/?search=' + this.searchInput)
 					.then((response) => {
 						console.log(response.data)
 						this.searchResults = response.data

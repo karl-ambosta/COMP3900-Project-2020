@@ -20,7 +20,7 @@ var loginApp = new Vue({
             };
 
             await axios
-                .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/login/', payload)
+                .post('http://127.0.0.1:8000/rest-auth/login/', payload)
                 .then((response) => {
                     this.results = response.data.key;
                     sessionStorage.user = this.username
@@ -34,7 +34,7 @@ var loginApp = new Vue({
                     axios.defaults.headers.common['Authorization'] = basicAuth
 
                     axios
-                        .get('https://api.unswcafe.tuesdaywaiter.tk/profile/')
+                        .get('http://127.0.0.1:8000/profile/')
                         .then((response) => {
                             userInfo = response.data.filter(x => x.username == this.username)[0]
                             console.log(userInfo)
@@ -95,7 +95,7 @@ var registerApp = new Vue ({
             }
 
             await axios
-                .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/register/', details)
+                .post('http://127.0.0.1:8000/rest-auth/register/', details)
                 .then((response) => {
                     console.log(response.data)
                     message = document.getElementById("errorMessage2")

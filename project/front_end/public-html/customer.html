@@ -101,13 +101,13 @@
                 userName = sessionStorage.getItem('user')
 
                 axios
-                    .get('https://api.unswcafe.tuesdaywaiter.tk/profile/')
+                    .get('http://127.0.0.1:8000/profile/')
                     .then((response) => {
                         console.log(response.data)
                         userID = response.data.filter(x => x.username == this.username)[0].user
 
                         axios
-                            .put('https://api.unswcafe.tuesdaywaiter.tk/profile/' + userID + "/", details)
+                            .put('http://127.0.0.1:8000/profile/' + userID + "/", details)
                             .then((response) => {
                                 console.log(response.data)
                             }).catch( error => {console.log(error);return })
@@ -125,7 +125,7 @@
 
 <style>
 body {
-    background-image: url("../templates/pictures/background-texture.jpg");
+    background-image: url("templates/pictures/background-texture.jpg");
     font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 }
 .title {

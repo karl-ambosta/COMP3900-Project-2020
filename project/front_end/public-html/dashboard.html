@@ -226,7 +226,7 @@ Things that can be added here: <br>
             logoutUser: function() {
                 console.log("here")
                 axios
-                    .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/logout/', null)
+                    .post('http://127.0.0.1:8000/rest-auth/logout/', null)
                     .then((response) => {
 						sessionStorage.clear()
                         window.open("index.html", "_self")
@@ -332,13 +332,13 @@ Things that can be added here: <br>
 			axios.defaults.headers.common['Authorization'] = basicAuth
 
 			axios
-				.get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/1/get_all_earnings/')
+				.get('http://127.0.0.1:8000/restaurant/1/get_all_earnings/')
 				.then((response) => {
 					this.totalEarnings = response.data
 				}).catch(error => {console.log(error); return })
 
 			axios
-				.get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/1/get_monthly_earnings/')
+				.get('http://127.0.0.1:8000/restaurant/1/get_monthly_earnings/')
 				.then((response) => {
 					this.monthlyEarnings = response.data
 
@@ -364,26 +364,26 @@ Things that can be added here: <br>
 			
 
 			axios
-				.get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/1/get_yearly_earnings/')
+				.get('http://127.0.0.1:8000/restaurant/1/get_yearly_earnings/')
 				.then((response) => {
 					this.yearlyEarnings = response.data
 				}).catch(error => {console.log(error); return })
 
 			axios
-				.get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/1/get_available_tables/')
+				.get('http://127.0.0.1:8000/restaurant/1/get_available_tables/')
 				.then((response) => {
 					this.availableTables = response.data
 				}).catch(error => {console.log(error); return })
 			/*
 			axios
-				.get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/1/get_average_dishes_per_order/')
+				.get('http://127.0.0.1:8000/restaurant/1/get_average_dishes_per_order/')
 				.then((response) => {
 					console.log(response.data)
 					this.averageDishes = response.data
 				}).catch(error => {console.log(error); return })
 
 			axios
-				.get('https://api.unswcafe.tuesdaywaiter.tk/restaurant/1/get_table_turnover/')
+				.get('http://127.0.0.1:8000/restaurant/1/get_table_turnover/')
 				.then((response) => {
 					console.log(response.data)
 					this.averageDishes = response.data
@@ -421,7 +421,7 @@ Things that can be added here: <br>
 </script>
 <style>
 body {
-    background-image: url("../templates/pictures/background-texture.jpg");
+    background-image: url("templates/pictures/background-texture.jpg");
     font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
     
 }

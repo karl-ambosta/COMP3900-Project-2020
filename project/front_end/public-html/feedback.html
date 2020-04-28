@@ -121,7 +121,7 @@
             logoutUser: function() {
                 console.log("here")
                 axios
-                    .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/logout/', null)
+                    .post('http://127.0.0.1:8000/rest-auth/logout/', null)
                     .then((response) => {
                         sessionStorage.clear()
                         window.open("index.html", "_self")
@@ -133,7 +133,7 @@
 </script>
 <style>
 body {
-    background-image: url("../templates/pictures/background-texture.jpg");
+    background-image: url("templates/pictures/background-texture.jpg");
     font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif; 
 }
 
