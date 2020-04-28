@@ -138,7 +138,7 @@
         methods: {
             logoutUser: function() {
                 axios
-                    .post('https://api.unswcafe.tuesdaywaiter.tk/rest-auth/logout/', null)
+                    .post('http://127.0.0.1:8000/rest-auth/logout/', null)
                     .then((response) => {
                         sessionStorage.clear()
                         window.open("index.html", "_self")
