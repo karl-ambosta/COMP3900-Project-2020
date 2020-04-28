@@ -16,13 +16,28 @@ Developers:
 - Silvia Xu - z5078647 - z5078647@unsw.edu.au
 
 ## Repository Layout
+```bash
+.
+├── project
+│   ├── front_end
+│   │   ├── public-html
+│   │   └── templates
+│   └── waiter
+│       ├── customer
+│       ├── media
+│       └── waiter
+└── work_diary
 
- - `project/` - all project related coding and files live here
- - `work_diary/` - our work diaries live here
- - `documentation/` - all associated project documents live here
+```
+All project files can be found within the project folder:  
+- `front_end/` contains all Front End files.  
+- `waiter/` contains all Back End files, including starting the Django server.  
+- `work/diary/` contains our work diaries used through the trimester. 
 
 ## Built With
-
-## Acknowledgements
-
-## License
+- Python3
+- Django
+- Vue.Js
+- Bootstrap V4
+- Axios
+- Apache HTTP Server

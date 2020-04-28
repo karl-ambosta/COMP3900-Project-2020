@@ -1,16 +1,18 @@
 # Getting Started
-Make sure you are within the `project/` directory when following the below.
-## Working in venv for first time
-1. `$ python3 -m venv venv`
-2. `$ source venv/bin/activate`
-3. `$ python3 -m pip install --upgrade pip`
-4. `$ pip3 install -r requirements.txt`
-5. Work as normal
-6. When finished: `$ deactivate`
+## Building docker image
+```bash
+$ docker build -t your-docker-repo/image_name .
+$ docker push your-docker-repo/image_name`
+```
 
-## Working in venv after setup
-1. `$ source venv/bin/activate`
-2. When finished: `$ deactivate`
+# Running Django
+## Running locally via terminal
+```bash
+$ python3 manage.py runserver
+```
 
-## Running Django Server
-`$ python3 tues14/manage.py runserver`
+## Running locally via docker
+```bash
+$ docker run -dit --name my-app-name --rm -p 8000:8000 your-docker-repo/image_name
+```
+Load using http://localhost:8000
